@@ -1,3 +1,4 @@
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import gensim
@@ -16,8 +17,9 @@ def NLP_processor(documents, type):
         dir = 'Dictionary'
     elif type == 'B2MATCH':
         dir = 'Dictionary_b2match'
+    print("AFTER LOAD")
     tokens = [process_document(doc) for doc in documents]
-    print("TOKENS")
+    # print("TOKENS", tokens)
     try:
         print("TRY")
         dictionary = load_dictionary(dir)
@@ -40,11 +42,22 @@ def process_document(document):
     :param document: string
     :return: list of tokens
     """
-
+    # print("ENTERED PROCESS")
     ps = PorterStemmer()
-    stop_words = set(stopwords.words('english'))
-    return [ps.stem(word.lower()) for word in word_tokenize(document) if
-            not word in stop_words]  # tokenizing and normalize tokens
+  #  nltk.download('stopwords')
+  #   nltk.download('punkt')
+
+    try:
+        stop_words = (stopwords.words('english'))
+    except Exception as e:
+        print("ERR", e)
+    # print("AFTER", len(stop_words))
+    try:
+        res = [ps.stem(word.lower()) for word in word_tokenize(document) if
+                not word in stop_words]  # tokenizing and normalize tokens
+    except Exception as e:
+        print("ERR", e)
+    return res
 
 
 def build_dictionary(tokens):
@@ -66,7 +79,9 @@ def build_corpus(dictionary, tokens):
     """
 
     # for each doc map termId : term frequency
-    return [dictionary.doc2bow(lst) for lst in tokens]
+    res = [dictionary.doc2bow(lst) for lst in tokens]
+    # print("RES", res)
+    return res
 
 
 def process_query_result(result):

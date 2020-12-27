@@ -45,7 +45,7 @@ class OrganizationProfileViewSet(viewsets.ModelViewSet):
         """
 
         print("*" * 50, "\nSTART UPDATING EU DB\n", "*" * 50 )
-
+        print("HERE")
 
         try:
             try:
@@ -65,14 +65,15 @@ class OrganizationProfileViewSet(viewsets.ModelViewSet):
 
             index = build_index('EU_Index', 'EU')
             MapIds.objects.all().delete()
-            status = {}
+            queue_status = {}
             graph = Graph()
             visitngQueue = collections.deque()
             startOrg = '999993953'
             visitngQueue.append(startOrg)
-            status[startOrg] = 'visiting'
+            queue_status[startOrg] = 'visiting'
             while len(visitngQueue) > 0:
                 currPic = visitngQueue.popleft()
+                print("CURR", currPic)
                 try:
                     currOrg = get_organization_profile_by_pic(currPic)
                     currAdjacent = get_pics_from_collaborations(
@@ -80,15 +81,18 @@ class OrganizationProfileViewSet(viewsets.ModelViewSet):
                 except:
                     continue
                 for pic in currAdjacent:
-                    if pic not in graph.vertices or status[pic] == 'notVisited':
+                    if pic not in graph.vertices or queue_status[pic] == 'notVisited':
                         graph.add(currPic, pic)
-                        status[pic] = 'visiting'
+                        queue_status[pic] = 'visiting'
                         visitngQueue.append(pic)
 
                 currOrg = translate_data(currOrg)
+                print("AFTER TRANSLATE", currOrg['pic'])
                 add_organization_to_DB(currOrg)
+                print("AFTER ADD")
                 index = add_org_to_index(index, currOrg)
-                status[currPic] = 'visited'
+                print("ADDED TO INDEX")
+                queue_status[currPic] = 'visited'
 
             # if os.path.exists('EU_Index_Temp.0') and os.path.getsize('EU_Index_Temp.0') > os.path.getsize('EU_Index.0'):
             #     destroy_and_rename(old_index_name='EU_Index', new_index_name='EU_Index_Temp')
@@ -187,6 +191,7 @@ class AlertsSettingsViewSet(viewsets.ModelViewSet):
             data = json.loads(data)
             email = data['email']
             turned_on = data['turned_on']
+            print("DATA", data)
 
             try:
                 AlertsSettings.objects.get(ID=1)

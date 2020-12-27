@@ -133,11 +133,13 @@ def add_organization_to_DB(org):
     :param org: EU organization
     :return: True/False
     """
+    print("ENTERED ADD")
     ATTRIBUTES = {'description', 'tagsAndKeywords', 'dataStatus',
                   'numberOfProjects', 'consorsiumRoles'}
     response = True
     org['collaborations'] = len(org['collaborations'])
     try:
+        print("TRY")
         obj = OrganizationProfile.objects.get(pic=org['pic'])
         updated = False
         for atr in ATTRIBUTES:
@@ -170,17 +172,23 @@ def add_organization_to_DB(org):
             obj.save()
             response = True
     except:
+        print("EXCEPT")
         if 'address' in org:
             if 'country' in org['address'] and 'city' in org['address']:
                 newAddress = Address(
                     country=org['address']['country'], city=org['address']['city'])
                 newAddress.save()
+        print(org.keys())
+        print('pic' in org, 'legalName' in org, 'businessName' in org, 'classificationType' in org, 'description' in org, 'dataStatus' in org, 'numberOfProjects' in org, 'consorsiumRoles' in org, 'collaborations' in org )
         newOrg = OrganizationProfile(pic=org['pic'], legalName=org['legalName'], businessName=org['businessName'],
                                      classificationType=org['classificationType'], description=org['description'],
                                      address=newAddress, dataStatus=org['dataStatus'],
                                      numberOfProjects=org['numberOfProjects'],
                                      consorsiumRoles=org['consorsiumRoles'], collaborations=org['collaborations'])
+        # print("AFTER ORG", org['pic'])
         newOrg.save()
+        print("SAVED")
+        # print(newOrg)
         for tag in org['tagsAndKeywords']:
             try:
                 currTag = Tag.objects.get(tag=tag)
@@ -189,7 +197,7 @@ def add_organization_to_DB(org):
                 currTag = Tag(tag=tag)
                 currTag.save()
                 currTag.organizations.add(newOrg)
-
+    print("ADDED")
     return response
 
 
