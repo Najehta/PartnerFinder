@@ -232,3 +232,15 @@ class EventsForAlerts(models.Model):
     event_url = models.CharField(max_length=200)
     event_score = models.FloatField(blank=False, null=False)
     event_date = models.DateField(blank=True, null=True)
+
+class BsfEvents(models.Model):
+   """
+   BSF website events
+   """
+   deadline_date = models.CharField(max_length=200, blank=False)
+   # description = models.CharField(max_length=200, null= True)
+   # organization_name = models.CharField(max_length=200)
+   # area_of_research = models.CharField(max_length=200)
+
+   # def __str__(self):
+   #     return self.deadline_date

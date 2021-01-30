@@ -5,11 +5,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfEvents
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
-    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer
+    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfEventsSerializer
 import json
 
 import operator
@@ -20,11 +20,12 @@ from celery.schedules import crontab
 
 from .EU import *
 from .B2MATCH import *
+from .BSF import *
 import datetime
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from urllib.request import urlopen as req
 import re
 import os
 
@@ -44,7 +45,7 @@ class OrganizationProfileViewSet(viewsets.ModelViewSet):
         :return: HTTP Response
         """
 
-        print("*" * 50, "\nSTART UPDATING EU DB\n", "*" * 50 )
+        print("*" * 50, "\nSTART UPDATING EU DB\n", "*" * 50)
         print("HERE")
 
         try:
@@ -847,7 +848,7 @@ class AlertsB2match(viewsets.ModelViewSet):
             response = []
             for event in myEvents:
                 date = str(event.event_date).split('T')[0]
-                response.append({'event_name': event.event_name, 'event_url': event.event_url, 'date':date})
+                response.append({'event_name': event.event_name, 'event_url': event.event_url, 'date': date})
         except:
             response = {'error': 'Error while uploading recommended events.'}
 
@@ -883,3 +884,37 @@ def setUpdateSettings(euDate=None, b2matchDate=None):
         updateSettings.save()
 
     return True
+
+
+class BsfEventsViewSet(viewsets.ModelViewSet):
+    queryset = BsfEvents.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = BsfEventsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_bsfevent_to_db(self, request):
+
+        BsfEvents.objects.all().delete()
+        deadline = get_events_deadline()
+        print(deadline)
+        event_details = get_events_details()
+        print(event_details)
+        counter = 0
+        try:
+            for item in deadline:
+                date = BsfEvents(deadline_date=item)
+                date.save()
+
+            for item in event_details:
+                 detail = BsfEvents(description=item)
+                 detail.save()
+
+            response = {'success': 'Events added successfully.'}
+        except:
+            response = {'error': 'Error while adding events to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+# return Response(response, status=status.HTTP_200_OK)

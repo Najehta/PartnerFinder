@@ -2,7 +2,7 @@ from rest_framework import routers
 
 from django.urls import path, include
 from .views import OrganizationProfileViewSet, EventViewSet, ParticipantsViewSet, CallViewSet, \
-    UpdateSettingsViewSet, AlertsSettingsViewSet, ScoresViewSet, AlertsB2match
+    UpdateSettingsViewSet, AlertsSettingsViewSet, ScoresViewSet, AlertsB2match, BsfEventsViewSet
 
 router = routers.DefaultRouter()
 
@@ -16,6 +16,8 @@ router.register('events', EventViewSet)
 router.register('participants', ParticipantsViewSet)
 router.register('scores', ScoresViewSet)
 router.register("b2matchalerts", AlertsB2match)
+
+router.register('bsfevents', BsfEventsViewSet)
 
 urlpatterns = [
     path('', include(router.urls))

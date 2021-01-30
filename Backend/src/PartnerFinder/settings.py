@@ -26,12 +26,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECRET_KEY = 'm#@ajkk0-wjmbrv97%1-^7#&b%s*2*x=^s1$)-8me8m@li-l)0'
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'm#@ajkk0-wjmbrv97%1-^7#&b%s*2*x=^s1$)-8me8m@li-l)0'
+# SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
-DEBUG = config('DEBUG')
+DEBUG = True
+# DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '62.90.89.14', 'https://www.parnerfinder.jce.ac.il', 'parnerfinder.jce.ac.il', 'd-155-omen-8']
 

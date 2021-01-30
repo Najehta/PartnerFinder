@@ -1,3 +1,4 @@
+import requests
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, EventsForAlerts
 from .NLP import *
