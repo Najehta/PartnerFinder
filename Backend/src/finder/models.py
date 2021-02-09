@@ -237,10 +237,10 @@ class BsfEvents(models.Model):
    """
    BSF website events
    """
-   deadline_date = models.CharField(max_length=200, blank=False)
-   # description = models.CharField(max_length=200, null= True)
-   # organization_name = models.CharField(max_length=200)
-   # area_of_research = models.CharField(max_length=200)
+   deadlineDate = models.CharField(max_length=200, blank=True, null=True)
+   description = models.CharField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200,blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200,blank=True, null=True)
 
-   # def __str__(self):
-   #     return self.deadline_date
+   def __str__(self):
+       return self.organizationName

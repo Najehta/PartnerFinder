@@ -13,6 +13,7 @@ from urllib.request import urlopen as req
 from time import sleep
 import math
 from orderedset import OrderedSet
+import re
 
 
 def get_events_deadline():
@@ -68,6 +69,21 @@ def get_events_details():
 
     return event_details
 
+
+def get_field_name():
+
+    event_details = get_events_details()
+    field_name = []
+
+    for event in event_details:
+        word_search = re.search(r'\b(in)\b', event)
+        field_start_index = word_search.start() + 2
+        word_search = re.search('[^a-zA-Z\d\s-]', event)
+        field_end_index = word_search.start()
+        field_name.append(event[field_start_index + 1:field_end_index - 1])
+
+
+    return field_name
 
 
 def make_csv_file(lists_containers):

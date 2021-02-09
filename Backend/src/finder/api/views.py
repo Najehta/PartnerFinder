@@ -1,4 +1,5 @@
 import datetime
+import traceback
 
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
@@ -897,22 +898,21 @@ class BsfEventsViewSet(viewsets.ModelViewSet):
     def add_bsfevent_to_db(self, request):
 
         BsfEvents.objects.all().delete()
-        deadline = get_events_deadline()
-        print(deadline)
-        event_details = get_events_details()
-        print(event_details)
-        counter = 0
+        deadline = get_events_deadline() # deadline is a list of strings
+        event_details = get_events_details() # event_details is a list of strings
+        field_name = get_field_name() # field_name is a list of strings
+
+
         try:
-            for item in deadline:
-                date = BsfEvents(deadline_date=item)
+            for i,item in enumerate (deadline):
+                date = BsfEvents(deadlineDate=item, organizationName= 'NSF-BSF',description=event_details[i] ,areaOfResearch=field_name[i])
                 date.save()
 
-            for item in event_details:
-                 detail = BsfEvents(description=item)
-                 detail.save()
-
             response = {'success': 'Events added successfully.'}
-        except:
+
+        except Exception as e:
+            print(repr(e))
+            traceback.print_exc()
             response = {'error': 'Error while adding events to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
