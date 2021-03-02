@@ -233,14 +233,34 @@ class EventsForAlerts(models.Model):
     event_score = models.FloatField(blank=False, null=False)
     event_date = models.DateField(blank=True, null=True)
 
-class BsfEvents(models.Model):
+class BsfCalls(models.Model):
    """
-   BSF website events
+   BSF Website Calls
    """
    deadlineDate = models.CharField(max_length=200, blank=True, null=True)
    description = models.CharField(max_length=200, blank=True, null=True)
    organizationName = models.CharField(max_length=200,blank=True, null=True)
    areaOfResearch = models.CharField(max_length=200,blank=True, null=True)
+
+   def __str__(self):
+       return self.organizationName
+
+
+class IsfCalls(models.Model):
+   """
+   ISF Website Calls
+   """
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   status = models.CharField(max_length=200, blank=True, null=True)
+   registrationDeadline = models.CharField(max_length=200, blank=True, null=True)
+   submissionDeadline = models.CharField(max_length=200, blank=True, null=True)
+   institutionType = models.CharField(max_length=200, blank=True, null=True)
+   numberOfPartners = models.CharField(max_length=200,blank=True, null=True)
+   grantPeriod = models.CharField(max_length=200,blank=True, null=True)
+   budget = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   deadline = models.CharField(max_length=200, blank=True, null=True)
+
 
    def __str__(self):
        return self.organizationName

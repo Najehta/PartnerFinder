@@ -1,5 +1,5 @@
 import requests
-from ..models import BsfEvents
+from ..models import BsfCalls
 
 # from selenium import webdriver
 import nltk
