@@ -260,7 +260,20 @@ class IsfCalls(models.Model):
    budget = models.CharField(max_length=200, blank=True, null=True)
    information = models.CharField(max_length=200, blank=True, null=True)
    deadline = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
 
+
+   def __str__(self):
+       return self.organizationName
+
+class InnovationCalls(models.Model):
+   """
+   BSF Website Calls
+   """
+   deadlineDate = models.CharField(max_length=200, blank=True, null=True)
+   description = models.CharField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200,blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200,blank=True, null=True)
 
    def __str__(self):
        return self.organizationName
