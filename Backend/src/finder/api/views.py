@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCalls, IsfCalls
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCalls, IsfCalls, InnovationCalls
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
-    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfCallsSerializer,IsfCallsSerializer
+    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfCallsSerializer,IsfCallsSerializer, InnovationCallsSerializer
 import json
 
 import operator
@@ -23,6 +23,7 @@ from .EU import *
 from .B2MATCH import *
 from .BSF import *
 from .ISF import *
+from.Innovation import *
 import datetime
 
 from email.mime.multipart import MIMEMultipart
@@ -1169,5 +1170,48 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             print(repr(e))
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class InnvoCallsViewSet(viewsets.ModelViewSet):
+
+    queryset = InnovationCalls.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = InnovationCallsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_innvocalls_to_db(self, request):
+
+        InnovationCalls.objects.all().delete()
+
+        _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
+        names, urls = (),()
+        try:
+            names_url = get_calls_org(_url)
+            names, urls = zip(*names_url)
+
+
+        except Exception as e:
+            print(e)
+
+        try:
+            for i,item in enumerate(urls):
+                org_name = names[i]
+                date = get_call_date(item)
+                info = get_call_info(item)
+                field = get_call_field(item)
+                call = InnovationCalls(organizationName= org_name,registrationDeadline= date[0],
+                                         submissionDeadline= date[1], information= info,
+                                       areaOfResearch= field,link= item)
+
+                call.save()
+            response = {'success': 'Innovation Israel calls added successfully.'}
+
+        except Exception as e:
+            print(e)
+            response = {'error': 'Error while adding Innovation Israel calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
