@@ -900,9 +900,10 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     def add_bsfcalls_to_db(self, request):
 
         BsfCalls.objects.all().delete()
-        deadline = get_events_deadline() # deadline is a list of strings
-        event_details = get_events_details() # event_details is a list of strings
-        field_name = get_field_name() # field_name is a list of strings
+        _url = 'https://www.bsf.org.il/calendar/'
+        deadline = get_events_deadline(_url) # deadline is a list of strings
+        event_details = get_events_details(_url) # event_details is a list of strings
+        field_name = get_field_name(_url) # field_name is a list of strings
 
 
         try:
@@ -945,7 +946,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6], link=call_info[9] )
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -955,7 +956,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/33/10'
+
         name = 'Joint Broad-ISF Program for Returning To Israel'
         call_info = ''
         try:
@@ -969,7 +970,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -979,7 +980,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/29/10'
+
         name = 'Joint NSFC-ISF Research Grant'
         call_info = ''
         try:
@@ -993,7 +994,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1003,7 +1004,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/40/10'
+
         name = 'Joint NRF - ISF Research Grant'
         call_info = ''
         try:
@@ -1017,7 +1018,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1027,7 +1028,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/46/10'
+
         name = 'Israel Precision Medicine Partnership (IPMP)'
         call_info = ''
         try:
@@ -1041,7 +1042,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1051,7 +1052,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/48/10'
+
         name = 'JDRF-ISF Networks of Excellence in T1D research'
         call_info = ''
         try:
@@ -1065,7 +1066,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1075,7 +1076,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/45/10'
+
         name = 'Research program in Quantum Technologies and Science'
         call_info = ''
         try:
@@ -1089,7 +1090,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1099,7 +1100,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/27/10'
+
         name = 'Physician-Scientist Research Program'
         call_info = ''
         try:
@@ -1113,7 +1114,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1123,7 +1124,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/42/10'
+
         name = 'JSPS-ISF Joint Academic Research Program'
         call_info = ''
         try:
@@ -1137,7 +1138,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}
@@ -1147,7 +1148,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             response = {'error': 'Error while adding ISF calls to DB'}
 
-        _url = 'https://www.isf.org.il/#/support-channels/49/10'
+
         name = 'KillCorona - Curbing coronavirus (SARS-CoV-2) Research program'
         call_info = ''
         try:
@@ -1161,7 +1162,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                             , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                             institutionType=call_info[1], numberOfPartners=call_info[2],
                             grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6])
+                            information=call_info[5], deadline=call_info[6],link=call_info[9])
 
             call.save()
             response = {'success': 'ISF calls added successfully.'}

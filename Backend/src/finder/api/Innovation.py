@@ -24,7 +24,7 @@ def get_calls_org(_url):
 
     # grab the page html
     page_html = req(get_client).read()
-    #get_client.close()
+
     # html parsing
     page_soup = soup(page_html, "html.parser")
 

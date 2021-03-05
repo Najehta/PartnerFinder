@@ -17,7 +17,7 @@ def get_calls_status(_url, click):
     PATH = '/Users/najeh/chromedriver'
     driver = webdriver.Chrome(PATH)
     driver.get(_url)
-    status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline= '', '', '', '', '', '', '', '', ''
+    status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline, link= '', '', '', '', '', '', '', '', '',''
     try:
         english = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.LINK_TEXT, "English"))
@@ -38,7 +38,7 @@ def get_calls_status(_url, click):
         #
         # for item in panels:
         #     name.append(item.a.a.text)
-
+        link = driver.current_url
 
         grant_tbl = page_soup.find_all("div", {"class": "grantInfoCell"})
 
@@ -78,5 +78,5 @@ def get_calls_status(_url, click):
 
     driver.quit()
 
-    return status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline
+    return status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline,link
 

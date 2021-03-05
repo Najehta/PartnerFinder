@@ -13,16 +13,19 @@ from urllib.request import urlopen as req
 from time import sleep
 import math
 from orderedset import OrderedSet
+from urllib.request import urlopen as req
+from urllib.request import Request
 import re
 
 
-def get_events_deadline():
-    bsf_calender_url = 'https://www.bsf.org.il/calendar/'
-    # open the connection with the url
-    get_client = req(bsf_calender_url)
+def get_events_deadline(_url):
+
+    # This will avoid mod_security on the website, to avoid been blocked
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+
     # grab the page html
-    page_html = get_client.read()
-    get_client.close()
+    page_html = req(get_client).read()
+
     # html parsing
     page_soup = soup(page_html, "html.parser")
 
@@ -43,10 +46,11 @@ def get_events_deadline():
     return deadline
 
 
-def get_events_details():
-    bsf_calender_url = 'https://www.bsf.org.il/calendar/'
+def get_events_details(_url):
+
+
     # open the connection with the url
-    get_client = req(bsf_calender_url)
+    get_client = req(_url)
     # grab the page html
     page_html = get_client.read()
     get_client.close()
@@ -70,9 +74,9 @@ def get_events_details():
     return event_details
 
 
-def get_field_name():
+def get_field_name(_url):
 
-    event_details = get_events_details()
+    event_details = get_events_details(_url)
     field_name = []
 
     for event in event_details:
