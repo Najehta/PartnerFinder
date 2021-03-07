@@ -280,3 +280,17 @@ class InnovationCalls(models.Model):
 
    def __str__(self):
        return self.organizationName
+
+
+class MstCalls(models.Model):
+   """
+    Israel  ministry of science and technology website calls
+   """
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   submissionDeadline = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+
+
+   def __str__(self):
+       return self.organizationName

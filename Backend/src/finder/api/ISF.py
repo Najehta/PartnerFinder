@@ -57,14 +57,14 @@ def get_calls_status(_url, click):
         try:
             submission_tools = page_soup.find_all("span", {"class": "newlines"})
             deadline = submission_tools[0].text.strip()
-            reg_deadline = 'Closed for registration'
-            sub_deadline = 'Closed for submission'
+            reg_deadline = 'Closed'
+            sub_deadline = 'Closed'
         except:
             submission_tools = page_soup.find("div", {"class": "toolInfo"})
             reg_deadline = submission_tools.p.span.text
             submission_tools = submission_tools.find_all("span", {"class": ""})
             sub_deadline = submission_tools[1].text
-            deadline = "Open for submission"
+            deadline = "Open"
 
         about = page_soup.find("div", {"class": "grantdataText"})
         text_clean = about.div.p.text[:-1]

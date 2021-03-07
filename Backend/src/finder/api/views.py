@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCalls, IsfCalls, InnovationCalls
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCalls, IsfCalls, InnovationCalls, MstCalls
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
-    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfCallsSerializer,IsfCallsSerializer, InnovationCallsSerializer
+    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfCallsSerializer, IsfCallsSerializer, InnovationCallsSerializer, MstCallsSerializer
 import json
 
 import operator
@@ -24,6 +24,7 @@ from .B2MATCH import *
 from .BSF import *
 from .ISF import *
 from.Innovation import *
+from .MST import *
 import datetime
 
 from email.mime.multipart import MIMEMultipart
@@ -1214,5 +1215,73 @@ class InnvoCallsViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             response = {'error': 'Error while adding Innovation Israel calls to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class MstCallsViewSet(viewsets.ModelViewSet):
+
+    queryset = MstCalls.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = MstCallsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_mstcalls_to_db(self, request):
+
+        MstCalls.objects.all().delete()
+
+        _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
+
+
+        if get_calls_num(_url) % 10 == 0:
+            pages_number = get_calls_num(_url) // 10
+        else:
+            pages_number = (get_calls_num(_url) // 10) + 1
+
+        try:
+
+            data = get_calls(_url)
+            call_name, link, deadline, about = zip(*data)
+
+            for i in range(len(call_name)):
+                call = MstCalls(organizationName=call_name[i], submissionDeadline=deadline[i],
+                                information=about[i], link=link[i])
+                call.save()
+
+        except Exception as e:
+            print(e)
+
+
+        try:
+            skip = 10
+            while pages_number >= 2:
+
+                if skip > 10:
+                    _url = _url[:-2]
+                    _url = _url + str(skip)
+                    new_url = re.sub("limit=10", "limit="+ str(skip + 10), _url)
+
+                else:
+                    _url = _url + '&skip=' + str(skip)
+                    new_url = re.sub("limit=10", "limit=" + str(skip + 10), _url)
+
+                data = get_calls(new_url)
+                call_name, link, deadline, about = zip(*data)
+
+                for i in range (len(call_name)):
+                    call = MstCalls(organizationName=call_name[i], submissionDeadline=deadline[i],
+                                    information=about[i],link=link[i])
+                    call.save()
+
+                skip += 10
+                pages_number -= 1
+
+            response = {'success': 'MST calls added successfully.'}
+
+        except Exception as e:
+            print(e)
+            response = {'error': 'Error while adding MST calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)

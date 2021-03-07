@@ -1,10 +1,10 @@
 import requests
-#from ..models import IsfCalls
 from google_trans_new import google_translator
 from selenium import webdriver
 from bs4 import BeautifulSoup as soup, element
 import re
-import time
+import time as t
+from datetime import datetime
 
 
 def get_calls(_url):
@@ -18,7 +18,7 @@ def get_calls(_url):
 
     call_name, link, deadline, about = [], [], [], []
     try:
-
+        t.sleep(1)
         page_html = driver.execute_script(
             'return document.getElementsByClassName("animate-container list-unstyled remove-last-speace ")[0].innerHTML')
 
@@ -40,26 +40,58 @@ def get_calls(_url):
 
             temp = item.span.text.strip()
             temp1 = re.sub("[^0-9.]", "", temp)
-            deadline.append(temp1)
+
+            d1, m1, y1 = [int(x) for x in temp1.split('.')]
+            b1 = datetime(y1, m1, d1)
+
+            today = datetime.today()
+            d1 = today.strftime("%d.%m.%Y")
+            d2, m2, y2 = [int(x) for x in d1.split('.')]
+            b2 = datetime(y2, m2, d2)
+
+            if b1 < b2:
+                deadline.append(temp1 + ' (Closed)')
+            else:
+                deadline.append(temp1 + ' (Open)')
+
 
         for item in call_info:
 
             if len(item.text) == 1:
-                about.append("No Info Is Available")
+                about.append("Not Available")
             else:
                 temp = item.text.replace("\r\n","")
                 temp1 = re.sub("-", "", temp)
                # about.append( translator.translate(temp1.strip()))
                 about.append(temp1.strip())
 
-        time.sleep(1)
+        t.sleep(1)
 
 
     except Exception as e:
         print("ERROR", e)
-        time.sleep(1)
+        t.sleep(1)
 
+    t.sleep(1)
+    driver.quit()
     list_of_data = list(zip(call_name, link, deadline, about))
-    
+
     return list_of_data
+
+def get_calls_num(_url):
+
+    PATH = '/Users/najeh/chromedriver'
+    driver = webdriver.Chrome(PATH)
+    driver.get(_url)
+
+    page_html = driver.execute_script(
+        'return document.getElementsByClassName("h1 reforma-medium xs-me-10 dark-blue-txt ng-binding")[0].innerHTML')
+
+    page_soup = soup(page_html, "html.parser")
+    calls_number = str(page_soup)
+    calls_number = int(calls_number)
+
+    driver.quit()
+
+    return calls_number
 

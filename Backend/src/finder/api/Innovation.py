@@ -118,10 +118,10 @@ def get_call_date(_url) :
         b2 = datetime(y2, m2, d2)
 
         if b1 < b2:
-            dates.append('Closed')
+            dates.append(sub_date + ' (Closed)')
 
         else:
-            dates.append(sub_date)
+            dates.append(sub_date+ ' (Open)')
 
     except :
         dates = []
@@ -180,10 +180,10 @@ def get_call_field(_url):
             area = field2.text
 
         else:
-            area = 'N/A'
+            area = 'Not Available'
 
     except :
-        area = 'N/A'
+        area = 'Not Available'
 
     return area
 
