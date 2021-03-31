@@ -233,18 +233,6 @@ class EventsForAlerts(models.Model):
     event_score = models.FloatField(blank=False, null=False)
     event_date = models.DateField(blank=True, null=True)
 
-class BsfCalls(models.Model):
-   """
-   BSF Website Calls
-   """
-   deadlineDate = models.CharField(max_length=200, blank=True, null=True)
-   description = models.CharField(max_length=200, blank=True, null=True)
-   organizationName = models.CharField(max_length=200,blank=True, null=True)
-   areaOfResearch = models.CharField(max_length=200,blank=True, null=True)
-
-   def __str__(self):
-       return self.organizationName
-
 
 class IsfCalls(models.Model):
    """
@@ -291,6 +279,19 @@ class MstCalls(models.Model):
    information = models.CharField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
 
+
+   def __str__(self):
+       return self.organizationName
+
+
+class BsfCall(models.Model):
+   """
+   BSF Website Calls
+   """
+   deadlineDate = models.CharField(max_length=200, blank=True, null=True)
+   description = models.CharField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
 
    def __str__(self):
        return self.organizationName

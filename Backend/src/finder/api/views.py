@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCalls, IsfCalls, InnovationCalls, MstCalls
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
@@ -891,7 +891,7 @@ def setUpdateSettings(euDate=None, b2matchDate=None):
 
 
 class BsfCallsViewSet(viewsets.ModelViewSet):
-    queryset = BsfCalls.objects.all()
+    queryset = BsfCall.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
@@ -900,7 +900,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_bsfcalls_to_db(self, request):
 
-        BsfCalls.objects.all().delete()
+        BsfCall.objects.all().delete()
         _url = 'https://www.bsf.org.il/calendar/'
         deadline = get_events_deadline(_url) # deadline is a list of strings
         event_details = get_events_details(_url) # event_details is a list of strings
@@ -909,7 +909,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
 
         try:
             for i,item in enumerate (deadline):
-                date = BsfCalls(deadlineDate=item, organizationName= 'NSF-BSF',description=event_details[i] ,areaOfResearch=field_name[i])
+                date = BsfCall(deadlineDate=item, organizationName= 'NSF-BSF',description=event_details[i] ,areaOfResearch=field_name[i])
                 date.save()
 
             response = {'success': 'BSF calls added successfully.'}

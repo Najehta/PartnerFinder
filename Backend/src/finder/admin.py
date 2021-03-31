@@ -5,7 +5,7 @@ from django.contrib import admin
 
 # admin.site.register(Finder)
 
-from .models import OrganizationProfile, Address, Tag, Event, Participants, TagP, Location, Scores, BsfCalls,IsfCalls,InnovationCalls, MstCalls
+from .models import OrganizationProfile, Address, Tag, Event, Participants, TagP, Location, Scores, BsfCall,IsfCalls,InnovationCalls, MstCalls
 
 admin.site.register(OrganizationProfile)
 admin.site.register(Address)
@@ -15,7 +15,7 @@ admin.site.register(Participants)
 admin.site.register(TagP)
 admin.site.register(Location)
 admin.site.register(Scores)
-admin.site.register(BsfCalls)
+admin.site.register(BsfCall)
 admin.site.register(IsfCalls)
 admin.site.register(InnovationCalls)
 admin.site.register(MstCalls)

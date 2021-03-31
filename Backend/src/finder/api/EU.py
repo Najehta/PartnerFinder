@@ -187,8 +187,6 @@ def add_organization_to_DB(org):
                                      consorsiumRoles=org['consorsiumRoles'], collaborations=org['collaborations'])
         # print("AFTER ORG", org['pic'])
         newOrg.save()
-        print("SAVED")
-        # print(newOrg)
         for tag in org['tagsAndKeywords']:
             try:
                 currTag = Tag.objects.get(tag=tag)
@@ -197,7 +195,7 @@ def add_organization_to_DB(org):
                 currTag = Tag(tag=tag)
                 currTag.save()
                 currTag.organizations.add(newOrg)
-    print("ADDED")
+
     return response
 
 
