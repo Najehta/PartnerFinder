@@ -25,6 +25,7 @@ from .BSF import *
 from .ISF import *
 from.Innovation import *
 from .MST import *
+from .QueryProcess import *
 import datetime
 
 from email.mime.multipart import MIMEMultipart
@@ -901,16 +902,34 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     def add_bsfcalls_to_db(self, request):
 
         BsfCall.objects.all().delete()
+        MapIdsBSF.objects.all().delete()
         _url = 'https://www.bsf.org.il/calendar/'
         deadline = get_events_deadline(_url) # deadline is a list of strings
         event_details = get_events_details(_url) # event_details is a list of strings
         field_name = get_field_name(_url) # field_name is a list of strings
 
+        try:
+            os.remove('BsfIndex')
+            os.remove('BsfIndex.0')
+            os.remove('Dictionary_BSF')
+            print('BSF Index is deleted')
+        except:
+            pass
+
+        index = make_index('BsfIndex', 'BSF')
+        print('Building BSF Index...')
+
 
         try:
             for i,item in enumerate (deadline):
-                date = BsfCall(deadlineDate=item, organizationName= 'NSF-BSF',description=event_details[i] ,areaOfResearch=field_name[i])
+                date = BsfCall(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i])
                 date.save()
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_call(event_details[i], field_name[i])
+                newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'BSF')
 
             response = {'success': 'BSF calls added successfully.'}
 
@@ -920,6 +939,11 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
             response = {'error': 'Error while adding BSF calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
+    #
+    # @action(detail=False, methods=['POST'])
+    # def add_bsfcalls_to_index(self, request):
+    #     MapIdsBSF.objects.all.delete()
+
 
 class IsfCallsViewSet(viewsets.ModelViewSet):
 

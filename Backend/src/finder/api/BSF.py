@@ -16,6 +16,8 @@ from orderedset import OrderedSet
 from urllib.request import urlopen as req
 from urllib.request import Request
 import re
+from .QueryProcess import *
+from ..models import MapIdsBSF,BsfCall
 
 
 def get_events_deadline(_url):
@@ -99,5 +101,51 @@ def make_csv_file(lists_containers):
         description = container.div.text
         f.write(deadline.replace(",", "") + "," + description + "\n")
     f.close()
+
+
+def get_bsf_call_by_tags(tags):
+    """
+       function to get all calls with at least one tag from the list of tags.
+       :param tags: list of tags
+       :return: list of organizations objects
+       """
+    tags = ' '.join(tags)
+    print("TAGS", tags)
+    index = reload_index('BsfIndex')
+    print("INDEX", index)
+    corpus = NLP_processor([tags], 'BSF')
+    print("CORPUS", corpus)
+    res = index[corpus]
+    print("AFTER RES")
+    res = process_query_result(res)
+    print("AFTER PROCESS")
+    res = [pair for pair in res if pair[1] > 0.3]
+    res = sorted(res, key=lambda pair: pair[1], reverse=True)
+    temp = []
+    print("AFTER SORT")
+    for pair in res:
+        try:
+            temp.append(MapIdsBSF.objects.get(indexID=pair[0]))
+        except:
+            pass
+    res = temp
+
+    finalRes = []
+    for mapId in res:
+        finalRes.append(BsfCall.objects.get(CallID=mapId.originalID))
+
+    return finalRes
+
+# def add_bsf_calls_to_index():
+#
+#     doc = get_document_from_org(org)
+#     originalID = org['pic']
+#     indexID = len(index)
+#
+#     newMap = MapIds(originalID=originalID, indexID=indexID)
+#     newMap.save()
+#
+#     index = add_documents(index, [doc],'EU')
+#     return index
 
 

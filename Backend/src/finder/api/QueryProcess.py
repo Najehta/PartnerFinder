@@ -9,31 +9,31 @@ def NLP_processor(documents, type):
     """
     function to make new corpus for a certain set of documents
     :param documents: list of lists of strings
-    :param type: type of repository EU or B2MATCH
+    :param type: type of repository
     :return: Corpus of the documents, list of lists of pairs (token_id, token_frequency)
     """
 
-    if type == 'EU':
-        dir = 'Dictionary'
-    elif type == 'B2MATCH':
-        dir = 'Dictionary_b2match'
+    if type == 'BSF':
+        dir = 'Dictionary_BSF'
+    elif type == 'ISF':
+        dir = 'Dictionary_ISF'
+    elif type == 'MST':
+        dir = 'Dictionary_MST'
     else:
-        dir = '/Users/najeh/Desktop/Dictionary_test'
+        dir = 'Dictionary_INNOVATION'
 
     tokens = [process_document(doc) for doc in documents]
     # print("TOKENS", tokens)
     try:
-        print("TRY")
-        dictionary = load_dictionary(dir)
+
+        dictionary = reload_dictionary(dir)
     except:
-        print("CATCH")
-        dictionary = build_dictionary([])
+        dictionary = make_dictionary([])
         dictionary.save(dir)
-    print("DICT")
+
     dictionary.add_documents(tokens)
-    print("ADD DOCS")
     dictionary.save(dir)
-    print("AFTER SAVE")
+    #print(dictionary.token2id)
     return build_corpus(dictionary, tokens)
 
 
@@ -44,7 +44,6 @@ def process_document(document):
     :param document: string
     :return: list of tokens
     """
-    # print("ENTERED PROCESS")
     ps = PorterStemmer()
   #  nltk.download('stopwords')
   #   nltk.download('punkt')
@@ -53,22 +52,21 @@ def process_document(document):
         stop_words = (stopwords.words('english'))
     except Exception as e:
         print("ERR", e)
-    # print("AFTER", len(stop_words))
+
     try:
-        res = [ps.stem(word.lower()) for word in word_tokenize(document) if
+        tokens_list = [ps.stem(word.lower()) for word in word_tokenize(document) if
                 not word in stop_words]  # tokenizing and normalize tokens
     except Exception as e:
         print("ERR", e)
-    return res
+    return tokens_list
 
 
-def build_dictionary(tokens):
+def make_dictionary(tokens):
     """
     function to build new dictionary with a certain tokens
     :param tokens: list of lists of tokens
     :return: Dictionary object
     """
-
     return gensim.corpora.Dictionary(tokens)  # mapping termId : term
 
 
@@ -81,9 +79,9 @@ def build_corpus(dictionary, tokens):
     """
 
     # for each doc map termId : term frequency
-    res = [dictionary.doc2bow(lst) for lst in tokens]
-    # print("RES", res)
-    return res
+    corpus = [dictionary.doc2bow(lst) for lst in tokens]
+    #print("Corpus: ", res)
+    return corpus
 
 
 def process_query_result(result):
@@ -104,12 +102,12 @@ def process_query_result(result):
     return pairs
 
 
-def add_documents(index, documents,type):
+def add_document_to_curr_index(index, documents,type):
     """
     function to add new documents to existent index
     :param index: current index
     :param documents: list of lists of strings
-    :param type: string to know which index b2match or eu
+    :param type: string to know which repository
     :return: updated index
     """
     corpus = NLP_processor(documents,type)
@@ -121,7 +119,7 @@ def add_documents(index, documents,type):
     return index
 
 
-def load_index(path):
+def reload_index(path):
     """
     function to load index from a specific directory on disk
     :param path: path to directory
@@ -131,7 +129,7 @@ def load_index(path):
     return gensim.similarities.Similarity.load(path)
 
 
-def load_dictionary(path):
+def reload_dictionary(path):
     """
     function to load dictionary from a specific directory on disk
     :param path: path to directory
@@ -141,11 +139,11 @@ def load_dictionary(path):
     return gensim.corpora.Dictionary.load(path)
 
 
-def build_index(path, type):
+def make_index(path, type):
     """
     build an empty index in disk and save it on a specific directory
     :param path: path of the directory
-    :param type: string to know whatc index b2match or eu
+    :param type: string to know what index b2match or eu
     :return: Similarity object "index"
     """
     corpus = NLP_processor([], type)
@@ -155,34 +153,17 @@ def build_index(path, type):
     return gensim.similarities.Similarity(path, tfidf[corpus], num_features=10000)
 
 
-def get_document_from_org(org):
+def get_document_from_call(info, area):
     """
-    function to take string attributes which are description and tags and keywords from EU organization and build a
-    document for this organization
-    :param org: EU organization object
-    :return: string of description and tags and keywords (document)
+    function to get the description and tags from proposal call
+    :param info: call information
+    :param area: tags
+    :return: document
     """
+    doc = [info]
+    for tag in area:
+        doc.append(tag)
 
-    res = [org['description']]
-    for tag in org['tagsAndKeywords']:
-        res.append(tag)
-
-    return ' '.join(res)
+    return ' '.join(doc)
 
 
-def get_document_from_par(par, tags):
-    """
-    function to get the description and tags from participants
-    :param par: participant
-    :param tags: tags
-    :return: string of combination of participants description and tags
-    """
-
-    res = [par.description]
-    for tag in tags:
-        res.append(tag)
-
-    return ' '.join(res)
-
-document = 'We welcome contributions to our documentation via GitHub pull requests, whether it’s fixing a typo or authoring an entirely new tutorial or guide. If you’re thinking about contributing documentation, please see How to Author Gensim Documentation.'
-print(NLP_processor(document, 'test'))

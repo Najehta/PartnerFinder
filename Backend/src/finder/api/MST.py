@@ -62,7 +62,7 @@ def get_calls(_url):
             else:
                 temp = item.text.replace("\r\n","")
                 temp1 = re.sub("-", "", temp)
-               # about.append( translator.translate(temp1.strip()))
+                about.append( translator.translate(temp1.strip()))
                 about.append(temp1.strip())
 
         t.sleep(1)
