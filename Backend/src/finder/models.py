@@ -289,7 +289,7 @@ class BsfCall(models.Model):
    BSF Website Calls
    """
    CallID = models.IntegerField(unique=True, null=True)
-   deadlineDate = models.CharField(max_length=200, blank=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
    organizationName = models.CharField(max_length=200, blank=True, null=True)
    information = models.CharField(max_length=200, blank=True, null=True)
    areaOfResearch = models.CharField(max_length=200, blank=True, null=True)

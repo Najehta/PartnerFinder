@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls, \
+    MapIdsBSF
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
@@ -890,6 +891,43 @@ def setUpdateSettings(euDate=None, b2matchDate=None):
 
     return True
 
+class ProposalCallsViewSet(viewsets.ModelViewSet):
+    queryset = BsfCall.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = BsfCallsSerializer
+
+    @action(detail=False, methods=['GET'])
+    def call_search(self, request):
+
+        try:
+            data = request.query_params['data']
+            print("this is the data:", data)
+            data = json.loads(data)
+            organization = data['organization']
+            tags = data['tags']
+            from_date = data['first_date']
+            to_date = data['second_date']
+            print(data)
+            if organization == 'BSF':
+               bsf_result = get_bsf_call_by(tags, from_date, to_date)
+            else:
+                bsf_result = get_bsf_call_by(tags, from_date, to_date)
+
+            BSF = []
+            for value in bsf_result:
+                BSF.append({'CallID': value.CallID, 'deadlineDate': value. deadlineDate,
+                            'organizationName': value.organizationName,
+                            'information': value.information,
+                            'areaOfResearch': value.areaOfResearch})
+
+            response = {'BSF': BSF}
+
+        except:
+            response = {'BSF': [], 'Error': 'Error while searching for calls'}
+
+        return Response(response, status=status.HTTP_200_OK)
 
 class BsfCallsViewSet(viewsets.ModelViewSet):
     queryset = BsfCall.objects.all()
@@ -939,10 +977,6 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
             response = {'error': 'Error while adding BSF calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
-    #
-    # @action(detail=False, methods=['POST'])
-    # def add_bsfcalls_to_index(self, request):
-    #     MapIdsBSF.objects.all.delete()
 
 
 class IsfCallsViewSet(viewsets.ModelViewSet):

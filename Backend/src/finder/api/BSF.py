@@ -1,5 +1,7 @@
+from datetime import datetime
+from ..models import MapIdsBSF,BsfCall
 import requests
-#from ..models import BsfCalls
+
 
 # from selenium import webdriver
 import nltk
@@ -17,7 +19,7 @@ from urllib.request import urlopen as req
 from urllib.request import Request
 import re
 from .QueryProcess import *
-from ..models import MapIdsBSF,BsfCall
+
 
 
 def get_events_deadline(_url):
@@ -37,10 +39,19 @@ def get_events_deadline(_url):
 
 
     deadline= []
-
+    date = []
     for container in lists_containers:
         if 'Deadline for' in container.div.text:
-            deadline.append(container.h3.text)
+            temp = container.h3.text
+            temp = temp.replace(',', '')
+            date = temp.split()
+            month_datetime = datetime.strptime(date[0], "%B")
+            month_number = month_datetime.month
+            date[0] = str(month_number)
+            date[0], date[1] = date[1], date[0]
+            date_string = '/'.join(date)
+            date_datetime = datetime.strptime(date_string,"%d/%m/%Y")
+            deadline.append(date_datetime)
 
     return deadline
 
@@ -136,16 +147,62 @@ def get_bsf_call_by_tags(tags):
 
     return finalRes
 
-# def add_bsf_calls_to_index():
-#
-#     doc = get_document_from_org(org)
-#     originalID = org['pic']
-#     indexID = len(index)
-#
-#     newMap = MapIds(originalID=originalID, indexID=indexID)
-#     newMap.save()
-#
-#     index = add_documents(index, [doc],'EU')
-#     return index
+def get_bsf_call_by(tags, first_date, second_date):
+
+    tags_call = get_bsf_call_by_tags(tags)
+    print("Related call to "+tags+"is: ", tags_call)
+    dates_call = get_bsf_call_by_dates(first_date, second_date)
+    print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+
+    result = get_bsf_call_intersection(tags_call, dates_call)
+
+    return result
+
+
+def get_bsf_call_by_dates(first_date, second_date):
+
+    calls = BsfCall.objects.all()
+
+    if not first_date and not second_date:
+        print('hello 1')
+        return calls
+
+    elif not first_date and second_date:
+        from_date = datetime.strptime(first_date, "%d/%m/%y")
+        print(calls.filter(deadlineDate__gte = from_date))
+        print('hello 2')
+        return calls.filter(deadlineDate__gte = from_date)
+
+    elif first_date and not second_date :
+        to_date = datetime.strptime(second_date, "%d/%m/%y")
+        print('hello 3')
+        print(calls.filter(deadlineDate__lte=to_date))
+        return calls.filter(deadlineDate__lte=to_date)
+
+    else:
+
+        from_date = datetime.strptime(first_date, "%d/%m/%y")
+        to_date = datetime.strptime(second_date, "%d/%m/%y")
+        print('hello 4')
+        print(calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date))
+        return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
+
+
+def get_bsf_call_intersection(tags_call, dates_call):
+
+    result = []
+    already_taken = set()
+
+    for call in tags_call:
+        already_taken.add(call.CallID)
+
+    not_taken = set()
+    for call in dates_call:
+        if call.CallID in already_taken and call.CallID not in not_taken:
+            result.append(call)
+            not_taken.add(call.CallID)
+
+    return result
+
 
 
