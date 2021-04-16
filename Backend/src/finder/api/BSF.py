@@ -164,27 +164,20 @@ def get_bsf_call_by_dates(first_date, second_date):
     calls = BsfCall.objects.all()
 
     if not first_date and not second_date:
-        print('hello 1')
         return calls
 
     elif not first_date and second_date:
-        from_date = datetime.strptime(first_date, "%d/%m/%y")
-        print(calls.filter(deadlineDate__gte = from_date))
-        print('hello 2')
-        return calls.filter(deadlineDate__gte = from_date)
+        from_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__lte = from_date)
 
     elif first_date and not second_date :
-        to_date = datetime.strptime(second_date, "%d/%m/%y")
-        print('hello 3')
-        print(calls.filter(deadlineDate__lte=to_date))
-        return calls.filter(deadlineDate__lte=to_date)
+        to_date = datetime.strptime(first_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=to_date)
 
     else:
 
-        from_date = datetime.strptime(first_date, "%d/%m/%y")
-        to_date = datetime.strptime(second_date, "%d/%m/%y")
-        print('hello 4')
-        print(calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date))
+        from_date = datetime.strptime(first_date, "%d/%m/%Y")
+        to_date = datetime.strptime(second_date, "%d/%m/%Y")
         return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
 
 

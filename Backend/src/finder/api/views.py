@@ -903,18 +903,18 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
         try:
             data = request.query_params['data']
-            print("this is the data:", data)
+            print("This is the data:", data)
             data = json.loads(data)
             organization = data['organization']
             tags = data['tags']
             from_date = data['first_date']
             to_date = data['second_date']
-            print(data)
+
             if organization == 'BSF':
                bsf_result = get_bsf_call_by(tags, from_date, to_date)
             else:
                 bsf_result = get_bsf_call_by(tags, from_date, to_date)
-            print(len(bsf_result))
+           
             BSF = []
             for value in bsf_result:
                 BSF.append({'CallID': value.CallID, 'deadlineDate': value.deadlineDate,
