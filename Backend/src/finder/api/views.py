@@ -914,10 +914,10 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                bsf_result = get_bsf_call_by(tags, from_date, to_date)
             else:
                 bsf_result = get_bsf_call_by(tags, from_date, to_date)
-
+            print(len(bsf_result))
             BSF = []
             for value in bsf_result:
-                BSF.append({'CallID': value.CallID, 'deadlineDate': value. deadlineDate,
+                BSF.append({'CallID': value.CallID, 'deadlineDate': value.deadlineDate,
                             'organizationName': value.organizationName,
                             'information': value.information,
                             'areaOfResearch': value.areaOfResearch})
@@ -964,6 +964,8 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
                 date.save()
                 originalID = i
                 indexID = len(index)
+                # print("This is field name:", field_name[i])
+                # print("This is event name:", event_details[i])
                 document = get_document_from_call(event_details[i], field_name[i])
                 newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
                 newMap.save()

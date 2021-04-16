@@ -120,20 +120,20 @@ def get_bsf_call_by_tags(tags):
        :param tags: list of tags
        :return: list of organizations objects
        """
-    tags = ' '.join(tags)
-    print("TAGS", tags)
+    tags = ''.join(tags)
+    # print("TAGS", tags)
     index = reload_index('BsfIndex')
-    print("INDEX", index)
+    # print("INDEX", index)
     corpus = NLP_processor([tags], 'BSF')
-    print("CORPUS", corpus)
+    # print("CORPUS", corpus)
     res = index[corpus]
-    print("AFTER RES")
+    # print("AFTER RES")
     res = process_query_result(res)
-    print("AFTER PROCESS")
+    # print("AFTER PROCESS")
     res = [pair for pair in res if pair[1] > 0.3]
     res = sorted(res, key=lambda pair: pair[1], reverse=True)
     temp = []
-    print("AFTER SORT")
+    # print("AFTER SORT")
     for pair in res:
         try:
             temp.append(MapIdsBSF.objects.get(indexID=pair[0]))
@@ -150,9 +150,9 @@ def get_bsf_call_by_tags(tags):
 def get_bsf_call_by(tags, first_date, second_date):
 
     tags_call = get_bsf_call_by_tags(tags)
-    print("Related call to "+tags+"is: ", tags_call)
+    # print("Related call to "+tags+" is: ", tags_call)
     dates_call = get_bsf_call_by_dates(first_date, second_date)
-    print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
 
     result = get_bsf_call_intersection(tags_call, dates_call)
 

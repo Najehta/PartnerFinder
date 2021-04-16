@@ -21,18 +21,22 @@ def NLP_processor(documents, type):
         dir = 'Dictionary_MST'
     else:
         dir = 'Dictionary_INNOVATION'
-
+    # print("This is the documents",documents)
     tokens = [process_document(doc) for doc in documents]
     # print("TOKENS", tokens)
     try:
 
         dictionary = reload_dictionary(dir)
+        # print("reloading")
     except:
         dictionary = make_dictionary([])
+        # print("Making dictionary")
         dictionary.save(dir)
 
     dictionary.add_documents(tokens)
     dictionary.save(dir)
+    # for k, v in dictionary.token2id.items():
+    #     print(k, v)
     #print(dictionary.token2id)
     return build_corpus(dictionary, tokens)
 
@@ -50,14 +54,17 @@ def process_document(document):
 
     try:
         stop_words = (stopwords.words('english'))
+
     except Exception as e:
         print("ERR", e)
 
     try:
         tokens_list = [ps.stem(word.lower()) for word in word_tokenize(document) if
                 not word in stop_words]  # tokenizing and normalize tokens
+
     except Exception as e:
         print("ERR", e)
+    # print("TokenList: ", tokens_list)
     return tokens_list
 
 
@@ -67,7 +74,9 @@ def make_dictionary(tokens):
     :param tokens: list of lists of tokens
     :return: Dictionary object
     """
-    return gensim.corpora.Dictionary(tokens)  # mapping termId : term
+    dictionary = gensim.corpora.Dictionary(tokens)
+    # print("This is the dictionary",dictionary.token2id)
+    return dictionary  # mapping termId : term
 
 
 def build_corpus(dictionary, tokens):
@@ -163,7 +172,8 @@ def get_document_from_call(info, area):
     doc = [info]
     for tag in area:
         doc.append(tag)
-
-    return ' '.join(doc)
+    # s = ''.join(doc)
+    # print("The document after cleaning: ", s)
+    return ''.join(doc)
 
 
