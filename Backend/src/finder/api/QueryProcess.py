@@ -162,9 +162,9 @@ def make_index(path, type):
     return gensim.similarities.Similarity(path, tfidf[corpus], num_features=10000)
 
 
-def get_document_from_call(info, area):
+def get_document_from_bsf_call(info, area):
     """
-    function to get the description and tags from proposal call
+    function to get the description and tags from bsf call
     :param info: call information
     :param area: tags
     :return: document
@@ -172,8 +172,17 @@ def get_document_from_call(info, area):
     doc = [info]
     for tag in area:
         doc.append(tag)
-    # s = ''.join(doc)
-    # print("The document after cleaning: ", s)
+
+    return ''.join(doc)
+
+
+def get_document_from_isf_call(info):
+    """
+    function to get the description and tags from isf call
+    :param info: call information
+    :return: document
+    """
+    doc = [info]
     return ''.join(doc)
 
 

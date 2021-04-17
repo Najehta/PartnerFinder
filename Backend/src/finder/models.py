@@ -238,6 +238,7 @@ class IsfCalls(models.Model):
    """
    ISF Website Calls
    """
+   CallID = models.IntegerField(unique=True, null=True)
    organizationName = models.CharField(max_length=200, blank=True, null=True)
    status = models.CharField(max_length=200, blank=True, null=True)
    registrationDeadline = models.CharField(max_length=200, blank=True, null=True)

@@ -1,11 +1,11 @@
 import requests
-from ..models import IsfCalls
+#from ..models import IsfCalls
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup as soup, element
 
 import time
@@ -13,11 +13,13 @@ import time
 def get_calls_status(_url, click):
 
 
+
     # please change this PATH to open chromedriver from your device
     PATH = '/Users/najeh/chromedriver'
     driver = webdriver.Chrome(PATH)
     driver.get(_url)
     status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline, link= '', '', '', '', '', '', '', '', '',''
+
     try:
         english = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.LINK_TEXT, "English"))
@@ -30,14 +32,10 @@ def get_calls_status(_url, click):
         )
         prg.click()
         time.sleep(1)
+
         page_html = driver.page_source
         page_soup = soup(page_html, "html.parser")
 
-        # Get a list of names, we don't need it now
-        # panels = page_soup.find_all("h4", {"class": "panel-title"})
-        #
-        # for item in panels:
-        #     name.append(item.a.a.text)
         link = driver.current_url
 
         grant_tbl = page_soup.find_all("div", {"class": "grantInfoCell"})
@@ -80,3 +78,47 @@ def get_calls_status(_url, click):
 
     return status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline,link
 
+def get_proposal_names_links(_url, click):
+
+
+    # please change this PATH to open chromedriver from your device
+    PATH = '/Users/najeh/chromedriver'
+    driver = webdriver.Chrome(PATH)
+    driver.get(_url)
+
+    calls_name, links = [], []
+    try:
+
+        english = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "English"))
+        )
+        english.click()
+        time.sleep(1)
+
+        prg = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, click))
+        )
+        prg.click()
+        time.sleep(1)
+        page_html = driver.execute_script(
+            'return document.getElementsByClassName("panel-group")[0].innerHTML')
+        # page_html = driver.page_source
+        page_soup = soup(page_html, "html.parser")
+
+        calls = page_soup.find_all("h4", {"class": "panel-title"})
+
+        elements = driver.find_elements_by_css_selector(".accordion-toggle [href]")
+        links = [elem.get_attribute('href') for elem in elements]
+
+        calls_name = []
+
+        for item in calls:
+            calls_name.append(item.a.text.strip())
+
+    except Exception as e:
+        print(e)
+        time.sleep(5)
+
+    driver.quit()
+
+    return calls_name, links

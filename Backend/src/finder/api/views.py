@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls, \
-    MapIdsBSF
+    MapIdsBSF, MapIdsISF
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
@@ -914,7 +914,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                bsf_result = get_bsf_call_by(tags, from_date, to_date)
             else:
                 bsf_result = get_bsf_call_by(tags, from_date, to_date)
-           
+
             BSF = []
             for value in bsf_result:
                 BSF.append({'CallID': value.CallID, 'deadlineDate': value.deadlineDate,
@@ -939,8 +939,8 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_bsfcalls_to_db(self, request):
 
-        BsfCall.objects.all().delete()
-        MapIdsBSF.objects.all().delete()
+        Call.objects.all().delete()
+        MapIdsBSF.objects.all().deleteBsf()
         _url = 'https://www.bsf.org.il/calendar/'
         deadline = get_events_deadline(_url) # deadline is a list of strings
         event_details = get_events_details(_url) # event_details is a list of strings
@@ -966,7 +966,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
                 indexID = len(index)
                 # print("This is field name:", field_name[i])
                 # print("This is event name:", event_details[i])
-                document = get_document_from_call(event_details[i], field_name[i])
+                document = get_document_from_bsf_call(event_details[i], field_name[i])
                 newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'BSF')
@@ -992,246 +992,61 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_isfcalls_to_db(self, request):
 
+
         IsfCalls.objects.all().delete()
+        MapIdsISF.objects.all().delete()
         _url = 'https://www.isf.org.il/#/support-channels/1/10'
         name = 'Personal Research Grants'
-        call_info = ''
+
+        call_names, call_links = [], []
+
         try:
-            call_info = get_calls_status(_url, name)
+            os.remove('IsfIndex')
+            os.remove('IsfIndex.0')
+            os.remove('Dictionary_ISF')
+            print('ISF Index is deleted')
+
+        except:
+            pass
+
+        index = make_index('IsfIndex', 'ISF')
+        print('Building ISF Index...')
+
+
+        try:
+            call_names, call_links = get_proposal_names_links(_url, name)
 
         except Exception as e:
             print(e)
 
         try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6], link=call_info[9] )
+            for i, item in enumerate(call_names):
+                call_info = get_calls_status(call_links[i], item)
+                call = IsfCalls(CallID= i, organizationName=item, status=call_info[0]
+                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                institutionType=call_info[1], numberOfPartners=call_info[2],
+                                grantPeriod=call_info[3], budget=call_info[4],
+                                information=call_info[5], deadline=call_info[6], link=call_links[i] )
 
-            call.save()
+                call.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_isf_call(call_info[5])
+                newMap = MapIdsISF(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'ISF')
+
+
             response = {'success': 'ISF calls added successfully.'}
 
         except Exception as e:
             print(repr(e))
             traceback.print_exc()
+
             response = {'error': 'Error while adding ISF calls to DB'}
 
 
-        name = 'Joint Broad-ISF Program for Returning To Israel'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'Joint NSFC-ISF Research Grant'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'Joint NRF - ISF Research Grant'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'Israel Precision Medicine Partnership (IPMP)'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'JDRF-ISF Networks of Excellence in T1D research'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'Research program in Quantum Technologies and Science'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'Physician-Scientist Research Program'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'JSPS-ISF Joint Academic Research Program'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
-
-
-        name = 'KillCorona - Curbing coronavirus (SARS-CoV-2) Research program'
-        call_info = ''
-        try:
-            call_info = get_calls_status(_url, name)
-
-        except Exception as e:
-            print(e)
-
-        try:
-            call = IsfCalls(organizationName=name, status=call_info[0]
-                            , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                            institutionType=call_info[1], numberOfPartners=call_info[2],
-                            grantPeriod=call_info[3], budget=call_info[4],
-                            information=call_info[5], deadline=call_info[6],link=call_info[9])
-
-            call.save()
-            response = {'success': 'ISF calls added successfully.'}
-
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
-            response = {'error': 'Error while adding ISF calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
 
