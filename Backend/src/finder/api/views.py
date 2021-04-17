@@ -910,19 +910,30 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             from_date = data['first_date']
             to_date = data['second_date']
 
-            if organization == 'BSF':
-               bsf_result = get_bsf_call_by(tags, from_date, to_date)
-            else:
-                bsf_result = get_bsf_call_by(tags, from_date, to_date)
+            bsf_result = get_bsf_call_by(tags, from_date, to_date)
+            Isf_result = get_Isf_call_by(tags, from_date, to_date)
 
             BSF = []
             for value in bsf_result:
-                BSF.append({'CallID': value.CallID, 'deadlineDate': value.deadlineDate,
-                            'organizationName': value.organizationName,
+                BSF.append({'CallID': value.CallID, 'organizationName': value.organizationName,
+                            'deadlineDate': value.deadlineDate,
                             'information': value.information,
-                            'areaOfResearch': value.areaOfResearch})
+                            'areaOfResearch': value.areaOfResearch, 'link': 'https://www.bsf.org.il/calendar/'})
 
-            response = {'BSF': BSF}
+            ISF = []
+            for value in Isf_result:
+                ISF.append({'CallID': value.CallID,'organizationName': value.organizationName,
+                            'deadlineDate': value.deadlineDate,
+                            'information': value.information,
+                            'registrationDeadline': value.registrationDeadline,
+                            'institutionType': value.institutionType,
+                            'link': value.link })
+
+            if organization == 'BSF':
+                response = {'BSF': BSF}
+
+            if organization == 'ISF':
+                response = {'ISF': ISF}
 
         except:
             response = {'BSF': [], 'Error': 'Error while searching for calls'}
@@ -960,7 +971,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
 
         try:
             for i,item in enumerate (deadline):
-                date = BsfCall(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i])
+                date = BsfCall(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i], link= 'https://www.bsf.org.il/calendar/')
                 date.save()
                 originalID = i
                 indexID = len(index)
@@ -1026,7 +1037,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
                                 , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
                                 institutionType=call_info[1], numberOfPartners=call_info[2],
                                 grantPeriod=call_info[3], budget=call_info[4],
-                                information=call_info[5], deadline=call_info[6], link=call_links[i] )
+                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i] )
 
                 call.save()
 

@@ -23,7 +23,7 @@ def NLP_processor(documents, type):
         dir = 'Dictionary_INNOVATION'
     # print("This is the documents",documents)
     tokens = [process_document(doc) for doc in documents]
-    # print("TOKENS", tokens)
+
     try:
 
         dictionary = reload_dictionary(dir)
@@ -35,9 +35,9 @@ def NLP_processor(documents, type):
 
     dictionary.add_documents(tokens)
     dictionary.save(dir)
-    # for k, v in dictionary.token2id.items():
-    #     print(k, v)
-    #print(dictionary.token2id)
+    for k, v in dictionary.token2id.items():
+        print(k, v)
+    print(dictionary.token2id)
     return build_corpus(dictionary, tokens)
 
 
@@ -75,7 +75,7 @@ def make_dictionary(tokens):
     :return: Dictionary object
     """
     dictionary = gensim.corpora.Dictionary(tokens)
-    # print("This is the dictionary",dictionary.token2id)
+    print("This is the dictionary",dictionary.token2id)
     return dictionary  # mapping termId : term
 
 

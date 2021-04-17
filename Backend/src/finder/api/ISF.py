@@ -1,5 +1,7 @@
+from datetime import datetime
+
 import requests
-#from ..models import IsfCalls
+from ..models import IsfCalls, MapIdsISF
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup as soup, element
+from .QueryProcess import *
+
 
 import time
 
@@ -54,19 +58,21 @@ def get_calls_status(_url, click):
 
         try:
             submission_tools = page_soup.find_all("span", {"class": "newlines"})
-            deadline = submission_tools[0].text.strip()
+            #deadline = submission_tools[0].text.strip()
+            deadline = None
             reg_deadline = 'Closed'
             sub_deadline = 'Closed'
+
         except:
             submission_tools = page_soup.find("div", {"class": "toolInfo"})
             reg_deadline = submission_tools.p.span.text
             submission_tools = submission_tools.find_all("span", {"class": ""})
             sub_deadline = submission_tools[1].text
-            deadline = "Open"
+            deadline = datetime.strptime(reg_deadline,"%d/%m/%Y")
 
         about = page_soup.find("div", {"class": "grantdataText"})
         text_clean = about.div.p.text[:-1]
-        general_info = text_clean
+        general_info = text_clean.rstrip("\n")
 
         time.sleep(1)
 
@@ -122,3 +128,84 @@ def get_proposal_names_links(_url, click):
     driver.quit()
 
     return calls_name, links
+
+
+def get_Isf_call_by(tags, first_date, second_date):
+
+    tags_call = get_Isf_call_by_tags(tags)
+    print("Related call to "+tags+" is: ", tags_call)
+    dates_call = get_Isf_call_by_dates(first_date, second_date)
+    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+
+    result = get_Isf_call_intersection(tags_call, dates_call)
+
+    return result
+
+
+def get_Isf_call_by_tags(tags):
+    """
+       function to get all calls with at least one tag from the list of tags.
+       :param tags: list of tags
+       :return: list of organizations objects
+       """
+    tags = ''.join(tags)
+    index = reload_index('IsfIndex')
+    corpus = NLP_processor([tags], 'ISF')
+    res = index[corpus]
+    res = process_query_result(res)
+
+    res = [pair for pair in res if pair[1] > 0.1]
+    res = sorted(res, key=lambda pair: pair[1], reverse=True)
+    temp = []
+
+    for pair in res:
+        try:
+            temp.append(MapIdsISF.objects.get(indexID=pair[0]))
+        except:
+            pass
+    res = temp
+
+    finalRes = []
+    for mapId in res:
+        finalRes.append(IsfCalls.objects.get(CallID=mapId.originalID))
+
+    return finalRes
+
+
+def get_Isf_call_by_dates(first_date, second_date):
+
+    calls = IsfCalls.objects.all()
+
+    if not first_date and not second_date:
+        return calls
+
+    elif not first_date and second_date:
+        from_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__lte = from_date)
+
+    elif first_date and not second_date :
+        to_date = datetime.strptime(first_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=to_date)
+
+    else:
+
+        from_date = datetime.strptime(first_date, "%d/%m/%Y")
+        to_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
+
+
+def get_Isf_call_intersection(tags_call, dates_call):
+
+    result = []
+    already_taken = set()
+
+    for call in tags_call:
+        already_taken.add(call.CallID)
+
+    not_taken = set()
+    for call in dates_call:
+        if call.CallID in already_taken and call.CallID not in not_taken:
+            result.append(call)
+            not_taken.add(call.CallID)
+
+    return result

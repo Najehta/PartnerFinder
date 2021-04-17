@@ -114,6 +114,19 @@ def make_csv_file(lists_containers):
     f.close()
 
 
+def get_bsf_call_by(tags, first_date, second_date):
+
+    tags_call = get_bsf_call_by_tags(tags)
+    # print("Related call to "+tags+" is: ", tags_call)
+    dates_call = get_bsf_call_by_dates(first_date, second_date)
+    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+
+    result = get_bsf_call_intersection(tags_call, dates_call)
+
+    return result
+
+
+
 def get_bsf_call_by_tags(tags):
     """
        function to get all calls with at least one tag from the list of tags.
@@ -121,19 +134,15 @@ def get_bsf_call_by_tags(tags):
        :return: list of organizations objects
        """
     tags = ''.join(tags)
-    # print("TAGS", tags)
     index = reload_index('BsfIndex')
-    # print("INDEX", index)
     corpus = NLP_processor([tags], 'BSF')
-    # print("CORPUS", corpus)
     res = index[corpus]
-    # print("AFTER RES")
     res = process_query_result(res)
-    # print("AFTER PROCESS")
+
     res = [pair for pair in res if pair[1] > 0.3]
     res = sorted(res, key=lambda pair: pair[1], reverse=True)
     temp = []
-    # print("AFTER SORT")
+
     for pair in res:
         try:
             temp.append(MapIdsBSF.objects.get(indexID=pair[0]))
@@ -147,16 +156,7 @@ def get_bsf_call_by_tags(tags):
 
     return finalRes
 
-def get_bsf_call_by(tags, first_date, second_date):
 
-    tags_call = get_bsf_call_by_tags(tags)
-    # print("Related call to "+tags+" is: ", tags_call)
-    dates_call = get_bsf_call_by_dates(first_date, second_date)
-    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
-
-    result = get_bsf_call_intersection(tags_call, dates_call)
-
-    return result
 
 
 def get_bsf_call_by_dates(first_date, second_date):
