@@ -15,15 +15,14 @@ def NLP_processor(documents, type):
 
     if type == 'BSF':
         dir = 'Dictionary_BSF'
-    elif type == 'ISF':
+    if type == 'ISF':
         dir = 'Dictionary_ISF'
-    elif type == 'MST':
+    if type == 'MST':
         dir = 'Dictionary_MST'
-    else:
+    if type == 'INNOVATION':
         dir = 'Dictionary_INNOVATION'
     # print("This is the documents",documents)
     tokens = [process_document(doc) for doc in documents]
-
     try:
 
         dictionary = reload_dictionary(dir)
@@ -35,9 +34,9 @@ def NLP_processor(documents, type):
 
     dictionary.add_documents(tokens)
     dictionary.save(dir)
-    for k, v in dictionary.token2id.items():
-        print(k, v)
-    print(dictionary.token2id)
+    # for k, v in dictionary.token2id.items():
+    #     print(k, v)
+    # print(dictionary.token2id)
     return build_corpus(dictionary, tokens)
 
 
@@ -64,7 +63,7 @@ def process_document(document):
 
     except Exception as e:
         print("ERR", e)
-    # print("TokenList: ", tokens_list)
+
     return tokens_list
 
 
@@ -75,7 +74,7 @@ def make_dictionary(tokens):
     :return: Dictionary object
     """
     dictionary = gensim.corpora.Dictionary(tokens)
-    print("This is the dictionary",dictionary.token2id)
+    # print("This is the dictionary",dictionary.token2id)
     return dictionary  # mapping termId : term
 
 
@@ -185,4 +184,17 @@ def get_document_from_isf_call(info):
     doc = [info]
     return ''.join(doc)
 
+
+def get_document_from_innovation_call(info, area):
+    """
+    function to get the description and tags from innovation call
+    :param info: call information
+    :param area: tags
+    :return: document
+    """
+    doc = [info]
+    for tag in area:
+        doc.append(tag)
+
+    return ''.join(doc)
 

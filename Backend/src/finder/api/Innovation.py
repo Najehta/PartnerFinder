@@ -1,5 +1,5 @@
 import requests
-from ..models import IsfCalls
+from ..models import InnovationCalls, MapIdsINNOVATION
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -14,7 +14,7 @@ from time import sleep
 import re
 import time as t
 from datetime import datetime
-
+from .QueryProcess import *
 
 def get_calls_org(_url):
 
@@ -104,6 +104,7 @@ def get_call_date(_url) :
 
         if len(td_sub_date) == 2:
             sub_date = td_sub_date[1].text.strip()
+
         elif len(td_sub_date) == 3:
             sub_date = td_sub_date[2].text.strip()
         else:
@@ -119,15 +120,20 @@ def get_call_date(_url) :
 
         if b1 < b2:
             dates.append(sub_date + ' (Closed)')
+            deadline_date = None
+            dates.append(deadline_date)
 
         else:
             dates.append(sub_date+ ' (Open)')
+            deadline_date = datetime.strptime(sub_date, "%d/%m/%Y")
+            dates.append(deadline_date)
 
     except :
         dates = []
+        deadline_date = None
         dates.append('Closed')
         dates.append('Closed')
-
+        dates.append(deadline_date)
 
     return dates
 
@@ -215,3 +221,83 @@ def get_call_link(name, _url):
 
     return link
 
+
+def get_Innovation_call_by(tags, first_date, second_date):
+
+    tags_call = get_Innovation_call_by_tags(tags)
+    # print("Related call to "+tags+" is: ", tags_call)
+    dates_call = get_Innovation_call_by_dates(first_date, second_date)
+    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+
+    result = get_Innovation_call_intersection(tags_call, dates_call)
+
+    return result
+
+
+def get_Innovation_call_by_tags(tags):
+    """
+       function to get all calls with at least one tag from the list of tags.
+       :param tags: list of tags
+       :return: list of organizations objects
+       """
+
+    tags = ''.join(tags)
+    index = reload_index('InnovationIndex')
+    corpus = NLP_processor([tags], 'INNOVATION')
+    res = index[corpus]
+    res = process_query_result(res)
+
+    res = [pair for pair in res if pair[1] > 0.3]
+    res = sorted(res, key=lambda pair: pair[1], reverse=True)
+    temp = []
+
+    for pair in res:
+        try:
+            temp.append(MapIdsINNOVATION.objects.get(indexID=pair[0]))
+        except:
+            pass
+    res = temp
+
+    finalRes = []
+    for mapId in res:
+        finalRes.append(InnovationCalls.objects.get(CallID=mapId.originalID))
+
+    return finalRes
+
+def get_Innovation_call_by_dates(first_date, second_date):
+
+    calls = InnovationCalls.objects.all()
+
+    if not first_date and not second_date:
+        return calls
+
+    elif not first_date and second_date:
+        from_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__lte = from_date)
+
+    elif first_date and not second_date :
+        to_date = datetime.strptime(first_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=to_date)
+
+    else:
+
+        from_date = datetime.strptime(first_date, "%d/%m/%Y")
+        to_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
+
+
+def get_Innovation_call_intersection(tags_call, dates_call):
+
+    result = []
+    already_taken = set()
+
+    for call in tags_call:
+        already_taken.add(call.CallID)
+
+    not_taken = set()
+    for call in dates_call:
+        if call.CallID in already_taken and call.CallID not in not_taken:
+            result.append(call)
+            not_taken.add(call.CallID)
+
+    return result

@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls, \
-    MapIdsBSF, MapIdsISF
+    MapIdsBSF, MapIdsISF, MapIdsINNOVATION, MapIdsMSF
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
@@ -910,33 +910,73 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             from_date = data['first_date']
             to_date = data['second_date']
 
-            bsf_result = get_bsf_call_by(tags, from_date, to_date)
-            Isf_result = get_Isf_call_by(tags, from_date, to_date)
-
-            BSF = []
-            for value in bsf_result:
-                BSF.append({'CallID': value.CallID, 'organizationName': value.organizationName,
-                            'deadlineDate': value.deadlineDate,
-                            'information': value.information,
-                            'areaOfResearch': value.areaOfResearch, 'link': 'https://www.bsf.org.il/calendar/'})
-
-            ISF = []
-            for value in Isf_result:
-                ISF.append({'CallID': value.CallID,'organizationName': value.organizationName,
-                            'deadlineDate': value.deadlineDate,
-                            'information': value.information,
-                            'registrationDeadline': value.registrationDeadline,
-                            'institutionType': value.institutionType,
-                            'link': value.link })
 
             if organization == 'BSF':
-                response = {'BSF': BSF}
+
+                try:
+
+                    bsf_result = get_bsf_call_by(tags, from_date, to_date)
+
+                    BSF = []
+                    for value in bsf_result:
+                        BSF.append({'CallID': value.CallID,
+                                    'organizationName': value.organizationName,
+                                    'deadlineDate': value.deadlineDate,
+                                    'information': value.information,
+                                    'areaOfResearch': value.areaOfResearch,
+                                    'link': 'https://www.bsf.org.il/calendar/'})
+
+                    response = {'BSF': BSF}
+
+                except:
+                        response = {'BSF': [], 'Error': 'Error while searching for calls'}
 
             if organization == 'ISF':
-                response = {'ISF': ISF}
+
+                try:
+
+                    Isf_result = get_Isf_call_by(tags, from_date, to_date)
+
+                    ISF = []
+                    for value in Isf_result:
+                        ISF.append({'CallID': value.CallID,
+                                    'organizationName': value.organizationName,
+                                    'deadlineDate': value.deadlineDate,
+                                    'registrationDeadline': value.registrationDeadline,
+                                    'information': value.information,
+                                    'institutionType': value.institutionType,
+                                    'link': value.link})
+
+                    response = {'ISF': ISF}
+
+                except:
+
+                    response = {'ISF': [], 'Error': 'Error while searching for calls'}
+
+
+            if organization == 'INNOVATION':
+
+                try :
+
+                    Innovation_result = get_Innovation_call_by(tags, from_date, to_date)
+
+                    INNOVATION = []
+                    for value in Innovation_result:
+                        INNOVATION.append({'CallID': value.CallID,
+                                           'organizationName': value.organizationName,
+                                           'deadlineDate': value.deadlineDate,
+                                           'registrationDeadline': value.registrationDeadline,
+                                           'information': value.information,
+                                           'areaOfResearch': value.areaOfResearch,
+                                           'link': value.link})
+
+                    response = {'INNOVATION': INNOVATION}
+
+                except:
+                    response = {'INNOVATION': [], 'Error': 'Error while searching for calls'}
 
         except:
-            response = {'BSF': [], 'Error': 'Error while searching for calls'}
+            response = {'Error': 'Error while searching for calls'}
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -961,7 +1001,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
             os.remove('BsfIndex')
             os.remove('BsfIndex.0')
             os.remove('Dictionary_BSF')
-            print('BSF Index is deleted')
+            print('Deleting BSF Index...')
         except:
             pass
 
@@ -1015,7 +1055,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
             os.remove('IsfIndex')
             os.remove('IsfIndex.0')
             os.remove('Dictionary_ISF')
-            print('ISF Index is deleted')
+            print('Deleting ISF Index...')
 
         except:
             pass
@@ -1074,9 +1114,24 @@ class InnvoCallsViewSet(viewsets.ModelViewSet):
     def add_innvocalls_to_db(self, request):
 
         InnovationCalls.objects.all().delete()
+        MapIdsINNOVATION.objects.all().delete()
 
         _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
         names, urls = (),()
+
+        try:
+            os.remove('InnovationIndex')
+            os.remove('InnovationIndex.0')
+            os.remove('Dictionary_INNOVATION')
+            print('Deleting Innovation Index...')
+
+        except:
+            pass
+
+        index = make_index('InnovationIndex', 'INNOVATION')
+        print('Building Innovation Index...')
+
+
         try:
             names_url = get_calls_org(_url)
             names, urls = zip(*names_url)
@@ -1091,11 +1146,20 @@ class InnvoCallsViewSet(viewsets.ModelViewSet):
                 date = get_call_date(item)
                 info = get_call_info(item)
                 field = get_call_field(item)
-                call = InnovationCalls(organizationName= org_name,registrationDeadline= date[0],
+                call = InnovationCalls(CallID=i, organizationName= org_name,registrationDeadline= date[0],
                                          submissionDeadline= date[1], information= info,
-                                       areaOfResearch= field,link= item)
+                                       areaOfResearch= field,link= item, deadlineDate= date[2])
 
                 call.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_innovation_call(info, field)
+                newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'INNOVATION')
+
+
             response = {'success': 'Innovation Israel calls added successfully.'}
 
         except Exception as e:

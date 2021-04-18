@@ -133,7 +133,7 @@ def get_proposal_names_links(_url, click):
 def get_Isf_call_by(tags, first_date, second_date):
 
     tags_call = get_Isf_call_by_tags(tags)
-    print("Related call to "+tags+" is: ", tags_call)
+    # print("Related call to "+tags+" is: ", tags_call)
     dates_call = get_Isf_call_by_dates(first_date, second_date)
     # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
 
