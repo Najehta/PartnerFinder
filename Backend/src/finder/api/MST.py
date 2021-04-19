@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup as soup, element
 import re
 import time as t
 from datetime import datetime
+from .QueryProcess import *
+from ..models import MstCalls, MapIdsMST
+from langdetect import detect
 
 
 def get_calls(_url):
@@ -16,7 +19,9 @@ def get_calls(_url):
     driver.get(_url)
     translator = google_translator()
 
-    call_name, link, deadline, about = [], [], [], []
+    call_name, link, deadline, about, deadline_date= [], [], [], [], []
+    target_lang = 'en'
+
     try:
         t.sleep(1)
         page_html = driver.execute_script(
@@ -32,9 +37,15 @@ def get_calls(_url):
         for item in calls:
 
             link.append(item.a.get('href'))
-            word_trans = translator.translate(item.a.text.strip())
-            word_trans = re.sub(pattern, "call", word_trans)
-            call_name.append(word_trans)
+            result_lang = detect(item.a.text.strip())
+
+            if result_lang == target_lang:
+                call_name.append(item.a.text.strip())
+
+            else:
+                word_trans = translator.translate(item.a.text.strip())
+                word_trans = re.sub(pattern, "call", word_trans)
+                call_name.append(word_trans)
 
         for item in call_details:
 
@@ -51,9 +62,11 @@ def get_calls(_url):
 
             if b1 < b2:
                 deadline.append(temp1 + ' (Closed)')
+                deadline_date.append(None)
             else:
+                deadline_datetime = datetime.strptime(temp1, "%d.%m.%Y")
                 deadline.append(temp1 + ' (Open)')
-
+                deadline_date.append(deadline_datetime)
 
         for item in call_info:
 
@@ -62,9 +75,14 @@ def get_calls(_url):
             else:
                 temp = item.text.replace("\r\n","")
                 temp1 = re.sub("-", "", temp)
-                about.append( translator.translate(temp1.strip()))
-                about.append(temp1.strip())
+                result_lang = detect(temp1)
 
+                if result_lang == target_lang:
+                    about.append(temp1.strip())
+
+                else:
+                    about.append(translator.translate(temp1.strip()))
+                    # about.append(temp1.strip()) # Remove # if you want the content in Hebrew
         t.sleep(1)
 
 
@@ -74,7 +92,7 @@ def get_calls(_url):
 
     t.sleep(1)
     driver.quit()
-    list_of_data = list(zip(call_name, link, deadline, about))
+    list_of_data = list(zip(call_name, link, deadline, about, deadline_date))
 
     return list_of_data
 
@@ -92,6 +110,87 @@ def get_calls_num(_url):
     calls_number = int(calls_number)
 
     driver.quit()
-
     return calls_number
+
+
+def get_Mst_call_by(tags, first_date, second_date):
+
+    tags_call = get_Mst_call_by_tags(tags)
+    # print("Related call to "+tags+" is: ", tags_call)
+    dates_call = get_Mst_call_by_dates(first_date, second_date)
+    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
+
+    result = get_Mst_call_intersection(tags_call, dates_call)
+
+    return result
+
+
+def get_Mst_call_by_tags(tags):
+    """
+       function to get all calls with at least one tag from the list of tags.
+       :param tags: list of tags
+       :return: list of organizations objects
+       """
+    tags = ''.join(tags)
+    index = reload_index('MstIndex')
+    corpus = NLP_processor([tags], 'MST')
+    res = index[corpus]
+    res = process_query_result(res)
+
+    res = [pair for pair in res if pair[1] > 0.1]
+    res = sorted(res, key=lambda pair: pair[1], reverse=True)
+    temp = []
+
+    for pair in res:
+        try:
+            temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+        except:
+            pass
+    res = temp
+
+    finalRes = []
+    for mapId in res:
+        finalRes.append(MstCalls.objects.get(CallID=mapId.originalID))
+
+    return finalRes
+
+
+def get_Mst_call_by_dates(first_date, second_date):
+
+    calls = MstCalls.objects.all()
+
+    if not first_date and not second_date:
+        return calls
+
+    elif not first_date and second_date:
+        from_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__lte = from_date)
+
+    elif first_date and not second_date :
+        to_date = datetime.strptime(first_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=to_date)
+
+    else:
+
+        from_date = datetime.strptime(first_date, "%d/%m/%Y")
+        to_date = datetime.strptime(second_date, "%d/%m/%Y")
+        return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
+
+
+def get_Mst_call_intersection(tags_call, dates_call):
+
+    result = []
+    already_taken = set()
+
+    for call in tags_call:
+        already_taken.add(call.CallID)
+
+    not_taken = set()
+    for call in dates_call:
+        if call.CallID in already_taken and call.CallID not in not_taken:
+            result.append(call)
+            not_taken.add(call.CallID)
+
+    return result
+
 

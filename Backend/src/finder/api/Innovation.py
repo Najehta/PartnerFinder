@@ -124,8 +124,9 @@ def get_call_date(_url) :
             dates.append(deadline_date)
 
         else:
+
             dates.append(sub_date+ ' (Open)')
-            deadline_date = datetime.strptime(sub_date, "%d/%m/%Y")
+            deadline_date = datetime.strptime(sub_date, "%d.%m.%Y")
             dates.append(deadline_date)
 
     except :

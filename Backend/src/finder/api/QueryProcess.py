@@ -15,10 +15,13 @@ def NLP_processor(documents, type):
 
     if type == 'BSF':
         dir = 'Dictionary_BSF'
+
     if type == 'ISF':
         dir = 'Dictionary_ISF'
+
     if type == 'MST':
         dir = 'Dictionary_MST'
+
     if type == 'INNOVATION':
         dir = 'Dictionary_INNOVATION'
     # print("This is the documents",documents)
@@ -197,4 +200,19 @@ def get_document_from_innovation_call(info, area):
         doc.append(tag)
 
     return ''.join(doc)
+
+
+def get_document_from_mst_call(topic, info):
+    """
+    function to get the description and tags from innovation call
+    :param info: call information
+    :param topic: call topic
+    :return: document
+    """
+    doc = [topic]
+    for tag in info:
+        doc.append(tag)
+
+    return ''.join(doc)
+
 
