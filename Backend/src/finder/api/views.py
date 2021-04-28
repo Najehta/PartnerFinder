@@ -6,12 +6,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
-    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, BsfCall, IsfCalls, InnovationCalls, MstCalls, \
-    MapIdsBSF, MapIdsISF, MapIdsINNOVATION, MapIdsMST
+    MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, IsfCalls, InnovationCalls, MstCalls,bsfCalls, \
+     MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
-    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, EventsForAlertsSerializer, BsfCallsSerializer, IsfCallsSerializer, InnovationCallsSerializer, MstCallsSerializer
+    AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, \
+    EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer, MstCallsSerializer, BsfCallsSerializer
 import json
 
 import operator
@@ -892,7 +893,7 @@ def setUpdateSettings(euDate=None, b2matchDate=None):
     return True
 
 class ProposalCallsViewSet(viewsets.ModelViewSet):
-    queryset = BsfCall.objects.all()
+    queryset = bsfCalls.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
@@ -1001,7 +1002,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
 class BsfCallsViewSet(viewsets.ModelViewSet):
-    queryset = BsfCall.objects.all()
+    queryset = bsfCalls.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
@@ -1010,8 +1011,8 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_bsfcalls_to_db(self, request):
 
-        Call.objects.all().delete()
-        MapIdsBSF.objects.all().deleteBsf()
+        bsfCalls.objects.all().delete()
+        MapIdsBSF.objects.all().delete()
         _url = 'https://www.bsf.org.il/calendar/'
         deadline = get_events_deadline(_url) # deadline is a list of strings
         event_details = get_events_details(_url) # event_details is a list of strings
@@ -1031,7 +1032,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
 
         try:
             for i,item in enumerate (deadline):
-                date = BsfCall(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i], link= 'https://www.bsf.org.il/calendar/')
+                date = bsfCalls(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i], link= 'https://www.bsf.org.il/calendar/', open=True)
                 date.save()
                 originalID = i
                 indexID = len(index)
@@ -1045,8 +1046,7 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
             response = {'success': 'BSF calls added successfully.'}
 
         except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
+            print(e)
             response = {'error': 'Error while adding BSF calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1093,11 +1093,21 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
         try:
             for i, item in enumerate(call_names):
                 call_info = get_calls_status(call_links[i], item)
-                call = IsfCalls(CallID= i, organizationName=item, status=call_info[0]
-                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                                institutionType=call_info[1], numberOfPartners=call_info[2],
-                                grantPeriod=call_info[3], budget=call_info[4],
-                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i] )
+
+                if call_info[7] == 'Closed':
+
+                    call = IsfCalls(CallID=i, organizationName=item, status=call_info[0]
+                                    , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                    institutionType=call_info[1], numberOfPartners=call_info[2],
+                                    grantPeriod=call_info[3], budget=call_info[4],
+                                    information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=False)
+                else:
+
+                    call = IsfCalls(CallID= i, organizationName=item, status=call_info[0]
+                                    , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                    institutionType=call_info[1], numberOfPartners=call_info[2],
+                                    grantPeriod=call_info[3], budget=call_info[4],
+                                    information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=True )
 
                 call.save()
 
@@ -1122,7 +1132,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_200_OK)
 
 
-class InnvoCallsViewSet(viewsets.ModelViewSet):
+class InnovCallsViewSet(viewsets.ModelViewSet):
 
     queryset = InnovationCalls.objects.all()
     permission_classes = [
@@ -1131,7 +1141,7 @@ class InnvoCallsViewSet(viewsets.ModelViewSet):
     serializer_class = InnovationCallsSerializer
 
     @action(detail=False, methods=['POST'])
-    def add_innvocalls_to_db(self, request):
+    def add_innovcalls_to_db(self, request):
 
         InnovationCalls.objects.all().delete()
         MapIdsINNOVATION.objects.all().delete()
@@ -1166,9 +1176,16 @@ class InnvoCallsViewSet(viewsets.ModelViewSet):
                 date = get_call_date(item)
                 info = get_call_info(item)
                 field = get_call_field(item)
-                call = InnovationCalls(CallID=i, organizationName= org_name,registrationDeadline= date[0],
-                                         submissionDeadline= date[1], information= info,
-                                       areaOfResearch= field,link= item, deadlineDate= date[2])
+
+                if date[2] is None:
+
+                    call = InnovationCalls(CallID=i, organizationName= org_name,registrationDeadline= date[0],
+                                             submissionDeadline= date[1], information= info,
+                                           areaOfResearch= field,link= item, deadlineDate= date[2], open=False)
+                else:
+                    call = InnovationCalls(CallID=i, organizationName=org_name, registrationDeadline=date[0],
+                                           submissionDeadline=date[1], information=info,
+                                           areaOfResearch=field, link=item, deadlineDate=date[2], open=True)
 
                 call.save()
 
@@ -1234,8 +1251,15 @@ class MstCallsViewSet(viewsets.ModelViewSet):
 
             for i,item in enumerate(call_name_list):
 
-                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
+                if deadline_date_list[i] is None:
+
+                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i], open= False)
+                else:
+                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                    open=True)
+
                 call.save()
 
                 originalID = i

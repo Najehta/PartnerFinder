@@ -2,7 +2,8 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 import requests
 
-URL = 'http://62.90.89.14:8000/api/'
+#URL = 'http://62.90.89.14:8000/api/'
+URL = 'http://127.0.0.1:8000/api/'
 
 
 @periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),

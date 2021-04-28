@@ -250,6 +250,7 @@ class IsfCalls(models.Model):
    information = models.CharField(max_length=200, blank=True, null=True)
    deadlineDate = models.DateField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
 
 
    def __str__(self):
@@ -268,6 +269,7 @@ class InnovationCalls(models.Model):
    areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
    deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
 
 
    def __str__(self):
@@ -285,12 +287,13 @@ class MstCalls(models.Model):
    information = models.CharField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
    deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
 
    def __str__(self):
        return self.organizationName
 
 
-class BsfCall(models.Model):
+class bsfCalls(models.Model):
    """
    BSF Website Calls
    """
@@ -300,6 +303,7 @@ class BsfCall(models.Model):
    information = models.CharField(max_length=200, blank=True, null=True)
    areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
 
    def __str__(self):
        return self.organizationName

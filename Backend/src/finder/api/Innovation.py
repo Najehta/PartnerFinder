@@ -20,7 +20,7 @@ def get_calls_org(_url):
 
     # open the connection with the url
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url,headers= {'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url,headers= {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -30,11 +30,12 @@ def get_calls_org(_url):
 
     td_title = page_soup.find_all("td", {"class": "views-field views-field-title"})
 
-    name, link = [],[]
+    name, links = [], []
     for item in td_title:
         temp_string = item.a.text.strip()
         name.append(temp_string)
-        link.append(get_call_link(temp_string, _url))
+        links.append("https://innovationisrael.org.il" + item.a['href'])
+
 
     # open google chrome driver to scroll down on the website to grab more calls
     PATH = '/Users/najeh/chromedriver'
@@ -42,6 +43,7 @@ def get_calls_org(_url):
     driver.get(_url)
     click = "Next"
     click_isExisted = True
+
 
     while click_isExisted:
         try:
@@ -61,10 +63,11 @@ def get_calls_org(_url):
             td_title = page_soup.find_all("td", {"class": "views-field views-field-title"})
 
             curr_url = driver.current_url
+
             for item in td_title:
                 temp_string = item.a.text.strip()
                 name.append(temp_string)
-                link.append(get_call_link(temp_string, curr_url))
+                links.append("https://innovationisrael.org.il" + item.a['href'])
 
         except Exception as e:
             click_isExisted = False
@@ -72,15 +75,14 @@ def get_calls_org(_url):
 
 
     driver.quit()
-    name_link = list(zip(name,link))
-
+    name_link = list(zip(name,links))
     return name_link
 
 
 def get_call_date(_url) :
 
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -142,7 +144,7 @@ def get_call_date(_url) :
 def get_call_info(_url):
 
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -170,7 +172,7 @@ def get_call_info(_url):
 def get_call_field(_url):
 
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -194,33 +196,6 @@ def get_call_field(_url):
 
     return area
 
-
-def get_call_link(name, _url):
-
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
-    click = name
-    link = ''
-
-    try:
-        t.sleep(1)
-        driver.execute_script("scrollBy(0,800)")
-        t.sleep(1)
-
-        next_page = WebDriverWait(driver, 2).until(
-            EC.presence_of_element_located((By.LINK_TEXT, click))
-        )
-        next_page.click()
-        t.sleep(2)
-        link = driver.current_url
-        driver.quit()
-
-    except Exception as e:
-        print(e)
-        t.sleep(1)
-
-    return link
 
 
 def get_Innovation_call_by(tags, first_date, second_date):

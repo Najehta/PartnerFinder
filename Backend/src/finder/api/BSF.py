@@ -1,5 +1,5 @@
 from datetime import datetime
-from ..models import MapIdsBSF,BsfCall
+from ..models import MapIdsBSF, bsfCalls
 import requests
 
 
@@ -25,7 +25,7 @@ from .QueryProcess import *
 def get_events_deadline(_url):
 
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -60,7 +60,7 @@ def get_events_details(_url):
 
 
     # This will avoid mod_security on the website, to avoid been blocked
-    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+    get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
     # grab the page html
     page_html = req(get_client).read()
@@ -152,7 +152,7 @@ def get_bsf_call_by_tags(tags):
 
     finalRes = []
     for mapId in res:
-        finalRes.append(BsfCall.objects.get(CallID=mapId.originalID))
+        finalRes.append(bsfCalls.objects.get(CallID=mapId.originalID))
 
     return finalRes
 
@@ -161,7 +161,7 @@ def get_bsf_call_by_tags(tags):
 
 def get_bsf_call_by_dates(first_date, second_date):
 
-    calls = BsfCall.objects.all()
+    calls = bsfCalls.objects.all()
 
     if not first_date and not second_date:
         return calls
