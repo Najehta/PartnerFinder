@@ -3,7 +3,7 @@ from rest_framework import routers
 from django.urls import path, include
 from .views import OrganizationProfileViewSet, EventViewSet, ParticipantsViewSet, CallViewSet, \
     UpdateSettingsViewSet, AlertsSettingsViewSet, ScoresViewSet, AlertsB2match, BsfCallsViewSet, \
-    IsfCallsViewSet, InnovCallsViewSet, MstCallsViewSet, ProposalCallsViewSet
+    IsfCallsViewSet, InnovCallsViewSet, MstCallsViewSet, ProposalCallsViewSet, EmailSubscriptionViewSet
 
 router = routers.DefaultRouter()
 
@@ -23,6 +23,7 @@ router.register('isfcalls', IsfCallsViewSet)
 router.register('innovcalls', InnovCallsViewSet)
 router.register('mstcalls', MstCallsViewSet)
 router.register('proposal', ProposalCallsViewSet)
+router.register('EmailSubscription', EmailSubscriptionViewSet)
 
 urlpatterns = [
     path('', include(router.urls))

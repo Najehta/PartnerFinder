@@ -7,12 +7,14 @@ from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, IsfCalls, InnovationCalls, MstCalls,bsfCalls, \
-     MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF
+     MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, Call, OrganizationProfile, MapIds, \
+    CallTag, EmailSubscription
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
     AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, \
-    EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer, MstCallsSerializer, BsfCallsSerializer
+    EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer\
+    , MstCallsSerializer, BsfCallsSerializer, EmailSubscriptionSerializer
 import json
 
 import operator
@@ -28,8 +30,8 @@ from .ISF import *
 from.Innovation import *
 from .MST import *
 from .QueryProcess import *
+from .emails import *
 import datetime
-
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from urllib.request import urlopen as req
@@ -199,7 +201,6 @@ class AlertsSettingsViewSet(viewsets.ModelViewSet):
             data = json.loads(data)
             email = data['email']
             turned_on = data['turned_on']
-            print("DATA", data)
 
             try:
                 AlertsSettings.objects.get(ID=1)
@@ -1312,5 +1313,119 @@ class MstCallsViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             response = {'error': 'Error while adding MST calls to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class EmailSubscriptionViewSet(viewsets.ModelViewSet):
+    queryset = EmailSubscription.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = EmailSubscriptionSerializer
+
+    @action(detail=False, methods=['GET'])
+    def get_emails(self, request):
+        """
+        method to define API to get email subscription settings
+        :param request: HTTP request
+        :return: HTTP Response
+        """
+        try:
+            EmailSubscriptions = EmailSubscription.objects.all()[0]
+            response = {'email': EmailSubscriptions.email,
+                        'turned_on': EmailSubscriptions.status}
+        except:
+            response = {'email': '', 'turned_on': '', 'error': 'Error while uploading email subscription settings'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+    @action(detail=False, methods=['POST'])
+    def set_emails(self, request):
+        """
+        method to define API to update the email subscription settings
+        :param request: HTTP request with updated email and status flag
+        :return: HTTP response
+        """
+
+        try:
+            data = request.query_params['data']
+            data = json.loads(data)
+            email = data['email']
+            subscription_status = data['status']
+            print("DATA", data)
+
+            try:
+                EmailSubscription.objects.get(ID=1)
+                EmailSubscription.objects.filter(ID=1).update(email=email)
+                EmailSubscription.objects.filter(ID=1).update(turned_on=subscription_status)
+            except:
+                emailSubscription = EmailSubscription(email=email, turned_on=subscription_status, ID=1)
+                emailSubscription.save()
+
+            response = {'success': 'Email subscription settings Updated Successfully.'}
+        except:
+            response = {'error': 'Error while updating email subscription settings'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+
+    @action(detail=False, methods=['GET'])
+    def send_email(self, request):
+        """
+        method to define API to send proposal calls updates to subscribed emails
+        :param request: HTTP request
+        :return: HTTP Response
+        """
+
+        signature = ''
+
+        try:
+            response = {'success': 'Please Turn Email Alerts ON!'}
+
+            try:
+                email_sub = EmailSubscription.objects.all()[0]
+            except:
+                email_sub['status'] = False
+
+            if not email_sub.status:
+                return Response(response, status=status.HTTP_200_OK)
+
+            email = email_sub.email
+            available_calls = get_field_name('https://www.bsf.org.il/calendar/')
+
+            body = MIMEMultipart('alternative')
+
+            calls = ''
+            for item in available_calls:
+                calls += '<li><b>' + item + '</b>.</li>'
+
+
+            signature = 'Sincerely,<br>BSF Proposal Calls Alerts'
+            html = """\
+                        <html>
+                          <head><h3>You have new proposal calls that might interest you</h3></head>
+                          <body>
+                            <ol>
+                            {}
+                            </ol>
+                            <br>
+                            <p> Calls can be found here:https://www.bsf.org.il/calendar/</p> 
+                            <br>
+                            {}
+                          </body>
+                        </html>
+                        """.format(calls, signature)
+
+            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+            content = MIMEText(html, 'html')
+            body.attach(content)
+            body['Subject'] = 'BSF Proposal Calls Alert'
+            email_processing(receiver_email=email, message=body)
+        except:
+            response = {'Error': 'Error while building Proposal Calls Alerts.'}
 
         return Response(response, status=status.HTTP_200_OK)

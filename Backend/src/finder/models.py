@@ -339,3 +339,15 @@ class MapIdsINNOVATION(models.Model):
     """
     originalID = models.IntegerField(unique=True)
     indexID = models.IntegerField()
+
+
+class EmailSubscription(models.Model):
+    """
+    class to define the data model of subscription Settings.
+    """
+    ID = models.IntegerField(unique=True, default=1)
+    email = models.EmailField(max_length=300, blank=True)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email

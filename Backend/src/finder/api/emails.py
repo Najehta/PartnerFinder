@@ -1,25 +1,32 @@
+import os
 from email.mime.text import MIMEText
 import pandas
-from emailCred import emailCred
 import smtplib, ssl
 from email.mime.multipart import MIMEMultipart
+from decouple import config
+from dotenv import read_dotenv
 
+def email_processing(receiver_email, message):
+    """
+    function to send email to a specific email address with a specific message
+    :param receiver_email: the receiver email address
+    :param message: the message to send.
+    :return:
+    """
+    read_dotenv()
+    sender_mail = os.getenv('USERID')
+    password = os.getenv('PASSWORD')
+    ssl_port = 465
+    smtp_server = 'smtp.gmail.com'
 
-password = emailCred()[1]
-port = 465 # for SSL
-smtp_server = "smtp.gmail.com"
-msg = MIMEMultipart()
-msg['from'] = emailCred()[0]
-msg['To'] = 'Najeh.tahhan@gmail.com'
-msg['Subject'] = "Partner Finder Events"
-# name = 'Najeh'
-body = "Congratulations {} on first email subscription to our website partnerfinder.jce.ac.il, we will sent you emails about our upcoming events!".format(name)
+    context = ssl.create_default_context()
 
-msg.attach(MIMEText(body, 'plain'))
-text = msg.as_string()
-context = ssl.create_default_context()
-with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(emailCred()[0], password)
-    server.sendmail(emailCred()[0], msg['To'], text)
+    try:
+        with smtplib.SMTP_SSL(smtp_server, ssl_port, context=context) as server:
 
-print('Your email has been sent!')
+            server.login(sender_mail, password)
+            server.sendmail(sender_mail, receiver_email, message.as_string())
+
+    except Exception as e:
+        print("ERROR while sending email!")
+        print(e)
