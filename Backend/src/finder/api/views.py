@@ -1354,14 +1354,18 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             data = json.loads(data)
             email = data['email']
             subscription_status = data['status']
+            organization = data['organizationName']
+            organization = ' '.join(organization)
             print("DATA", data)
 
             try:
                 EmailSubscription.objects.get(ID=1)
                 EmailSubscription.objects.filter(ID=1).update(email=email)
-                EmailSubscription.objects.filter(ID=1).update(turned_on=subscription_status)
+                EmailSubscription.objects.filter(ID=1).update(status=subscription_status)
+                EmailSubscription.objects.filter(ID=1).update(organizationName=organization)
+
             except:
-                emailSubscription = EmailSubscription(email=email, turned_on=subscription_status, ID=1)
+                emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
                 emailSubscription.save()
 
             response = {'success': 'Email subscription settings Updated Successfully.'}
@@ -1373,7 +1377,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
 
     @action(detail=False, methods=['GET'])
-    def send_email(self, request):
+    def send_emails(self, request):
         """
         method to define API to send proposal calls updates to subscribed emails
         :param request: HTTP request
@@ -1381,7 +1385,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         """
 
         signature = ''
-
+        available_calls = []
         try:
             response = {'success': 'Please Turn Email Alerts ON!'}
 
@@ -1394,37 +1398,190 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                 return Response(response, status=status.HTTP_200_OK)
 
             email = email_sub.email
-            available_calls = get_field_name('https://www.bsf.org.il/calendar/')
 
-            body = MIMEMultipart('alternative')
+            if 'BSF' in email_sub.organizationName:
 
-            calls = ''
-            for item in available_calls:
-                calls += '<li><b>' + item + '</b>.</li>'
+                try:
+                    available_calls = get_field_name('https://www.bsf.org.il/calendar/')
+                except:
+                    response = {'Error': 'Error while Getting BSF available calls'}
+
+                if len(available_calls) != 0 :
+
+                    body = MIMEMultipart('alternative')
+
+                    calls = ''
+                    for item in available_calls:
+                        calls += '<li><b>' + item + '</b>.</li>'
 
 
-            signature = 'Sincerely,<br>BSF Proposal Calls Alerts'
-            html = """\
-                        <html>
-                          <head><h3>You have new proposal calls that might interest you</h3></head>
-                          <body>
-                            <ol>
-                            {}
-                            </ol>
-                            <br>
-                            <p> Calls can be found here:https://www.bsf.org.il/calendar/</p> 
-                            <br>
-                            {}
-                          </body>
-                        </html>
-                        """.format(calls, signature)
+                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                    html = """\
+                                <html>
+                                  <head><h3>You have new NSF-BSF proposal calls that might interest you</h3></head>
+                                  <body>
+                                    <ol>
+                                    {}
+                                    </ol>
+                                    <br>
+                                    <p> Calls can be found here: https://www.bsf.org.il/calendar/</p> 
+                                    <br>
+                                    {}
+                                  </body>
+                                </html>
+                                """.format(calls, signature)
 
-            response = {'Success': 'Finished building Proposal Calls Alert.'}
+                    response = {'Success': 'Finished building Proposal Calls Alert.'}
 
-            content = MIMEText(html, 'html')
-            body.attach(content)
-            body['Subject'] = 'BSF Proposal Calls Alert'
-            email_processing(receiver_email=email, message=body)
+                    content = MIMEText(html, 'html')
+                    body.attach(content)
+                    body['Subject'] = 'BSF Proposal Calls Alert'
+                    email_processing(receiver_email=email, message=body)
+
+                else:
+                    response = {'Error': 'NO calls is open in BSF right now '}
+
+            if 'ISF' in email_sub.organizationName:
+
+                try:
+                    isf_calls = IsfCalls.objects.filter(open=True)
+                    calls_list = []
+                    for item in isf_calls:
+                        calls_list.append(item.organizationName)
+
+                except:
+                    calls_list = []
+                    response = {'Error': 'Error while Getting ISF available calls'}
+
+                if len(calls_list) != 0:
+
+                    body = MIMEMultipart('alternative')
+
+                    calls = ''
+                    for item in calls_list:
+                        calls += '<li><b>' + item + '</b>.</li>'
+
+                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                    html = """\
+                                               <html>
+                                                 <head><h3>You have new ISF proposal calls that might interest you</h3></head>
+                                                 <body>
+                                                   <ol>
+                                                   {}
+                                                   </ol>
+                                                   <br>
+                                                   <p> Calls can be found here: https://www.isf.org.il/#/support-channels/1/10</p> 
+                                                   <br>
+                                                   {}
+                                                 </body>
+                                               </html>
+                                               """.format(calls, signature)
+
+                    response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                    content = MIMEText(html, 'html')
+                    body.attach(content)
+                    body['Subject'] = 'ISF Proposal Calls Alert'
+                    email_processing(receiver_email=email, message=body)
+
+                else:
+                    response = {'Error': 'NO calls is open in ISF right now '}
+
+
+            if 'Innovation' in email_sub.organizationName:
+
+                try:
+
+                    innovation_calls = InnovationCalls.objects.filter(open=True)
+                    calls_list = []
+                    for item in innovation_calls:
+                        calls_list.append(item.organizationName)
+                except:
+                    calls_list = []
+                    response = {'Error': 'Error while Getting Innovation Israel available calls'}
+
+                if len(calls_list) != 0:
+
+                    body = MIMEMultipart('alternative')
+
+                    calls = ''
+                    for item in calls_list:
+                        calls += '<li><b>' + item + '</b>.</li>'
+
+                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                    html = """\
+                                               <html>
+                                                 <head><h3>You have new Innovation Israel proposal calls that might interest you</h3></head>
+                                                 <body>
+                                                   <ol>
+                                                   {}
+                                                   </ol>
+                                                   <br>
+                                                   <p> Calls can be found here: https://innovationisrael.org.il/en/page/calls-proposals</p> 
+                                                   <br>
+                                                   {}
+                                                 </body>
+                                               </html>
+                                               """.format(calls, signature)
+
+                    response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                    content = MIMEText(html, 'html')
+                    body.attach(content)
+                    body['Subject'] = 'Innovation Israel Proposal Calls Alert'
+                    email_processing(receiver_email=email, message=body)
+
+                else:
+                    response = {'Error': 'NO calls is open in Innovation Israel right now '}
+
+
+
+            if 'MST' in email_sub.organizationName:
+
+                try:
+
+                    mst_calls = MstCalls.objects.filter(open=True)
+                    calls_list = []
+                    for item in mst_calls:
+                        calls_list.append(item.organizationName)
+                except:
+                    calls_list = []
+                    response = {'Error': 'Error while Getting Innovation Israel available calls'}
+
+                if len(calls_list) != 0:
+
+                    body = MIMEMultipart('alternative')
+
+                    calls = ''
+                    for item in calls_list:
+                        calls += '<li><b>' + item + '</b>.</li>'
+
+                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                    html = """\
+                                                   <html>
+                                                     <head><h3>You have new MST proposal calls that might interest you</h3></head>
+                                                     <body>
+                                                       <ol>
+                                                       {}
+                                                       </ol>
+                                                       <br>
+                                                       <p> Calls can be found here: https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1</p> 
+                                                       <br>
+                                                       {}
+                                                     </body>
+                                                   </html>
+                                                   """.format(calls, signature)
+
+                    response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                    content = MIMEText(html, 'html')
+                    body.attach(content)
+                    body['Subject'] = 'MST Proposal Calls Alert'
+                    email_processing(receiver_email=email, message=body)
+
+                else:
+                    response = {'Error': 'NO calls is open in MST right now '}
+
         except:
             response = {'Error': 'Error while building Proposal Calls Alerts.'}
 
