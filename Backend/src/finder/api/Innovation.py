@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
+from google_trans_new import google_translator
 from bs4 import BeautifulSoup as soup, element
 from urllib.request import urlopen as req
 from urllib.request import Request
@@ -15,6 +15,7 @@ import re
 import time as t
 from datetime import datetime
 from .QueryProcess import *
+
 
 def get_calls_org(_url):
 
@@ -196,6 +197,71 @@ def get_call_field(_url):
 
     return area
 
+
+def get_innovation_hebrew_calls(_url):
+
+    translator = google_translator()
+    # open the connection with the url
+    # This will avoid mod_security on the website, to avoid been blocked
+    get_client = Request(_url, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
+
+    # grab the page html
+    page_html = req(get_client).read()
+
+    # html parsing
+    page_soup = soup(page_html, "html.parser")
+
+    td_title = page_soup.find_all("td", {"class": "views-field views-field-title"})
+
+    call_name = []
+    call_date = []
+    call_url = []
+
+    pattern = '^Voice call+'
+
+    for item in td_title:
+        translated = translator.translate(item.h3.text)
+        translated = re.sub(pattern, "Call", translated)
+        call_name.append(translated)
+        call_url.append('https://innovationisrael.org.il' + item.a['href'])
+
+    td_date = page_soup.find_all("td", {"class": "views-field views-field-field-final-submission-date"})
+
+    for item in td_date:
+        temp_date = item.span.text.strip()
+        datetime_date = datetime.strptime(temp_date, "%d/%m/%Y")
+        call_date.append(datetime_date)
+
+
+    return call_name, call_url, call_date
+
+
+def get_innovation_hebrew_calls_info(_url):
+
+    translator = google_translator()
+    # open the connection with the url
+    # This will avoid mod_security on the website, to avoid been blocked
+    get_client = Request(_url, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
+
+    # grab the page html
+    page_html = req(get_client).read()
+
+    # html parsing
+    page_soup = soup(page_html, "html.parser")
+
+    div_info = page_soup.find_all("div", {"class": "field-item even"})
+    for i in range (len(div_info)):
+        try:
+            info = div_info[i].p.text.strip()
+
+        except:
+            pass
+
+    translated_info = translator.translate(info)
+
+    return translated_info
 
 
 def get_Innovation_call_by(tags, first_date, second_date):

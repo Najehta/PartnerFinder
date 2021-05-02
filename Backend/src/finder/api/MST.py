@@ -44,7 +44,7 @@ def get_calls(_url):
 
             else:
                 word_trans = translator.translate(item.a.text.strip())
-                word_trans = re.sub(pattern, "call", word_trans)
+                word_trans = re.sub(pattern, "Call", word_trans)
                 call_name.append(word_trans)
 
         for item in call_details:

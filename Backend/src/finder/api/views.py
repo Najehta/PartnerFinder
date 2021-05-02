@@ -31,7 +31,6 @@ from.Innovation import *
 from .MST import *
 from .QueryProcess import *
 from .emails import *
-import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from urllib.request import urlopen as req
@@ -1149,6 +1148,8 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
 
         _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
         names, urls = (),()
+        names_list, urls_list, date_list = [], [], []
+        counter = 0
 
         try:
             os.remove('InnovationIndex')
@@ -1166,7 +1167,7 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
         try:
             names_url = get_calls_org(_url)
             names, urls = zip(*names_url)
-
+            names_list, urls_list, date_list = get_innovation_hebrew_calls('https://innovationisrael.org.il/kol-kore-view')
 
         except Exception as e:
             print(e)
@@ -1196,6 +1197,27 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')
+                counter = i
+
+            for i,item in enumerate(urls_list):
+                org_name = names_list[i]
+                date = date_list[i]
+                str_date = date.strftime("%d/%m/%Y")
+
+
+                call = InnovationCalls(CallID=counter + 1, organizationName= org_name,registrationDeadline= str_date,
+                                         submissionDeadline= str_date, information= 'Not Available',
+                                       areaOfResearch='Not Available',link= item, deadlineDate= date, open=True)
+
+                call.save()
+
+                originalID = counter + 1
+                indexID = len(index)
+                document = get_document_from_isf_call(org_name)
+                newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'INNOVATION')
+                counter += 1
 
 
             response = {'success': 'Innovation Israel calls added successfully.'}
@@ -1424,7 +1446,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                     {}
                                     </ol>
                                     <br>
-                                    <p> Calls can be found here: https://www.bsf.org.il/calendar/</p> 
+                                    <p> For more information please visit: https://www.bsf.org.il/calendar/</p> 
                                     <br>
                                     {}
                                   </body>
@@ -1470,7 +1492,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                                    {}
                                                    </ol>
                                                    <br>
-                                                   <p> Calls can be found here: https://www.isf.org.il/#/support-channels/1/10</p> 
+                                                   <p> For more information please visit: https://www.isf.org.il/#/support-channels/1/10</p> 
                                                    <br>
                                                    {}
                                                  </body>
@@ -1517,7 +1539,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                                    {}
                                                    </ol>
                                                    <br>
-                                                   <p> Calls can be found here: https://innovationisrael.org.il/en/page/calls-proposals</p> 
+                                                   <p> For more information please visit: https://innovationisrael.org.il/en/page/calls-proposals</p> 
                                                    <br>
                                                    {}
                                                  </body>
@@ -1565,7 +1587,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                                        {}
                                                        </ol>
                                                        <br>
-                                                       <p> Calls can be found here: https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1</p> 
+                                                       <p> For more information please visit: https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1</p> 
                                                        <br>
                                                        {}
                                                      </body>
