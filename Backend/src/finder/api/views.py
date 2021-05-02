@@ -1406,8 +1406,10 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         :return: HTTP Response
         """
 
+
         signature = ''
         available_calls = []
+        calls_deadline = []
         try:
             response = {'success': 'Please Turn Email Alerts ON!'}
 
@@ -1425,6 +1427,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                 try:
                     available_calls = get_field_name('https://www.bsf.org.il/calendar/')
+                    calls_deadline = get_events_deadline('https://www.bsf.org.il/calendar/')
                 except:
                     response = {'Error': 'Error while Getting BSF available calls'}
 
@@ -1433,9 +1436,12 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                     body = MIMEMultipart('alternative')
 
                     calls = ''
-                    for item in available_calls:
-                        calls += '<li><b>' + item + '</b>.</li>'
+                    for i,item in enumerate(available_calls):
 
+                        date = calls_deadline[i]
+                        str_date = date.strftime("%d/%m/%Y")
+                        calls += '<li>' + item + ' (' + str_date + ')' + '.</li>'
+                        calls += '<br>'
 
                     signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
                     html = """\
@@ -1468,11 +1474,16 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                 try:
                     isf_calls = IsfCalls.objects.filter(open=True)
                     calls_list = []
+                    deadline_list = []
                     for item in isf_calls:
                         calls_list.append(item.organizationName)
+                        temp_date = item.deadlineDate
+                        str_date = temp_date.strftime("%d/%m/%Y")
+                        deadline_list.append(str_date)
 
                 except:
                     calls_list = []
+                    deadline_list = []
                     response = {'Error': 'Error while Getting ISF available calls'}
 
                 if len(calls_list) != 0:
@@ -1480,8 +1491,9 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                     body = MIMEMultipart('alternative')
 
                     calls = ''
-                    for item in calls_list:
-                        calls += '<li><b>' + item + '</b>.</li>'
+                    for i,item in calls_list:
+                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                        calls += '<br>'
 
                     signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
                     html = """\
@@ -1516,10 +1528,17 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                     innovation_calls = InnovationCalls.objects.filter(open=True)
                     calls_list = []
+                    deadline_list = []
+
                     for item in innovation_calls:
                         calls_list.append(item.organizationName)
+                        temp_date = item.deadlineDate
+                        str_date = temp_date.strftime("%d/%m/%Y")
+                        deadline_list.append(str_date)
+
                 except:
                     calls_list = []
+                    deadline_list = []
                     response = {'Error': 'Error while Getting Innovation Israel available calls'}
 
                 if len(calls_list) != 0:
@@ -1527,8 +1546,9 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                     body = MIMEMultipart('alternative')
 
                     calls = ''
-                    for item in calls_list:
-                        calls += '<li><b>' + item + '</b>.</li>'
+                    for i,item in enumerate(calls_list):
+                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                        calls += '<br>'
 
                     signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
                     html = """\
@@ -1564,10 +1584,17 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                     mst_calls = MstCalls.objects.filter(open=True)
                     calls_list = []
+                    deadline_list = []
+
                     for item in mst_calls:
                         calls_list.append(item.organizationName)
+                        temp_date = item.deadlineDate
+                        str_date = temp_date.strftime("%d/%m/%Y")
+                        deadline_list.append(str_date)
+
                 except:
                     calls_list = []
+                    deadline_list = []
                     response = {'Error': 'Error while Getting Innovation Israel available calls'}
 
                 if len(calls_list) != 0:
@@ -1575,14 +1602,15 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                     body = MIMEMultipart('alternative')
 
                     calls = ''
-                    for item in calls_list:
-                        calls += '<li><b>' + item + '</b>.</li>'
+                    for i, item in enumerate(calls_list):
+                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                        calls += '<br>'
 
                     signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
                     html = """\
                                                    <html>
-                                                     <head><h3>You have new MST proposal calls that might interest you</h3></head>
-                                                     <body>
+                                                     # <head><h3>You have new MST proposal calls that might interest you</h3></head>
+                                                     # <body>
                                                        <ol>
                                                        {}
                                                        </ol>
@@ -1604,7 +1632,8 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                 else:
                     response = {'Error': 'NO calls is open in MST right now '}
 
-        except:
+        except Exception as e:
+            print(e)
             response = {'Error': 'Error while building Proposal Calls Alerts.'}
 
         return Response(response, status=status.HTTP_200_OK)
