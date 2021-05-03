@@ -345,10 +345,7 @@ class EmailSubscription(models.Model):
     """
     class to define the data model of subscription Settings.
     """
-    ID = models.IntegerField(unique=True, default=1)
+    ID = models.IntegerField(unique=True, null=False, blank= False)
     email = models.EmailField(max_length=300, blank=True)
     status = models.BooleanField(default=False)
     organizationName = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return self.email

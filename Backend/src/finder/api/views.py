@@ -1354,9 +1354,17 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         :return: HTTP Response
         """
         try:
-            EmailSubscriptions = EmailSubscription.objects.all()[0]
-            response = {'email': EmailSubscriptions.email,
-                        'turned_on': EmailSubscriptions.status}
+            EmailSubscriptions = EmailSubscription.objects.all()
+            email_responses = []
+
+            for item in EmailSubscriptions:
+
+                email_responses.append({'email':item.email,
+                                         'status':item.status,
+                                         'ID': item.ID})
+
+            response = {'emails': email_responses}
+
         except:
             response = {'email': '', 'turned_on': '', 'error': 'Error while uploading email subscription settings'}
 
@@ -1377,20 +1385,25 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             email = data['email']
             subscription_status = data['status']
             organization = data['organizationName']
-            organization = ' '.join(organization)
-            print("DATA", data)
+            organization = ''.join(organization)
 
             try:
-                EmailSubscription.objects.get(ID=1)
-                EmailSubscription.objects.filter(ID=1).update(email=email)
-                EmailSubscription.objects.filter(ID=1).update(status=subscription_status)
-                EmailSubscription.objects.filter(ID=1).update(organizationName=organization)
 
-            except:
+                latest_id = EmailSubscription.objects.latest('ID')
+                latest_id_num = latest_id.ID + 1
+
+                email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                               status=subscription_status,
+                                               organizationName=organization)
+
+                email_info.save()
+
+            except Exception as e:
+                print(e)
                 emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
                 emailSubscription.save()
 
-            response = {'success': 'Email subscription settings Updated Successfully.'}
+            response = {'success': 'New email have been successfully subscribed.'}
         except:
             response = {'error': 'Error while updating email subscription settings'}
 
@@ -1414,223 +1427,226 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             response = {'success': 'Please Turn Email Alerts ON!'}
 
             try:
-                email_sub = EmailSubscription.objects.all()[0]
-            except:
+                email_sub = EmailSubscription.objects.filter(status=True)
+
+                for item in email_sub:
+                    email = item.email
+                    organization = item.organizationName
+
+
+                    if 'BSF' in organization:
+
+                        try:
+                            available_calls = get_field_name('https://www.bsf.org.il/calendar/')
+                            calls_deadline = get_events_deadline('https://www.bsf.org.il/calendar/')
+                        except:
+                            response = {'Error': 'Error while Getting BSF available calls'}
+
+                        if len(available_calls) != 0 :
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i,item in enumerate(available_calls):
+
+                                date = calls_deadline[i]
+                                str_date = date.strftime("%d/%m/%Y")
+                                calls += '<li>' + item + ' (' + str_date + ')' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                        <html>
+                                          <head><h3>You have new NSF-BSF proposal calls that might interest you</h3></head>
+                                          <body>
+                                            <ol>
+                                            {}
+                                            </ol>
+                                            <br>
+                                            <p> For more information please visit: https://www.bsf.org.il/calendar/</p> 
+                                            <br>
+                                            {}
+                                          </body>
+                                        </html>
+                                        """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'BSF Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in BSF right now '}
+
+
+                    if 'ISF' in organization:
+
+                        try:
+                            isf_calls = IsfCalls.objects.filter(open=True)
+                            calls_list = []
+                            deadline_list = []
+                            for item in isf_calls:
+                                calls_list.append(item.organizationName)
+                                temp_date = item.deadlineDate
+                                str_date = temp_date.strftime("%d/%m/%Y")
+                                deadline_list.append(str_date)
+
+                        except:
+                            calls_list = []
+                            deadline_list = []
+                            response = {'Error': 'Error while Getting ISF available calls'}
+
+                        if len(calls_list) != 0:
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i,item in calls_list:
+                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                                       <html>
+                                                         <head><h3>You have new ISF proposal calls that might interest you</h3></head>
+                                                         <body>
+                                                           <ol>
+                                                           {}
+                                                           </ol>
+                                                           <br>
+                                                           <p> For more information please visit: https://www.isf.org.il/#/support-channels/1/10</p> 
+                                                           <br>
+                                                           {}
+                                                         </body>
+                                                       </html>
+                                                       """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'ISF Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in ISF right now '}
+
+
+                    if 'Innovation' in organization:
+
+                        try:
+
+                            innovation_calls = InnovationCalls.objects.filter(open=True)
+                            calls_list = []
+                            deadline_list = []
+
+                            for item in innovation_calls:
+                                calls_list.append(item.organizationName)
+                                temp_date = item.deadlineDate
+                                str_date = temp_date.strftime("%d/%m/%Y")
+                                deadline_list.append(str_date)
+
+                        except:
+                            calls_list = []
+                            deadline_list = []
+                            response = {'Error': 'Error while Getting Innovation Israel available calls'}
+
+                        if len(calls_list) != 0:
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i,item in enumerate(calls_list):
+                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                                       <html>
+                                                         <head><h3>You have new Innovation Israel proposal calls that might interest you</h3></head>
+                                                         <body>
+                                                           <ol>
+                                                           {}
+                                                           </ol>
+                                                           <br>
+                                                           <p> For more information please visit: https://innovationisrael.org.il/en/page/calls-proposals</p> 
+                                                           <br>
+                                                           {}
+                                                         </body>
+                                                       </html>
+                                                       """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'Innovation Israel Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in Innovation Israel right now '}
+
+
+
+                    if 'MST' in organization:
+
+                        try:
+
+                            mst_calls = MstCalls.objects.filter(open=True)
+                            calls_list = []
+                            deadline_list = []
+
+                            for item in mst_calls:
+                                calls_list.append(item.organizationName)
+                                temp_date = item.deadlineDate
+                                str_date = temp_date.strftime("%d/%m/%Y")
+                                deadline_list.append(str_date)
+
+                        except:
+                            calls_list = []
+                            deadline_list = []
+                            response = {'Error': 'Error while Getting Innovation Israel available calls'}
+
+                        if len(calls_list) != 0:
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i, item in enumerate(calls_list):
+                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                                           <html>
+                                                             <head><h3>You have new MST proposal calls that might interest you</h3></head>
+                                                              <body>
+                                                               <ol>
+                                                               {}
+                                                               </ol>
+                                                               <br>
+                                                               <p> For more information please visit: https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1</p> 
+                                                               <br>
+                                                               {}
+                                                             </body>
+                                                           </html>
+                                                           """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'MST Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in MST right now '}
+
+            except Exception as e:
+                print(e)
                 email_sub['status'] = False
-
-            if not email_sub.status:
-                return Response(response, status=status.HTTP_200_OK)
-
-            email = email_sub.email
-
-            if 'BSF' in email_sub.organizationName:
-
-                try:
-                    available_calls = get_field_name('https://www.bsf.org.il/calendar/')
-                    calls_deadline = get_events_deadline('https://www.bsf.org.il/calendar/')
-                except:
-                    response = {'Error': 'Error while Getting BSF available calls'}
-
-                if len(available_calls) != 0 :
-
-                    body = MIMEMultipart('alternative')
-
-                    calls = ''
-                    for i,item in enumerate(available_calls):
-
-                        date = calls_deadline[i]
-                        str_date = date.strftime("%d/%m/%Y")
-                        calls += '<li>' + item + ' (' + str_date + ')' + '.</li>'
-                        calls += '<br>'
-
-                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
-                    html = """\
-                                <html>
-                                  <head><h3>You have new NSF-BSF proposal calls that might interest you</h3></head>
-                                  <body>
-                                    <ol>
-                                    {}
-                                    </ol>
-                                    <br>
-                                    <p> For more information please visit: https://www.bsf.org.il/calendar/</p> 
-                                    <br>
-                                    {}
-                                  </body>
-                                </html>
-                                """.format(calls, signature)
-
-                    response = {'Success': 'Finished building Proposal Calls Alert.'}
-
-                    content = MIMEText(html, 'html')
-                    body.attach(content)
-                    body['Subject'] = 'BSF Proposal Calls Alert'
-                    email_processing(receiver_email=email, message=body)
-
-                else:
-                    response = {'Error': 'NO calls is open in BSF right now '}
-
-            if 'ISF' in email_sub.organizationName:
-
-                try:
-                    isf_calls = IsfCalls.objects.filter(open=True)
-                    calls_list = []
-                    deadline_list = []
-                    for item in isf_calls:
-                        calls_list.append(item.organizationName)
-                        temp_date = item.deadlineDate
-                        str_date = temp_date.strftime("%d/%m/%Y")
-                        deadline_list.append(str_date)
-
-                except:
-                    calls_list = []
-                    deadline_list = []
-                    response = {'Error': 'Error while Getting ISF available calls'}
-
-                if len(calls_list) != 0:
-
-                    body = MIMEMultipart('alternative')
-
-                    calls = ''
-                    for i,item in calls_list:
-                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
-                        calls += '<br>'
-
-                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
-                    html = """\
-                                               <html>
-                                                 <head><h3>You have new ISF proposal calls that might interest you</h3></head>
-                                                 <body>
-                                                   <ol>
-                                                   {}
-                                                   </ol>
-                                                   <br>
-                                                   <p> For more information please visit: https://www.isf.org.il/#/support-channels/1/10</p> 
-                                                   <br>
-                                                   {}
-                                                 </body>
-                                               </html>
-                                               """.format(calls, signature)
-
-                    response = {'Success': 'Finished building Proposal Calls Alert.'}
-
-                    content = MIMEText(html, 'html')
-                    body.attach(content)
-                    body['Subject'] = 'ISF Proposal Calls Alert'
-                    email_processing(receiver_email=email, message=body)
-
-                else:
-                    response = {'Error': 'NO calls is open in ISF right now '}
-
-
-            if 'Innovation' in email_sub.organizationName:
-
-                try:
-
-                    innovation_calls = InnovationCalls.objects.filter(open=True)
-                    calls_list = []
-                    deadline_list = []
-
-                    for item in innovation_calls:
-                        calls_list.append(item.organizationName)
-                        temp_date = item.deadlineDate
-                        str_date = temp_date.strftime("%d/%m/%Y")
-                        deadline_list.append(str_date)
-
-                except:
-                    calls_list = []
-                    deadline_list = []
-                    response = {'Error': 'Error while Getting Innovation Israel available calls'}
-
-                if len(calls_list) != 0:
-
-                    body = MIMEMultipart('alternative')
-
-                    calls = ''
-                    for i,item in enumerate(calls_list):
-                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
-                        calls += '<br>'
-
-                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
-                    html = """\
-                                               <html>
-                                                 <head><h3>You have new Innovation Israel proposal calls that might interest you</h3></head>
-                                                 <body>
-                                                   <ol>
-                                                   {}
-                                                   </ol>
-                                                   <br>
-                                                   <p> For more information please visit: https://innovationisrael.org.il/en/page/calls-proposals</p> 
-                                                   <br>
-                                                   {}
-                                                 </body>
-                                               </html>
-                                               """.format(calls, signature)
-
-                    response = {'Success': 'Finished building Proposal Calls Alert.'}
-
-                    content = MIMEText(html, 'html')
-                    body.attach(content)
-                    body['Subject'] = 'Innovation Israel Proposal Calls Alert'
-                    email_processing(receiver_email=email, message=body)
-
-                else:
-                    response = {'Error': 'NO calls is open in Innovation Israel right now '}
-
-
-
-            if 'MST' in email_sub.organizationName:
-
-                try:
-
-                    mst_calls = MstCalls.objects.filter(open=True)
-                    calls_list = []
-                    deadline_list = []
-
-                    for item in mst_calls:
-                        calls_list.append(item.organizationName)
-                        temp_date = item.deadlineDate
-                        str_date = temp_date.strftime("%d/%m/%Y")
-                        deadline_list.append(str_date)
-
-                except:
-                    calls_list = []
-                    deadline_list = []
-                    response = {'Error': 'Error while Getting Innovation Israel available calls'}
-
-                if len(calls_list) != 0:
-
-                    body = MIMEMultipart('alternative')
-
-                    calls = ''
-                    for i, item in enumerate(calls_list):
-                        calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
-                        calls += '<br>'
-
-                    signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
-                    html = """\
-                                                   <html>
-                                                     # <head><h3>You have new MST proposal calls that might interest you</h3></head>
-                                                     # <body>
-                                                       <ol>
-                                                       {}
-                                                       </ol>
-                                                       <br>
-                                                       <p> For more information please visit: https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1</p> 
-                                                       <br>
-                                                       {}
-                                                     </body>
-                                                   </html>
-                                                   """.format(calls, signature)
-
-                    response = {'Success': 'Finished building Proposal Calls Alert.'}
-
-                    content = MIMEText(html, 'html')
-                    body.attach(content)
-                    body['Subject'] = 'MST Proposal Calls Alert'
-                    email_processing(receiver_email=email, message=body)
-
-                else:
-                    response = {'Error': 'NO calls is open in MST right now '}
 
         except Exception as e:
             print(e)
