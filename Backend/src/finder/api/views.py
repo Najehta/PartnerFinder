@@ -1371,6 +1371,38 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_200_OK)
 
 
+
+    @action(detail=False, methods=['POST'])
+    def delete_email(self, request):
+        """
+        method to define API to delete email subscription
+        :param request: HTTP request
+        :return: HTTP Response
+        """
+        try:
+
+            data = request.query_params['data']
+            data = json.loads(data)
+            email = data['email']
+
+            EmailSubscriptions = EmailSubscription.objects.all()
+
+            for item in EmailSubscriptions:
+                if item.email == email:
+                    EmailSubscription.objects.filter(email= item.email).delete()
+
+
+            response = {'Success': 'Email ' + email + ' deleted successfully'}
+
+
+        except Exception as e:
+                    print(e)
+                    response = {'Error':'Error while deleting the subscribed email'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+
     @action(detail=False, methods=['POST'])
     def set_emails(self, request):
         """
