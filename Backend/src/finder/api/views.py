@@ -892,6 +892,7 @@ def setUpdateSettings(euDate=None, b2matchDate=None):
 
     return True
 
+
 class ProposalCallsViewSet(viewsets.ModelViewSet):
     queryset = bsfCalls.objects.all()
     permission_classes = [
@@ -918,7 +919,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             to_date = data['second_date']
 
 
-            if organization == 'BSF':
+            if 'BSF' in organization:
 
                 try:
 
@@ -938,7 +939,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                 except:
                         response = {'BSF': [], 'Error': 'Error while searching for calls'}
 
-            if organization == 'ISF':
+            if 'ISF' in organization:
 
                 try:
 
@@ -961,7 +962,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                     response = {'ISF': [], 'Error': 'Error while searching for calls'}
 
 
-            if organization == 'INNOVATION':
+            if 'INNOVATION' in organization:
 
                 try :
 
@@ -982,7 +983,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                 except:
                     response = {'INNOVATION': [], 'Error': 'Error while searching for calls'}
 
-            if organization == 'MST':
+            if 'MST' in organization:
 
                 try:
 

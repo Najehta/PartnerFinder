@@ -45,3 +45,73 @@ def update_events():
 def b2match_alerts():
     url2 = URL + 'b2matchalerts/alertB2match/'
     response2 = requests.get(url2)
+
+
+@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
+               name="Update BSF Proposal Calls", ignore_result=True)
+
+def add_bsfcalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 7:00 AM to update BSF calls
+    :return:
+    """
+
+    url = URL + 'bsfcalls/add_bsfcalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
+               name="Update ISF Proposal Calls", ignore_result=True)
+
+def add_isfcalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 7:00 AM to update ISF calls
+    :return:
+    """
+
+    url = URL + 'isfcalls/add_isfcalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
+               name="Update Innovation Israel Proposal Calls", ignore_result=True)
+
+def add_isfcalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 7:00 AM to update Innovation Israel calls
+    :return:
+    """
+
+    url = URL + 'innovcalls/add_innovcalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
+               name="Update MST Proposal Calls", ignore_result=True)
+
+def add_mstcalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 7:00 AM to update MST calls
+    :return:
+    """
+
+    url = URL + 'mstcalls/add_mstcalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=0, hour=7, day_of_week='sun')),
+               name="Email Proposal Calls Alert", ignore_result=True)
+
+def send_emails():
+
+    """
+    automatic task that executes every week on sunday at 10:00 AM to send proposal calls to the subscribed email list
+    :return:
+    """
+
+    url = URL + 'EmailSubscription/send_emails/'
+    response = requests.get(url)
