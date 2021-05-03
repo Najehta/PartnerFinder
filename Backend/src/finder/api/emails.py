@@ -7,12 +7,14 @@ from decouple import config
 from dotenv import read_dotenv
 
 def email_processing(receiver_email, message):
+
     """
-    function to send email to a specific email address with a specific message
+    Method to send emails to a specific email address with a specific message
     :param receiver_email: the receiver email address
     :param message: the message to send.
-    :return:
+    :return: nothing
     """
+
     read_dotenv()
     sender_mail = os.getenv('USERID')
     password = os.getenv('PASSWORD')

@@ -24,6 +24,12 @@ from .QueryProcess import *
 
 def get_events_deadline(_url):
 
+    """
+      Method to fetch all the calls deadline from BSF website
+      :param : website proposal calls url
+      :return: proposal calls deadline date
+      """
+
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
@@ -58,6 +64,11 @@ def get_events_deadline(_url):
 
 def get_events_details(_url):
 
+    """
+      Method to fetch the calls information from the website
+      :param : website proposal calls url
+      :return: proposal calls information
+      """
 
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
@@ -83,6 +94,12 @@ def get_events_details(_url):
 
 def get_field_name(_url):
 
+    """
+      Method to extract the field name from the context using Regex
+      :param : website proposal calls url
+      :return: proposal calls field name
+      """
+
     event_details = get_events_details(_url)
     field_name = []
 
@@ -102,6 +119,13 @@ def get_field_name(_url):
 
 
 def make_csv_file(lists_containers):
+
+    """
+      Method to make csv file from the available proposal calls
+      :param : open deadline calls
+      :return: nothing
+      """
+
     # open an excel sheet to save the data
     excel_file = "BSF-Events.csv"
     f = open(excel_file, "w")
@@ -116,6 +140,12 @@ def make_csv_file(lists_containers):
 
 def get_bsf_call_by(tags, first_date, second_date):
 
+    """
+    Method to return all the relevant calls by tags and dates
+    :param : tags, date
+    :return: related calls
+    """
+
     tags_call = get_bsf_call_by_tags(tags)
     # print("Related call to "+tags+" is: ", tags_call)
     dates_call = get_bsf_call_by_dates(first_date, second_date)
@@ -128,11 +158,13 @@ def get_bsf_call_by(tags, first_date, second_date):
 
 
 def get_bsf_call_by_tags(tags):
+
     """
-       function to get all calls with at least one tag from the list of tags.
+       Method to get all calls with at least one tag from the list of tags.
        :param tags: list of tags
        :return: list of organizations objects
        """
+
     tags = ''.join(tags)
     index = reload_index('BsfIndex')
     corpus = NLP_processor([tags], 'BSF')
@@ -161,6 +193,12 @@ def get_bsf_call_by_tags(tags):
 
 def get_bsf_call_by_dates(first_date, second_date):
 
+    """
+         Method to return all the calls between dates
+         :param : dates
+         :return: calls that have deadline between this range
+         """
+
     calls = bsfCalls.objects.all()
 
     if not first_date and not second_date:
@@ -182,6 +220,12 @@ def get_bsf_call_by_dates(first_date, second_date):
 
 
 def get_bsf_call_intersection(tags_call, dates_call):
+
+    """
+      Method to intersect all the calls result together
+      :param : tags results, date results calls
+      :return: calls list
+      """
 
     result = []
     already_taken = set()

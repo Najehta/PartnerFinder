@@ -19,6 +19,12 @@ from .QueryProcess import *
 
 def get_calls_org(_url):
 
+    """
+      Method to fetch (scrape) all the calls data from Innovation Israel website
+      :param : website proposal calls url
+      :return: proposal calls names and links
+      """
+
     # open the connection with the url
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url,headers= {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
@@ -82,6 +88,12 @@ def get_calls_org(_url):
 
 def get_call_date(_url) :
 
+    """
+      Method to fetch (scrape) all the calls deadline date from the website
+      :param : website proposal calls url
+      :return: proposal calls deadline date
+      """
+
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
@@ -144,6 +156,12 @@ def get_call_date(_url) :
 
 def get_call_info(_url):
 
+    """
+      Method to fetch (scrape) all the calls information from the website
+      :param : website proposal calls url
+      :return: proposal calls information
+      """
+
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
@@ -172,6 +190,12 @@ def get_call_info(_url):
 
 def get_call_field(_url):
 
+    """
+      Method to fetch (scrape) the call field (area of research)
+      :param : website proposal calls url
+      :return: proposal calls area of research
+      """
+
     # This will avoid mod_security on the website, to avoid been blocked
     get_client = Request(_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
@@ -199,6 +223,12 @@ def get_call_field(_url):
 
 
 def get_innovation_hebrew_calls(_url):
+
+    """
+     Method to scrape the hebrew proposal calls data
+     :param : website proposal calls url
+     :return: proposal calls data
+     """
 
     translator = google_translator()
     # open the connection with the url
@@ -239,6 +269,12 @@ def get_innovation_hebrew_calls(_url):
 
 def get_innovation_hebrew_calls_info(_url):
 
+    """
+     Method to scrape the hebrew proposal calls information
+     :param : website proposal calls url
+     :return: proposal calls information
+     """
+
     translator = google_translator()
     # open the connection with the url
     # This will avoid mod_security on the website, to avoid been blocked
@@ -265,6 +301,12 @@ def get_innovation_hebrew_calls_info(_url):
 
 
 def get_Innovation_call_by(tags, first_date, second_date):
+
+    """
+     Method to return all the relevant calls by tags and dates
+     :param : tags, date
+     :return: related calls
+     """
 
     tags_call = get_Innovation_call_by_tags(tags)
     # print("Related call to "+tags+" is: ", tags_call)
@@ -308,6 +350,12 @@ def get_Innovation_call_by_tags(tags):
 
 def get_Innovation_call_by_dates(first_date, second_date):
 
+    """
+     Method to return all the calls between dates
+     :param : dates
+     :return: calls that have deadline between this range
+     """
+
     calls = InnovationCalls.objects.all()
 
     if not first_date and not second_date:
@@ -329,6 +377,12 @@ def get_Innovation_call_by_dates(first_date, second_date):
 
 
 def get_Innovation_call_intersection(tags_call, dates_call):
+
+    """
+     Method to return all the calls between dates
+     :param : dates
+     :return: calls that have deadline between this range
+     """
 
     result = []
     already_taken = set()

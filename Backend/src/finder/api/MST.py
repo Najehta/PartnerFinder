@@ -12,6 +12,11 @@ from langdetect import detect
 
 def get_calls(_url):
 
+    """
+    Method to fetch (scrape) all the calls data from MST website
+    :param : website proposal calls url
+    :return: proposal calls information
+    """
 
     # please change this PATH to open chromedriver from your device
     PATH = '/Users/najeh/chromedriver'
@@ -98,6 +103,12 @@ def get_calls(_url):
 
 def get_calls_num(_url):
 
+    """
+   Method to return the number of proposal calls
+   :param : website proposal calls url
+   :return: number of calls
+   """
+
     PATH = '/Users/najeh/chromedriver'
     driver = webdriver.Chrome(PATH)
     driver.get(_url)
@@ -115,6 +126,12 @@ def get_calls_num(_url):
 
 def get_Mst_call_by(tags, first_date, second_date):
 
+    """
+   Method to return all the relevant calls by tags and dates
+   :param : tags, date
+   :return: related calls
+   """
+
     tags_call = get_Mst_call_by_tags(tags)
     # print("Related call to "+tags+" is: ", tags_call)
     dates_call = get_Mst_call_by_dates(first_date, second_date)
@@ -126,11 +143,13 @@ def get_Mst_call_by(tags, first_date, second_date):
 
 
 def get_Mst_call_by_tags(tags):
+
     """
-       function to get all calls with at least one tag from the list of tags.
-       :param tags: list of tags
-       :return: list of organizations objects
-       """
+   Method to get all calls with at least one tag from the list of tags.
+   :param tags: list of tags
+   :return: list of organizations objects
+   """
+
     tags = ''.join(tags)
     index = reload_index('MstIndex')
     corpus = NLP_processor([tags], 'MST')
@@ -157,6 +176,12 @@ def get_Mst_call_by_tags(tags):
 
 def get_Mst_call_by_dates(first_date, second_date):
 
+    """
+   Method to return all the calls between dates
+   :param : dates
+   :return: calls that have deadline between this range
+   """
+
     calls = MstCalls.objects.all()
 
     if not first_date and not second_date:
@@ -178,6 +203,12 @@ def get_Mst_call_by_dates(first_date, second_date):
 
 
 def get_Mst_call_intersection(tags_call, dates_call):
+
+    """
+   Method to intersect all the calls result together
+   :param : tags results, date results calls
+   :return: calls list
+   """
 
     result = []
     already_taken = set()

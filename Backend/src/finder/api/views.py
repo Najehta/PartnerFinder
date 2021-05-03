@@ -902,6 +902,12 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'])
     def call_search(self, request):
 
+        """
+        Method to define API to search for calls in the DB, that is related to the user input
+        :param request: HTTP request that contain data, which is tags, dates
+        :return: HTTP response
+        """
+
         try:
             data = request.query_params['data']
             print("This is the data:", data)
@@ -1011,6 +1017,12 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_bsfcalls_to_db(self, request):
 
+        """
+        Method to define API add BSF calls and the generated index to the local DB
+        :param request: HTTP request
+        :return: HTTP response
+        """
+
         bsfCalls.objects.all().delete()
         MapIdsBSF.objects.all().delete()
         _url = 'https://www.bsf.org.il/calendar/'
@@ -1063,6 +1075,11 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def add_isfcalls_to_db(self, request):
 
+        """
+       Method to define API add ISF calls and the generated index to the local DB
+       :param request: HTTP request
+       :return: HTTP response
+       """
 
         IsfCalls.objects.all().delete()
         MapIdsISF.objects.all().delete()
@@ -1142,6 +1159,12 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def add_innovcalls_to_db(self, request):
+
+        """
+         Method to define API add Innovation Israel calls and the generated index to the local DB
+         :param request: HTTP request
+         :return: HTTP response
+         """
 
         InnovationCalls.objects.all().delete()
         MapIdsINNOVATION.objects.all().delete()
@@ -1239,6 +1262,12 @@ class MstCallsViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def add_mstcalls_to_db(self, request):
+
+        """
+         Method to define API add Ministry of science and technology calls and the generated index to the local DB
+         :param request: HTTP request
+         :return: HTTP response
+         """
 
         counter = 0
         MstCalls.objects.all().delete()
@@ -1348,11 +1377,13 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def get_emails(self, request):
+
         """
-        method to define API to get email subscription settings
+        Method to define API to get email subscription settings
         :param request: HTTP request
         :return: HTTP Response
         """
+
         try:
             EmailSubscriptions = EmailSubscription.objects.all()
             email_responses = []
@@ -1374,11 +1405,13 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def delete_email(self, request):
+
         """
-        method to define API to delete email subscription
-        :param request: HTTP request
+        Method to define API to delete email subscription
+        :param request: HTTP request that contain email data
         :return: HTTP Response
         """
+
         try:
 
             data = request.query_params['data']
@@ -1405,8 +1438,9 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def set_emails(self, request):
+
         """
-        method to define API to update the email subscription settings
+        Method to define API to update the email subscription settings
         :param request: HTTP request with updated email and status flag
         :return: HTTP response
         """
@@ -1445,12 +1479,12 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def send_emails(self, request):
+
         """
-        method to define API to send proposal calls updates to subscribed emails
+        Method to define API to send proposal calls updates to subscribed emails
         :param request: HTTP request
         :return: HTTP Response
         """
-
 
         signature = ''
         available_calls = []

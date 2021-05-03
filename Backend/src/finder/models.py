@@ -342,9 +342,11 @@ class MapIdsINNOVATION(models.Model):
 
 
 class EmailSubscription(models.Model):
+
     """
-    class to define the data model of subscription Settings.
+    class to define the data model of email subscription settings.
     """
+
     ID = models.IntegerField(unique=True, null=False, blank= False)
     email = models.EmailField(max_length=300, blank=True)
     status = models.BooleanField(default=False)

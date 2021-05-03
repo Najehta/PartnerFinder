@@ -6,6 +6,7 @@ from nltk.tokenize import word_tokenize
 
 
 def NLP_processor(documents, type):
+
     """
     function to make new corpus for a certain set of documents
     :param documents: list of lists of strings
@@ -24,7 +25,9 @@ def NLP_processor(documents, type):
 
     if type == 'INNOVATION':
         dir = 'Dictionary_INNOVATION'
+
     # print("This is the documents",documents)
+
     tokens = [process_document(doc) for doc in documents]
     try:
 
@@ -44,15 +47,17 @@ def NLP_processor(documents, type):
 
 
 def process_document(document):
+
     """
     function to process a certain document by 1- tokenizing it 2- remove stop words 3- making lower cas of tokens
     4- stemming each token
     :param document: string
     :return: list of tokens
     """
+
     ps = PorterStemmer()
-  #  nltk.download('stopwords')
-  #   nltk.download('punkt')
+  #  nltk.download('stopwords') ---> remove # for the first run only
+  #   nltk.download('punkt')    ---> remove # for the first run only
 
     try:
         stop_words = (stopwords.words('english'))
@@ -71,17 +76,20 @@ def process_document(document):
 
 
 def make_dictionary(tokens):
+
     """
     function to build new dictionary with a certain tokens
     :param tokens: list of lists of tokens
     :return: Dictionary object
     """
+
     dictionary = gensim.corpora.Dictionary(tokens)
     # print("This is the dictionary",dictionary.token2id)
     return dictionary  # mapping termId : term
 
 
 def build_corpus(dictionary, tokens):
+
     """
     function to build a corpus, which is mapping each token id to its frequency
     :param dictionary: inner dictionary object for mapping token -> token id
@@ -96,6 +104,7 @@ def build_corpus(dictionary, tokens):
 
 
 def process_query_result(result):
+
     """
     function to process similarity result, it will map each document similarity percentage with the document id
     :param result: list of lists of percentages
@@ -114,6 +123,7 @@ def process_query_result(result):
 
 
 def add_document_to_curr_index(index, documents,type):
+
     """
     function to add new documents to existent index
     :param index: current index
@@ -121,6 +131,7 @@ def add_document_to_curr_index(index, documents,type):
     :param type: string to know which repository
     :return: updated index
     """
+
     corpus = NLP_processor(documents,type)
     index.num_features += len(corpus) * 1000
     for doc in corpus:
@@ -131,6 +142,7 @@ def add_document_to_curr_index(index, documents,type):
 
 
 def reload_index(path):
+
     """
     function to load index from a specific directory on disk
     :param path: path to directory
@@ -141,6 +153,7 @@ def reload_index(path):
 
 
 def reload_dictionary(path):
+
     """
     function to load dictionary from a specific directory on disk
     :param path: path to directory
@@ -151,12 +164,14 @@ def reload_dictionary(path):
 
 
 def make_index(path, type):
+
     """
     build an empty index in disk and save it on a specific directory
     :param path: path of the directory
     :param type: string to know what index b2match or eu
     :return: Similarity object "index"
     """
+
     corpus = NLP_processor([], type)
     tfidf = gensim.models.TfidfModel(corpus)
 
@@ -165,12 +180,14 @@ def make_index(path, type):
 
 
 def get_document_from_bsf_call(info, area):
+
     """
     function to get the description and tags from bsf call
     :param info: call information
     :param area: tags
     :return: document
     """
+
     doc = [info]
     for tag in area:
         doc.append(tag)
@@ -179,22 +196,26 @@ def get_document_from_bsf_call(info, area):
 
 
 def get_document_from_isf_call(info):
+
     """
     function to get the description and tags from isf call
     :param info: call information
     :return: document
     """
+
     doc = [info]
     return ''.join(doc)
 
 
 def get_document_from_innovation_call(info, area):
+
     """
     function to get the description and tags from innovation call
     :param info: call information
     :param area: tags
     :return: document
     """
+
     doc = [info]
     for tag in area:
         doc.append(tag)
@@ -203,12 +224,14 @@ def get_document_from_innovation_call(info, area):
 
 
 def get_document_from_mst_call(topic, info):
+
     """
     function to get the description and tags from innovation call
     :param info: call information
     :param topic: call topic
     :return: document
     """
+
     doc = [topic]
     for tag in info:
         doc.append(tag)
