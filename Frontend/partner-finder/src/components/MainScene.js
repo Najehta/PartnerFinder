@@ -18,6 +18,7 @@ import Box from "@material-ui/core/Box";
 import moment from "moment";
 import { Msgtoshow } from "./Msgtoshow";
 import { BACKEND_URL } from "../utils";
+import Calls from './P_Calls';
 
 function MainScene(props) {
   const { children, value, index, ...other } = props;
@@ -325,6 +326,16 @@ export default function NavTabs() {
             href="/updates"
             {...a11yProps(2)}
           />
+          <LinkTab
+            label={
+              <span id="textFontFamily" className={classes.tabsText}>
+                Proposal Calls
+              </span>
+            }
+            href="/calls"
+            {...a11yProps(3)}
+          />
+
         </Tabs>
       </AppBar>
       <MainScene value={value} index={0}>
@@ -335,6 +346,9 @@ export default function NavTabs() {
       </MainScene>
       <MainScene value={value} index={2}>
         <Updates state={updatesState} setState={setUpdatesState} />
+      </MainScene>
+      <MainScene value={value} index={3}>
+        <Calls />
       </MainScene>
     </div>}
     </div>
