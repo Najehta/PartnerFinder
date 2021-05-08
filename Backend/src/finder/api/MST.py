@@ -149,27 +149,34 @@ def get_Mst_call_by_tags(tags):
    :param tags: list of tags
    :return: list of organizations objects
    """
-
-    tags = ''.join(tags)
-    index = reload_index('MstIndex')
-    corpus = NLP_processor([tags], 'MST')
-    res = index[corpus]
-    res = process_query_result(res)
-
-    res = [pair for pair in res if pair[1] > 0.1]
-    res = sorted(res, key=lambda pair: pair[1], reverse=True)
-    temp = []
-
-    for pair in res:
-        try:
-            temp.append(MapIdsMST.objects.get(indexID=pair[0]))
-        except:
-            pass
-    res = temp
-
     finalRes = []
-    for mapId in res:
-        finalRes.append(MstCalls.objects.get(CallID=mapId.originalID))
+    calls = MstCalls.objects.all()
+
+    if not tags:
+        for call in calls:
+            finalRes.append(call)
+
+    else:
+        tags = ''.join(tags)
+        index = reload_index('MstIndex')
+        corpus = NLP_processor([tags], 'MST')
+        res = index[corpus]
+        res = process_query_result(res)
+
+        res = [pair for pair in res if pair[1] > 0.1]
+        res = sorted(res, key=lambda pair: pair[1], reverse=True)
+        temp = []
+
+        for pair in res:
+            try:
+                temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+            except:
+                pass
+        res = temp
+
+        finalRes = []
+        for mapId in res:
+            finalRes.append(MstCalls.objects.get(CallID=mapId.originalID))
 
     return finalRes
 

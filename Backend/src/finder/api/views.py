@@ -918,6 +918,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             from_date = data['first_date']
             to_date = data['second_date']
 
+        #TODO: check if organization is empty
 
             if 'BSF' in organization:
 
@@ -936,7 +937,8 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     response = {'BSF': BSF}
 
-                except:
+                except Exception as e:
+                        print(e)
                         response = {'BSF': [], 'Error': 'Error while searching for calls'}
 
             if 'ISF' in organization:
@@ -980,7 +982,8 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     response = {'INNOVATION': INNOVATION}
 
-                except:
+                except Exception as e:
+                    print(e)
                     response = {'INNOVATION': [], 'Error': 'Error while searching for calls'}
 
             if 'MST' in organization:
@@ -999,7 +1002,8 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     response = {'MST': MST}
 
-                except:
+                except Exception as e:
+                        print(e)
                         response = {'MST': [], 'Error': 'Error while searching for calls'}
 
         except:
