@@ -759,9 +759,9 @@ class ScoresViewSet(viewsets.ModelViewSet):
                                 R_D_Institution=data['R_D_Institution'], Start_Up=data['Start_Up'],
                                 Others=data['Others'])
             scores.save()
-            response = {'success': 'Scores updated successfully.'}
+            response = {'Success': 'Scores updated successfully.'}
         except:
-            response = {'error': 'Error while updating scores.'}
+            response = {'Error': 'Error while updating scores.'}
         return Response(response, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['GET'])
@@ -775,7 +775,7 @@ class ScoresViewSet(viewsets.ModelViewSet):
             scores = Scores.objects.all()[0]
             response = ScoresSerializer(scores).data
         except:
-            response = {'error': 'Error while uploading scores.'}
+            response = {'Error': 'Error while uploading scores.'}
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -838,7 +838,7 @@ class AlertsB2match(viewsets.ModelViewSet):
             body['Subject'] = 'B2MATCH Events Alert'
             send_mail(receiver_email=email, message=body)
         except:
-            response = {'error': 'Error while building recommended events.'}
+            response = {'Error': 'Error while building recommended events.'}
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -857,7 +857,7 @@ class AlertsB2match(viewsets.ModelViewSet):
                 date = str(event.event_date).split('T')[0]
                 response.append({'event_name': event.event_name, 'event_url': event.event_url, 'date': date})
         except:
-            response = {'error': 'Error while uploading recommended events.'}
+            response = {'Error': 'Error while uploading recommended events.'}
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -907,7 +907,9 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
         Method to define API to search for calls in the DB, that is related to the user input
         :param request: HTTP request that contain data, which is tags, dates
         :return: HTTP response
+
         """
+
 
         try:
             data = request.query_params['data']
@@ -918,7 +920,9 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             from_date = data['first_date']
             to_date = data['second_date']
 
-        #TODO: check if organization is empty
+
+            if not organization:
+                response = {'Error': 'Organization field is empty'}
 
             if 'BSF' in organization:
 
@@ -940,6 +944,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                 except Exception as e:
                         print(e)
                         response = {'BSF': [], 'Error': 'Error while searching for calls'}
+
 
             if 'ISF' in organization:
 
@@ -1474,9 +1479,9 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                 emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
                 emailSubscription.save()
 
-            response = {'success': 'New email have been successfully subscribed.'}
+            response = {'Success': 'New email have been successfully subscribed.'}
         except:
-            response = {'error': 'Error while updating email subscription settings'}
+            response = {'Error': 'Error while updating email subscription settings'}
 
         return Response(response, status=status.HTTP_200_OK)
 
