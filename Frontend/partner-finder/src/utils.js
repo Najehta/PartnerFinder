@@ -73,6 +73,21 @@ const B2Match_columns = [
       ) },
 ];
 
+const Calls_columns = [
+  { title: "Organization Name", field: "organizationName" },
+  { title: "Deadline Date", field: "deadlineDate" },
+  { title: "Information", field: "information" },
+  { title: "Area of research", field: "areaOfResearch" },
+  { title: "Link", field: "link" ,
+  render: (rowData) => (
+
+<a href={rowData.link} target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
+      {rowData.link}{" "}
+    </a>
+  )}
+  
+];
+
 const classificationTypesOptions = [
   {label :"Small or medium-size enterprise", value:"Small or medium-size enterprise"}, {label:"International Organisation", value:"International Organisation"},
   {label:"Higher or secondary education establishment", value: "Higher or secondary education establishment"},
@@ -223,4 +238,5 @@ const tableIcons = {
 
 const BACKEND_URL = "http://62.90.89.14:8000/api/";
 
-export { EU_columns, B2Match_columns, BACKEND_URL, tableIcons, classificationTypesOptions, consorsiumRoles, calls_columns, events_columns };
+export { EU_columns, B2Match_columns, BACKEND_URL, tableIcons, classificationTypesOptions, consorsiumRoles, calls_columns, 
+  events_columns, Calls_columns};
