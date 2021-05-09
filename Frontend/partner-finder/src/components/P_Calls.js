@@ -7,7 +7,7 @@ import Search from './Search';
 
 function Calls() {
   return (
-    <div className='parent'>
+    <div className='Calls-grid'>
       <div className='div1'>
         <Getcalls></Getcalls>
       </div>

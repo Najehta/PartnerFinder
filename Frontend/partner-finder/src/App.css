@@ -53,6 +53,13 @@ h3 {
   line-height: 15.4px;
   color: #02203c;
 }
+h5 {
+  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
+    "Bitstream Vera Sans Mono", monospace;
+  font-style: normal;
+  font-variant: normal;
+  color: #02203c;
+}
 p {
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
     "Bitstream Vera Sans Mono", monospace;
