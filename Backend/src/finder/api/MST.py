@@ -19,9 +19,15 @@ def get_calls(_url):
     """
 
     # please change this PATH to open chromedriver from your device
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
+
+    except Exception as e:
+        print(e)
+        return
+
     translator = google_translator()
 
     call_name, link, deadline, about, deadline_date= [], [], [], [], []
@@ -108,10 +114,14 @@ def get_calls_num(_url):
    :param : website proposal calls url
    :return: number of calls
    """
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
 
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
+    except Exception as e:
+        print(e)
+        return
 
     page_html = driver.execute_script(
         'return document.getElementsByClassName("h1 reforma-medium xs-me-10 dark-blue-txt ng-binding")[0].innerHTML')

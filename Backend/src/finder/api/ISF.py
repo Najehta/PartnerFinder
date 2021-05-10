@@ -23,9 +23,15 @@ def get_calls_status(_url, click):
    """
 
     # please change this PATH to open chromedriver from your device
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
+
+    except Exception as e:
+        print(e)
+        return
+
     status, inst_type, num_partners, period, budget, general_info, deadline, reg_deadline, sub_deadline, link= '', '', '', '', '', '', '', '', '',''
 
     try:
@@ -97,9 +103,14 @@ def get_proposal_names_links(_url, click):
     """
 
     # please change this PATH to open chromedriver from your device
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
+
+    except Exception as e:
+        print(e)
+        return
 
     calls_name, links = [], []
     try:

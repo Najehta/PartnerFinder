@@ -910,7 +910,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
         """
 
-
+        BSF, ISF, INNOVATION, MST = [], [], [], []
         try:
             data = request.query_params['data']
             print("This is the data:", data)
@@ -922,7 +922,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
             if not organization:
-                response = {'Error': 'Organization field is empty'}
+                organization = 'BSF, ISF, INNOVATION, MST'
 
             if 'BSF' in organization:
 
@@ -939,11 +939,9 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                                     'areaOfResearch': value.areaOfResearch,
                                     'link': 'https://www.bsf.org.il/calendar/'})
 
-                    response = {'BSF': BSF}
-
                 except Exception as e:
                         print(e)
-                        response = {'BSF': [], 'Error': 'Error while searching for calls'}
+                        
 
 
             if 'ISF' in organization:
@@ -962,11 +960,9 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                                     'institutionType': value.institutionType,
                                     'link': value.link})
 
-                    response = {'ISF': ISF}
+                except Exception as e:
+                    print(e)
 
-                except:
-
-                    response = {'ISF': [], 'Error': 'Error while searching for calls'}
 
 
             if 'INNOVATION' in organization:
@@ -985,11 +981,10 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                                            'areaOfResearch': value.areaOfResearch,
                                            'link': value.link})
 
-                    response = {'INNOVATION': INNOVATION}
 
                 except Exception as e:
                     print(e)
-                    response = {'INNOVATION': [], 'Error': 'Error while searching for calls'}
+
 
             if 'MST' in organization:
 
@@ -1005,12 +1000,42 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                                     'information': value.information,
                                     'link': value.link})
 
-                    response = {'MST': MST}
-
                 except Exception as e:
                         print(e)
-                        response = {'MST': [], 'Error': 'Error while searching for calls'}
 
+
+            if BSF and ISF and INNOVATION and MST :
+                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST}
+            elif BSF and not ISF and not INNOVATION and not MST:
+                response = {'BSF': BSF}
+            elif not BSF and ISF and not INNOVATION and not MST:
+                response = {'ISF': ISF}
+            elif not BSF and not ISF and INNOVATION and not MST:
+                response = {'INNOVATION': INNOVATION}
+            elif not BSF and not ISF and not INNOVATION and MST:
+                response = {'MST': MST}
+            elif BSF and ISF and not INNOVATION and not MST:
+                response = {'BSF': BSF, 'ISF': ISF}
+            elif BSF and not ISF and INNOVATION and not MST:
+                response = {'BSF': BSF, 'INNOVATION': INNOVATION}
+            elif BSF and not ISF and not INNOVATION and MST:
+                response = {'BSF': BSF, 'MST': MST}
+            elif BSF and ISF and INNOVATION and not MST:
+                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION}
+            elif not BSF and ISF and INNOVATION and not MST:
+                response = {'ISF': ISF, 'INNOVATION': INNOVATION}
+            elif not BSF and ISF and INNOVATION and MST:
+                response = {'ISF': ISF, 'INNOVATION': INNOVATION,'MST': MST}
+            elif not BSF and ISF and not INNOVATION and MST:
+                response = {'ISF': ISF, 'MST': MST}
+            elif not BSF and not ISF and INNOVATION and MST:
+                response = {'INNOVATION': INNOVATION, 'MST': MST}
+            elif BSF and not ISF and INNOVATION and MST:
+                response = {'BSF': BSF, 'INNOVATION': INNOVATION, 'MST': MST}
+            elif BSF and ISF and not INNOVATION and MST:
+                response = {'BSF': BSF, 'ISF': ISF, 'MST': MST}
+            else:
+                response = {'BSF': [], 'ISF': [], 'INNOVATION': [], 'MST': []}
         except:
             response = {'Error': 'Error while searching for calls'}
 

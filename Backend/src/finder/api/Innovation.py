@@ -45,9 +45,15 @@ def get_calls_org(_url):
 
 
     # open google chrome driver to scroll down on the website to grab more calls
-    PATH = '/Users/najeh/chromedriver'
-    driver = webdriver.Chrome(PATH)
-    driver.get(_url)
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
+
+    except Exception as e:
+        print(e)
+        return
+
     click = "Next"
     click_isExisted = True
 
