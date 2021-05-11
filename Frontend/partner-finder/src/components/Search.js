@@ -15,6 +15,8 @@ import {
   DialogContent,
 } from "@material-ui/core/";
 import { BeatLoader } from "react-spinners";
+import { WithContext as ReactTags } from "react-tag-input";
+import Typography from "@material-ui/core/Typography";
 //???
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -70,14 +72,17 @@ const Search = (props) => {
     };
     //Button consts
     const searchByOrg = () => {
+    //   let OrganizationToSearch = selectedOrganization.map((value) => {
+    //     return valuçe.label;})
       // if (formValidation()) {
+        
       //   setMsgState({
       //     title: "Error",
       //     body: "Please fill the tag field",
       //     visible: true,
       //   });
       // } else {
-      //   let countriesToSearch = countrySearched.map((value) => {
+      //   let selectedOrganization = selectedOrganization.map((value) => {
       //     return valuçe.label;
       //   })
       //   let typeTosSearch = type.map((value) => {
@@ -89,7 +94,75 @@ const Search = (props) => {
       //   }
       //   genericSearch(tags, countriesToSearch, typeTosSearch, roleToSearch);
       // }
-    };
+    //   callsSearch(OrganizationToSearch);
+     };
+
+    // const calsSearch = (organization) => {
+    //   setState({ ...state, loading: true });
+    //   tags = tags.map((tag) => tag.text);
+    //   let url = new URL(BACKEND_URL + "generic_search/");
+    //   let params = { data: JSON.stringify({ tags: tags, countries: countries, types: type, role: role }) };
+    //   Object.keys(params).forEach((key) =>
+    //     url.searchParams.append(key, params[key])
+    //   );
+    //   fetch(url, {
+    //     method: "GET",
+    //   })
+    //     .then((res) => res.json())
+    //     .then((resp) => {
+    //       if ("error" in resp) {
+    //         setMsgState({
+    //           title: "Failed",
+    //           body: "Error while searching for organizations",
+    //           visible: true,
+    //         });
+    //         setState({ ...state, loading: false });
+    //         setData({ EU: [], B2MATCH: [] });
+    //         props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
+    //       } else {
+    //         setState({ ...state, loading: false });
+    //         resp['EU'] = resp['EU'].map(val => {
+    //           return { ...val, 'consorsiumRoles': val.consorsiumRoles ? 'Coordinator' : 'Regular' }
+    //         })
+    //         setData(resp);
+    //         props.setState({ ...props.state, data: { ...resp } });
+    //         if(resp.EU.length === 0 && resp.B2MATCH.length === 0){
+    //           setMsgState({
+    //             title: "Success",
+    //             body: "We didn't find any relevant results",
+    //             visible: true,
+    //           });
+    //         }
+    //         else{
+    //           if (resp.EU.length === 0){
+    //             setMsgState({
+    //               title: "Success",
+    //               body: "We didn't find any relevant organizations from EU",
+    //               visible: true,
+    //             });
+    //           }
+    //           if (resp.B2MATCH.length === 0){
+    //             setMsgState({
+    //               title: "Success",
+    //               body: "We didn't find any relevant participants from B2match",
+    //               visible: true,
+    //             });
+    //           }
+    //         }
+           
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       setData({ EU: [], B2MATCH: [] });
+    //       props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
+    //       setMsgState({
+    //         title: "Failed",
+    //         body: "Error while searching for organizations",
+    //         visible: true,
+    //       });
+    //       setState({ ...state, loading: false });
+    //     });
+    // };
 
     //variables for the table
     const [data, setData] = useState( [
@@ -126,6 +199,47 @@ const Search = (props) => {
           "link": "https://www.bsf.org.il/calendar/"
       }
   ]);
+  //tags consts------------------
+const [tags, setTags] = React.useState([]);
+const [formState, setFormState] = React.useState({
+  tags: false,
+});
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
+/**
+   * function for adding a new tag
+   * @param {String} tag the tag that the user inserts
+   */
+ const addTag = (tag) => {
+  setTags([...tags, tag]);
+  // props.setState({ ...props.state, tags: [...props.state.tags, tag] });
+};
+
+
+/**
+ * function that sets the value of the tag that the user filled
+ * @param {event} event 
+ */
+const changeTagInput = (event) => {
+  if (event.length !== 0) {
+    setFormState({ ...formState, tags: false });
+  }
+};
+/**
+ * function for deleting the tag that has been inserted
+ * @param {int} idx index of the tag we want to delete
+ */
+const deleteTag = (idx) => {
+  let newTags = tags.filter((val, i) => i !== idx);
+  setTags(newTags);
+  // props.setState({ ...props.state, tags: [...newTags] });
+};
+
+const dragTag = (tag, currPos, newPos) => { };
+
 
  
   
@@ -151,20 +265,29 @@ const Search = (props) => {
             </FormControl>
       </div>
       <div className='aorMultiSelect'>
-      <h1 id="textFontFamily" style={{ color: "#02203c" }}>
-              Area of research
+      <h1>
+              Tags
             </h1>
-            <FormControl  id="text_select">
-              <MultiSelect
-                options={options}
-                styles={customStyles}
-                value={selectedOrganization}
-                onChange={handleChoose}
-                focusSearchOnOpen={true}
-                className="select"
-                labelledBy={"Select"}
-              />
-            </FormControl>
+            <ReactTags
+              tags={tags}
+              handleDelete={deleteTag}
+              handleAddition={addTag}
+              handleDrag={dragTag}
+              delimiters={delimiters}
+              handleInputChange={changeTagInput}
+            />
+
+            {formState && formState.tags ? (
+              <Typography
+                variant="caption"
+                display="block"
+                gutterBottom
+                style={{ color: "red", fontWeight: "bold" }}
+              >
+                Enter at least one tag
+              </Typography>
+            ) : null}
+
       </div>
       <div className='searchButton'>
       <Button
