@@ -17,6 +17,14 @@ import {
 import { BeatLoader } from "react-spinners";
 import { WithContext as ReactTags } from "react-tag-input";
 import Typography from "@material-ui/core/Typography";
+import 'date-fns';
+import Grid from '@material-ui/core/Grid';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 //???
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -240,8 +248,19 @@ const deleteTag = (idx) => {
 
 const dragTag = (tag, currPos, newPos) => { };
 
+//date 
 
- 
+const [selectedStartDate, setSelectedStartDate] = React.useState();
+
+const handleStartDateChange = (date) => {
+  setSelectedStartDate(date);
+};
+
+const [selectedEndDate, setselectedEndDate] = React.useState();
+
+const handleEndDateChange = (date) => {
+  setselectedEndDate(date);
+};
   
   return (
   <div className='SearchCom'>
@@ -287,7 +306,39 @@ const dragTag = (tag, currPos, newPos) => { };
                 Enter at least one tag
               </Typography>
             ) : null}
-
+      
+      </div>
+      <div className="Date">
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container justify="space-around">
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Start Date"
+          value={selectedStartDate}
+          onChange={handleStartDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+          <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="End Date"
+          value={selectedEndDate}
+          onChange={handleEndDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        </Grid>
+    </MuiPickersUtilsProvider>
       </div>
       <div className='searchButton'>
       <Button

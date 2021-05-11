@@ -60,7 +60,7 @@ const Getcalls = (props) => {
     });
     const handleChoose = (event) => {
       setSelected(event);
-      props.setState({ ...props.state, selected: event });
+      //props.setState({ ...props.state, selected: event });
     };
     //Button consts
   

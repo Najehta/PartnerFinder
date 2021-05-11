@@ -53,7 +53,7 @@ const Alert = (props) => {
     });
     const handleChoose = (event) => {
       setSelected(event);
-      props.setState({ ...props.state, selected: event });
+     // props.setState({ ...props.state, selected: event });
     };
 
     const classes = useStyles();

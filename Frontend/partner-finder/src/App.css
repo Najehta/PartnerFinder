@@ -1,19 +1,18 @@
 body {
-  background-color: #ececec;
+  background-color: white;
 }
 
 #textFontFamily {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family:   "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
+  color: white;
   
 }
 
 
 #text_select{
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-  "Bitstream Vera Sans Mono", monospace;
+  font-family:   "Helvetica Neue";
 font-style: normal;
 font-variant: normal;
 color:white;
@@ -28,37 +27,36 @@ font-size:13px;
   background-color: #ececec;
 }
 h1 {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
-  color: #02203c;
+  color: #283747;
 }
 
 h2 {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family:    "Helvetica Neue";
+
   font-style: normal;
   font-variant: normal;
-  color: #02203c;
+  color: #283747;
 }
 
 h3 {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family:   "Helvetica Neue";
+
   font-style: normal;
   font-variant: normal;
   font-size: 14px;
   font-weight: 700;
   line-height: 15.4px;
-  color: #02203c;
+  color: #283747;
 }
 h5 {
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
     "Bitstream Vera Sans Mono", monospace;
   font-style: normal;
   font-variant: normal;
-  color: #02203c;
+  color: #283747;
 }
 p {
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
@@ -168,14 +166,14 @@ pre {
 }
 .select{
   width:300px;
-  --rmsc-background: #02203c;
+  --rmsc-background: #283747;
 }
 .select_role{
   width: 200px;
 }
 
 .multi-select {
-  background-color: #02203c;
+  background-color: #283747;
   color: "white"; 
   --rmsc-gray:white;
 }
@@ -222,37 +220,37 @@ pre {
   color: white;
 }
 .dropdown-heading, .dropdown-heading-value{
-  background-color: #02203c;
+  background-color: #eef1f4;
   color: "white";
 }
 
 .dropdown-content{
-  background-color: #02203c;
+  background-color: #d2dfdf;
   color: "white";
 }
 
 .select-panel{
-  background-color: #02203c;
+  background-color: #adb3b9;
   color: "white";
 }
 .go2885254090 input{
-  background-color: #02203c;
+  background-color: #283747;
   color: "white";
 }
 
 .select_role css-2b097c-container{
-  background-color: #02203c;
+  background-color: #283747;
   color: "white";
 }
 
 
 .css-yk16xz-control{
-  background-color: #02203c;
+  background-color: #283747;
   color: "white";
 }
 
 .MuiDialogTitle-root {
-  background-color:  #02203c;
+  background-color:  #283747;
  
 }
 
@@ -293,7 +291,7 @@ pre {
   grid-template-columns: 17% 17% 17.5% 17% 17.5% 17%;
 }
 .line {
-  border-top: 5px solid #02203c;
+  border-top: 5px solid #283747;
   width: 80%;
   margin-left: 130px;
   margin-top: 20px;
@@ -318,7 +316,7 @@ pre {
 }
 
 #BackgroundColor {
-  background-color: #02203c;
+  background-color: #283747;
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
     "Bitstream Vera Sans Mono", monospace;
   font-style: normal;
@@ -355,9 +353,9 @@ div.ReactTags__tagInput input.ReactTags__tagInputField {
   font-style: normal;
   font-variant: normal;
   width: 100%;
-  border: 1px solid #02203c;
+  border: 1px solid #283747;
   padding: 0 4px;
-  background-color: #02203c;
+  background-color: #283747;
   color: white;
 }
 
@@ -367,8 +365,8 @@ div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder {
 
 /* Styles for selected tags */
 div.ReactTags__selected span.ReactTags__tag {
-  border: 1px solid #02203c;
-  background: #02203c;
+  border: 1px solid #283747;
+  background: #283747;
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
     "Bitstream Vera Sans Mono", monospace;
   font-style: normal;
@@ -394,21 +392,21 @@ div.ReactTags__suggestions {
 div.ReactTags__suggestions ul {
   list-style-type: none;
   /* box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2); */
-  background: #02203c;
+  background: #10131011;
   width: 200px;
 }
 div.ReactTags__suggestions li {
-  border-bottom: 1px solid #02203c;
+  border-bottom: 1px solid #283747;
   padding: 5px 10px;
   margin: 0;
 }
 div.ReactTags__suggestions li mark {
   text-decoration: underline;
-  background: #02203c;
+  background: #283747;
   font-weight: 600;
 }
 div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
-  background: #02203c;
+  background: #283747;
   cursor: pointer;
   color: white;
 }
