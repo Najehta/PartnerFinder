@@ -15,28 +15,41 @@ import {
   DialogTitle,
   DialogContent,
 } from "@material-ui/core/";
-import { classificationTypesOptions, consorsiumRoles, BACKEND_URL } from "../utils";
+import {
+  classificationTypesOptions,
+  consorsiumRoles,
+  BACKEND_URL,
+} from "../utils";
 
 const customStyles = {
   menu: (provided, state) => ({
     ...provided,
     backgroundColor: "#02203c",
-    borderBottom: '1px dotted pink',
+    borderBottom: "1px dotted pink",
     color: "white",
     fontSize: "13px",
   }),
-  placeholder: styles => ({ ...styles, color: "white", fontSize: "13px", }),
-  control: styles => ({ ...styles, backgroundColor: '#02203c', color: "white", fontSize: "13px", }),
+  placeholder: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
+  control: (styles) => ({
+    ...styles,
+    backgroundColor: "#02203c",
+    color: "white",
+    fontSize: "13px",
+  }),
 
-  option: styles => ({
-    ...styles, color: "white", backgroundColor: "#02203c", fontSize: "13px", '&:hover': {
+  option: (styles) => ({
+    ...styles,
+    color: "white",
+    backgroundColor: "#02203c",
+    fontSize: "13px",
+    "&:hover": {
       backgroundColor: "#f1f3f5",
       color: "black",
       fontSize: "13px",
     },
   }),
-  singleValue: styles => ({ ...styles, color: "white", fontSize: "13px" })
-}
+  singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
+};
 
 const KeyCodes = {
   comma: 188,
@@ -62,12 +75,11 @@ function SearchDetails(props) {
   const [data, setData] = React.useState({});
   const [tags, setTags] = React.useState([]);
   const [type, setType] = React.useState([]);
-  const [role, setRole] = React.useState('');
+  const [role, setRole] = React.useState("");
   const [countrySearched, setCountrySearched] = React.useState([]);
   const [state, setState] = React.useState({
     loading: false,
     firstLoading: true,
-
   });
 
   const [formState, setFormState] = React.useState({
@@ -82,7 +94,7 @@ function SearchDetails(props) {
     setData({ ...props.state.data });
     setState({ ...state, firstLoading: false });
   }
-  
+
   /**
    * Method to set the value of the country/ies that the user chose
    * @param {event} event when the user want to choose country/ies
@@ -94,23 +106,21 @@ function SearchDetails(props) {
 
   /**
    * Method to set the values of the type or the role that the user chose
-   * @param {event} event when the user choose from the role or type options 
+   * @param {event} event when the user choose from the role or type options
    */
   const handleSelect = (event) => {
     if (event instanceof Array === false) {
-      let newRole = '';
+      let newRole = "";
       if (event === role) {
-        newRole = '';
-      }
-      else {
+        newRole = "";
+      } else {
         newRole = event;
       }
       setRole(newRole);
       props.setState({ ...props.state, role: newRole });
-    }
-    else {
-        setType(event);
-        props.setState({ ...props.state, type: event });
+    } else {
+      setType(event);
+      props.setState({ ...props.state, type: event });
     }
   };
 
@@ -123,10 +133,9 @@ function SearchDetails(props) {
     props.setState({ ...props.state, tags: [...props.state.tags, tag] });
   };
 
-
   /**
    * function that sets the value of the tag that the user filled
-   * @param {event} event 
+   * @param {event} event
    */
   const changeTagInput = (event) => {
     if (event.length !== 0) {
@@ -143,10 +152,10 @@ function SearchDetails(props) {
     props.setState({ ...props.state, tags: [...newTags] });
   };
 
-  const dragTag = (tag, currPos, newPos) => { };
+  const dragTag = (tag, currPos, newPos) => {};
 
   /**
-   * Method that checkes the validation 
+   * Method that checkes the validation
    */
   const searchCompany = () => {
     if (formValidation()) {
@@ -158,12 +167,12 @@ function SearchDetails(props) {
     } else {
       let countriesToSearch = countrySearched.map((value) => {
         return value.label;
-      })
+      });
       let typeTosSearch = type.map((value) => {
         return value.label;
-      })
-      let roleToSearch = '';
-      if (role !== '') {
+      });
+      let roleToSearch = "";
+      if (role !== "") {
         roleToSearch = role.label;
       }
       genericSearch(tags, countriesToSearch, typeTosSearch, roleToSearch);
@@ -183,7 +192,14 @@ function SearchDetails(props) {
     setState({ ...state, loading: true });
     tags = tags.map((tag) => tag.text);
     let url = new URL(BACKEND_URL + "generic_search/");
-    let params = { data: JSON.stringify({ tags: tags, countries: countries, types: type, role: role }) };
+    let params = {
+      data: JSON.stringify({
+        tags: tags,
+        countries: countries,
+        types: type,
+        role: role,
+      }),
+    };
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
     );
@@ -203,27 +219,29 @@ function SearchDetails(props) {
           props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
         } else {
           setState({ ...state, loading: false });
-          resp['EU'] = resp['EU'].map(val => {
-            return { ...val, 'consorsiumRoles': val.consorsiumRoles ? 'Coordinator' : 'Regular' }
-          })
+          resp["EU"] = resp["EU"].map((val) => {
+            return {
+              ...val,
+              consorsiumRoles: val.consorsiumRoles ? "Coordinator" : "Regular",
+            };
+          });
           setData(resp);
           props.setState({ ...props.state, data: { ...resp } });
-          if(resp.EU.length === 0 && resp.B2MATCH.length === 0){
+          if (resp.EU.length === 0 && resp.B2MATCH.length === 0) {
             setMsgState({
               title: "Success",
               body: "We didn't find any relevant results",
               visible: true,
             });
-          }
-          else{
-            if (resp.EU.length === 0){
+          } else {
+            if (resp.EU.length === 0) {
               setMsgState({
                 title: "Success",
                 body: "We didn't find any relevant organizations from EU",
                 visible: true,
               });
             }
-            if (resp.B2MATCH.length === 0){
+            if (resp.B2MATCH.length === 0) {
               setMsgState({
                 title: "Success",
                 body: "We didn't find any relevant participants from B2match",
@@ -231,7 +249,6 @@ function SearchDetails(props) {
               });
             }
           }
-         
         }
       })
       .catch((error) => {
@@ -274,16 +291,10 @@ function SearchDetails(props) {
       </h1>
 
       <div className="Search_Details">
-        <h1
-          style={{ "margin-left": "1%" }}
-        >
-          Search Details
-        </h1>
+        <h1 style={{ "margin-left": "1%" }}>Search Details</h1>
         <div className="input_row">
           <div className="Tags">
-            <h1>
-              Tags and Keywords
-            </h1>
+            <h1>Tags and Keywords</h1>
             <ReactTags
               tags={tags}
               handleDelete={deleteTag}
@@ -378,14 +389,14 @@ function SearchDetails(props) {
         </Button>
       </div>
       {data &&
-        data.EU &&
-        data.B2MATCH &&
-        data.EU.length === 0 &&
-        data.B2MATCH.length === 0 ? null : (
-          <div style={{ "margin-top": "10px" }}>
-            <SearchResults data={data} />
-          </div>
-        )}
+      data.EU &&
+      data.B2MATCH &&
+      data.EU.length === 0 &&
+      data.B2MATCH.length === 0 ? null : (
+        <div style={{ "margin-top": "10px" }}>
+          <SearchResults data={data} />
+        </div>
+      )}
     </React.Fragment>
   );
 }
