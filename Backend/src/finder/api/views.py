@@ -1009,33 +1009,33 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             if BSF and ISF and INNOVATION and MST :
                 response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST}
             elif BSF and not ISF and not INNOVATION and not MST:
-                response = {'BSF': BSF}
+                response = {'BSF': BSF, 'ISF':[], 'INNOVATION':[], 'MST':[]}
             elif not BSF and ISF and not INNOVATION and not MST:
-                response = {'ISF': ISF}
+                response = {'BSF':[], 'ISF': ISF, 'INNOVATION':[], 'MST':[]}
             elif not BSF and not ISF and INNOVATION and not MST:
-                response = {'INNOVATION': INNOVATION}
+                response = {'BSF':[], 'ISF':[], 'INNOVATION': INNOVATION, 'MST':[]}
             elif not BSF and not ISF and not INNOVATION and MST:
-                response = {'MST': MST}
+                response = {'BSF':[], 'ISF':[], 'INNOVATION': [],'MST': MST}
             elif BSF and ISF and not INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF': ISF}
+                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION':[], 'MST':[]}
             elif BSF and not ISF and INNOVATION and not MST:
-                response = {'BSF': BSF, 'INNOVATION': INNOVATION}
+                response = {'BSF': BSF, 'ISF':[], 'INNOVATION': INNOVATION, 'MST':[]}
             elif BSF and not ISF and not INNOVATION and MST:
-                response = {'BSF': BSF, 'MST': MST}
+                response = {'BSF': BSF, 'ISF':[], 'INNOVATION': [], 'MST': MST}
             elif BSF and ISF and INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION}
+                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST':[]}
             elif not BSF and ISF and INNOVATION and not MST:
-                response = {'ISF': ISF, 'INNOVATION': INNOVATION}
+                response = {'BSF':[], 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST':[]}
             elif not BSF and ISF and INNOVATION and MST:
-                response = {'ISF': ISF, 'INNOVATION': INNOVATION,'MST': MST}
+                response = {'BSF':[], 'ISF': ISF, 'INNOVATION': INNOVATION,'MST': MST}
             elif not BSF and ISF and not INNOVATION and MST:
-                response = {'ISF': ISF, 'MST': MST}
+                response = {'BSF':[], 'ISF': ISF,'INNOVATION': [], 'MST': MST}
             elif not BSF and not ISF and INNOVATION and MST:
-                response = {'INNOVATION': INNOVATION, 'MST': MST}
+                response = {'BSF':[], 'ISF':[], 'INNOVATION': INNOVATION, 'MST': MST}
             elif BSF and not ISF and INNOVATION and MST:
-                response = {'BSF': BSF, 'INNOVATION': INNOVATION, 'MST': MST}
+                response = {'BSF': BSF,'ISF':[], 'INNOVATION': INNOVATION, 'MST': MST}
             elif BSF and ISF and not INNOVATION and MST:
-                response = {'BSF': BSF, 'ISF': ISF, 'MST': MST}
+                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': [], 'MST': MST}
             else:
                 response = {'BSF': [], 'ISF': [], 'INNOVATION': [], 'MST': []}
         except:
