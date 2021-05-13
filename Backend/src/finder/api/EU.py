@@ -432,10 +432,12 @@ def is_valid_date(date):
     :param date: deadline date
     :return: True/False
     """
+
     try:
         date //= 1000
         three_months = datetime.now() + relativedelta(months=+3)
         three_months = time.mktime(three_months.timetuple())
+        print(date)
         return date >= three_months
     except:
         return False
@@ -490,21 +492,29 @@ def get_proposal_calls():
         print("Error - ", err)
         return []
 
+    # print("URL res - ", response)
     res = response.json()['fundingData']['GrantTenderObj']
+    # print("Grantes res - ", res)
     grants = []
     for obj in res:
         if 'type' in obj and obj['type'] == 1:
             obj = get_call_related_attributes(obj)
             obj = get_rest_attributes(obj)
-            try:
-                check_dates = [is_valid_date(date)
-                               for date in obj['deadlineDatesLong']]
-            except:
-                continue
 
-            if any(check_dates) and is_valid_status(obj) and is_relevant_action(obj):
+            # if 'callTitle' in obj:
+            #     print("curr grant ", obj['callTitle'])
+
+            # try:
+            #     check_dates = [is_valid_date(date)
+            #                    for date in obj['deadlineDatesLong']]
+            # except:
+            #     continue
+
+            # any(check_dates) and
+            if  is_valid_status(obj) and is_relevant_action(obj):
                 obj = get_call_to_save(obj)
                 grants.append(obj)
+                print("added obj", obj)
 
     return grants
 

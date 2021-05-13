@@ -257,21 +257,23 @@ class CallViewSet(viewsets.ModelViewSet):
         :param request: HTTP request
         :return: HTTP Response
         """
-
+        print('*' * 40, "Started consortium builder", '*' * 40)
         try:
-            response = {'success': 'Please Turn Alerts ON!'}
-            try:
-                alerts_settings = AlertsSettings.objects.all()[0]
-            except:
-                alerts_settings['turned_on'] = False
-            if not alerts_settings.turned_on:
-                return Response(response, status=status.HTTP_200_OK)
-
-            email = alerts_settings.email
+            # response = {'success': 'Please Turn Alerts ON!'}
+            # try:
+            #     alerts_settings = AlertsSettings.objects.all()[0]
+            # except:
+            #     alerts_settings['turned_on'] = False
+            # if not alerts_settings.turned_on:
+            #     return Response(response, status=status.HTTP_200_OK)
+            #
+            # email = alerts_settings.email
 
             Call.objects.all().delete()
             CallTag.objects.all().delete()
             calls = get_proposal_calls()
+            print("Getting open calls")
+            print(calls)
 
             calls_to_send = []
 
@@ -915,16 +917,16 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             data = request.query_params['data']
             print("This is the data:", data)
             data = json.loads(data)
-            organization = data['organization']
+            organizations = data['organizations']
             tags = data['tags']
-            from_date = data['first_date']
-            to_date = data['second_date']
+            from_date = data['start_date']
+            to_date = data['end_date']
 
 
-            if not organization:
-                organization = 'BSF, ISF, INNOVATION, MST'
+            if not organizations:
+                organizations = 'BSF, ISF, INNOVATION, MST'
 
-            if 'BSF' in organization:
+            if 'BSF' in organizations:
 
                 try:
 
@@ -941,10 +943,10 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                 except Exception as e:
                         print(e)
-                        
 
 
-            if 'ISF' in organization:
+
+            if 'ISF' in organizations:
 
                 try:
 
@@ -965,7 +967,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
 
-            if 'INNOVATION' in organization:
+            if 'INNOVATION' in organizations:
 
                 try :
 
@@ -986,7 +988,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                     print(e)
 
 
-            if 'MST' in organization:
+            if 'MST' in organizations:
 
                 try:
 
