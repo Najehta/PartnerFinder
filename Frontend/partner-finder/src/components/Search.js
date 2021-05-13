@@ -3,9 +3,14 @@ import "./Components.css";
 import { Button } from "@material-ui/core";
 import MultiSelect from "react-multi-select-component";
 import { useState } from "react";
-import Divider from "@material-ui/core/Divider";
 import ResultsTable from "./ResultsTable";
-import { Calls_columns, BACKEND_URL } from "../utils";
+import {
+  BSF_columns,
+  ISF_columns,
+  MST_columns,
+  INNOVATION_columns,
+  BACKEND_URL,
+} from "../utils";
 import FormControl from "@material-ui/core/FormControl";
 import {
   makeStyles,
@@ -17,11 +22,9 @@ import { BeatLoader } from "react-spinners";
 import { WithContext as ReactTags } from "react-tag-input";
 import Typography from "@material-ui/core/Typography";
 import "date-fns";
-import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Msgtoshow } from "./Msgtoshow";
@@ -49,13 +52,13 @@ const Search = (props) => {
   const options = [
     { label: "BSF", value: "BSF" },
     { label: "ISF", value: "ISF" },
-    { label: "MST", value: "MST" },
-    { label: "INNOVASION ISREAL", value: "INNOVASION ISREAL" },
+    { label: "Ministry Of Science And Technology", value: "MST" },
+    { label: "Innovation Israel", value: "INNOVATION" },
   ];
   const customStyles = {
     menu: (provided, state) => ({
       ...provided,
-      backgroundColor: "#02203c",
+      backgroundColor: "white",
       borderBottom: "1px dotted pink",
       color: "white",
       fontSize: "13px",
@@ -63,7 +66,7 @@ const Search = (props) => {
     placeholder: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
     control: (styles) => ({
       ...styles,
-      backgroundColor: "#02203c",
+      backgroundColor: "white",
       color: "white",
       fontSize: "13px",
     }),
@@ -71,7 +74,7 @@ const Search = (props) => {
     option: (styles) => ({
       ...styles,
       color: "white",
-      backgroundColor: "#02203c",
+      backgroundColor: "white",
       fontSize: "13px",
       "&:hover": {
         backgroundColor: "#f1f3f5",
@@ -99,20 +102,20 @@ const Search = (props) => {
   // search methods
 
   const searchProposalCalls = () => {
-    if (formValidation()) {
-      setMsgState({
-        title: "Error",
-        body: "Please fill the tag field",
-        visible: true,
-      });
-    } else {
-      let orgToSearch = selectedOrganization.map((value) => {
-        return value.label;
-      });
-      //what to do with date
-      //how to check if the input zero
-      callsSearch(orgToSearch, tags, startDate, endDate);
-    }
+    // if (formValidation()) {
+    //   setMsgState({
+    //     title: "Error",
+    //     body: "Please fill the tag field",
+    //     visible: true,
+    //   });
+    // }
+
+    let orgToSearch = selectedOrganization.map((value) => {
+      return value.value;
+    });
+    //what to do with date
+    //how to check if the input zero
+    callsSearch(orgToSearch, tags, startDate, endDate);
   };
 
   ///////////
@@ -160,7 +163,7 @@ const Search = (props) => {
             visible: true,
           });
           setState({ ...state, loading: false });
-          setData({ BFS: [], ISF: [] });
+          setData({ BFS: [], ISF: [], MST: [], INNOVATION: [] });
           // props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
         } else {
           setState({ ...state, loading: false });
@@ -182,7 +185,7 @@ const Search = (props) => {
         }
       })
       .catch((error) => {
-        setData({ BSF: [], ISF: [] });
+        setData({ BFS: [], ISF: [], MST: [], INNOVATION: [] });
         // props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
         setMsgState({
           title: "Failed",
@@ -195,44 +198,7 @@ const Search = (props) => {
 
   //variables for the table
   const [data, setData] = useState({
-    BSF: [
-      {
-        CallID: 0,
-        organizationName: "NSF-BSF",
-        deadlineDate: "2021-07-20",
-        information:
-          "Deadline for NSF-BSF program in Science of Learning and Augmented Intelligence (NSF deadline is Jul. 14)",
-        areaOfResearch: "Science of Learning and Augmented Intelligence",
-        link: "https://www.bsf.org.il/calendar/",
-      },
-      {
-        CallID: 2,
-        organizationName: "NSF-BSF",
-        deadlineDate: "2021-07-21",
-        information:
-          "Deadline for NSF-BSF program in Developmental Sciences (NSF deadline is Jul. 15)",
-        areaOfResearch: "Developmental Sciences",
-        link: "https://www.bsf.org.il/calendar/",
-      },
-      {
-        CallID: 5,
-        organizationName: "NSF-BSF",
-        deadlineDate: "2021-08-22",
-        information:
-          "Deadline for NSF-BSF program in Ocean Sciences (NSF deadline is Aug. 16)",
-        areaOfResearch: "Ocean Sciences",
-        link: "https://www.bsf.org.il/calendar/",
-      },
-      {
-        CallID: 7,
-        organizationName: "NSF-BSF",
-        deadlineDate: "2021-08-24",
-        information:
-          "Deadline for NSF-BSF program in Decision, Risk and Management Sciences (NSF deadline is Aug. 18)",
-        areaOfResearch: "Decision, Risk and Management Sciences",
-        link: "https://www.bsf.org.il/calendar/",
-      },
-    ],
+    BSF: [],
     ISF: [],
     MST: [],
     INNOVATION: [],
@@ -293,9 +259,7 @@ const Search = (props) => {
         <h1>Search For Calls</h1>
       </div>
       <div className="searchMultiSelect">
-        <h1 id="textFontFamily" style={{ color: "#02203c" }}>
-          Organizations
-        </h1>
+        <h2 id="textFontFamily">Organizations</h2>
         <FormControl id="text_select">
           <MultiSelect
             options={options}
@@ -308,8 +272,8 @@ const Search = (props) => {
           />
         </FormControl>
       </div>
-      <div className="aorMultiSelect">
-        <h1>Tags</h1>
+      <div className="Tags">
+        <h2>Tags</h2>
         <ReactTags
           tags={tags}
           handleDelete={deleteTag}
@@ -330,38 +294,41 @@ const Search = (props) => {
           </Typography>
         ) : null}
       </div>
-      <div className="Date">
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container justify="space-around">
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="dd/MM/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Start Date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
-            />
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="dd/MM/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="End Date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
-      </div>
+
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <div className="startDate">
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Start Date"
+            value={startDate}
+            onChange={handleStartDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date",
+            }}
+          />
+        </div>
+
+        <div className="endDate">
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="End Date"
+            value={endDate}
+            onChange={handleEndDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date",
+            }}
+          />
+        </div>
+      </MuiPickersUtilsProvider>
+
       <div className="searchButton">
         <Button
           color="primary"
@@ -391,13 +358,34 @@ const Search = (props) => {
       </div>
 
       <div className="ResultTable">
-        {data && data.BSF.length === 0 ? null : (
-          <ResultsTable
-            title={"Proposal Calls"}
-            columns={Calls_columns}
-            data={data.BSF}
-          />
-        )}
+        <div className="BsfTable">
+          {data && data.BSF.length === 0 ? null : (
+            <ResultsTable title={"BSF"} columns={BSF_columns} data={data.BSF} />
+          )}
+        </div>
+        <div className="ISFTable">
+          {data && data.ISF.length === 0 ? null : (
+            <ResultsTable title={"ISF"} columns={ISF_columns} data={data.ISF} />
+          )}
+        </div>
+        <div className="MSTTable">
+          {data && data.MST.length === 0 ? null : (
+            <ResultsTable
+              title={"Ministry Of Science And Technology"}
+              columns={MST_columns}
+              data={data.MST}
+            />
+          )}
+        </div>
+        <div className="INNOVATIONTable">
+          {data && data.INNOVATION.length === 0 ? null : (
+            <ResultsTable
+              title={"Innovation Israel"}
+              columns={INNOVATION_columns}
+              data={data.INNOVATION}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

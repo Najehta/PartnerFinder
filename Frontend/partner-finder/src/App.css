@@ -3,27 +3,25 @@ body {
 }
 
 #textFontFamily {
-  font-family:   "Helvetica Neue";
+  font-family: "Helvetica Neue";
+  font-style: normal;
+  font-variant: normal;
+  color: rgb(251, 251, 251);
+}
+
+#text_select {
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   color: white;
-  
+  font-size: 13px;
 }
 
-
-#text_select{
-  font-family:   "Helvetica Neue";
-font-style: normal;
-font-variant: normal;
-color:white;
-font-size:13px;
-}
-
-#text_select::hover{
+#text_select::hover {
   color: black;
   background-color: #f1f3f5;
 }
-.label{
+.label {
   background-color: #ececec;
 }
 h1 {
@@ -34,7 +32,7 @@ h1 {
 }
 
 h2 {
-  font-family:    "Helvetica Neue";
+  font-family: "Helvetica Neue";
 
   font-style: normal;
   font-variant: normal;
@@ -42,7 +40,7 @@ h2 {
 }
 
 h3 {
-  font-family:   "Helvetica Neue";
+  font-family: "Helvetica Neue";
 
   font-style: normal;
   font-variant: normal;
@@ -85,7 +83,6 @@ pre {
   font-weight: 400;
   line-height: 18.5714px;
 }
-
 
 h3 {
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
@@ -164,37 +161,38 @@ pre {
 .counrty {
   display: grid;
 }
-.select{
-  width:300px;
+.select {
+  width: 300px;
   --rmsc-background: #283747;
 }
-.select_role{
+.select_role {
   width: 200px;
 }
 
 .multi-select {
   background-color: #283747;
-  color: "white"; 
-  --rmsc-gray:white;
+  color: "white";
+  --rmsc-gray: white;
 }
 
-.go977458394.selected{
+.go977458394.selected {
   color: black;
 }
 
-.go977458394 :hover{
+.go977458394 :hover {
   color: black;
 }
 
-.go4079732705 .gray{
-  color:white;
-}
-
-.go4079732705, .gray span{
+.go4079732705 .gray {
   color: white;
 }
 
-.dropdown-heading-value span{
+.go4079732705,
+.gray span {
+  color: white;
+}
+
+.dropdown-heading-value span {
   font-size: 13px;
   color: white;
   /* outline-color: white;
@@ -203,58 +201,57 @@ pre {
   text-decoration-color: white; */
 }
 
-.go2885254090 input{
+.go2885254090 input {
   color: white;
 }
 
-.go1053659416 dropdown-heading{
+.go1053659416 dropdown-heading {
   color: white;
 }
-.go3433208811 dropdown-container{
+.go3433208811 dropdown-container {
   color: white;
 }
-.go4079732705 select{
-  color:white;
-}
-.MuiFormControl-root{
+.go4079732705 select {
   color: white;
 }
-.dropdown-heading, .dropdown-heading-value{
+.MuiFormControl-root {
+  color: white;
+}
+.dropdown-heading,
+.dropdown-heading-value {
   background-color: #eef1f4;
   color: "white";
 }
 
-.dropdown-content{
+.dropdown-content {
   background-color: #d2dfdf;
   color: "white";
 }
 
-.select-panel{
+.select-panel {
   background-color: #adb3b9;
   color: "white";
 }
-.go2885254090 input{
+.go2885254090 input {
   background-color: #283747;
   color: "white";
 }
 
-.select_role css-2b097c-container{
+.select_role css-2b097c-container {
   background-color: #283747;
   color: "white";
 }
 
-
-.css-yk16xz-control{
+.css-yk16xz-control {
   background-color: #283747;
   color: "white";
 }
 
 .MuiDialogTitle-root {
-  background-color:  #283747;
- 
+  background-color: #283747;
 }
 
-.MuiTypography-h6{
+.MuiTypography-h6 {
   color: white;
   font-style: normal;
   font-variant: normal;
@@ -339,9 +336,7 @@ div.ReactTags__tagInput {
   border-radius: 3px;
   display: inline-block;
   font-size: 16px;
-  
 }
-
 
 div.ReactTags__tagInput input.ReactTags__tagInputField,
 div.ReactTags__tagInput input.ReactTags__tagInputField {
@@ -355,12 +350,12 @@ div.ReactTags__tagInput input.ReactTags__tagInputField {
   width: 100%;
   border: 1px solid #283747;
   padding: 0 4px;
-  background-color: #283747;
+  background-color: #f6f7f8;
   color: white;
 }
 
 div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder {
-  color: white;
+  color: rgb(29, 27, 27);
 }
 
 /* Styles for selected tags */
@@ -416,15 +411,14 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   margin: 100px;
 }
 
-
-.MuiTableSortLabel-root:hover{
-  color:white;
+.MuiTableSortLabel-root:hover {
+  color: white;
 }
-.MuiButtonBase-root MuiTableSortLabel-root:hover{
-  color:white;
+.MuiButtonBase-root MuiTableSortLabel-root:hover {
+  color: white;
 }
 
-.MuiTypography-caption{
+.MuiTypography-caption {
   color: white;
 }
 
@@ -462,5 +456,3 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   font-variant: normal;
   color: white;
 }
-
-

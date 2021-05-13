@@ -1,89 +1,39 @@
-.getCalls{
-    display:grid;
-    grid-template-columns: 40% 30% 20%;
+.getCalls {
+  display: grid;
+  grid-template-columns: 40% 30% 20%;
 }
-.GetCallsButton{
-padding-left: 20%;
-padding-top: 20%;
-}
-
-.Alerts{
-    display:grid;
-    grid-template-columns: 30% 20% 20%;
-    border-top: 2px solid  #02203c;
-}
-.email{
-    margin-top: 15px;
+.GetCallsButton {
+  margin-top: 25%;
 }
 
-.SearchCom{
-    display:grid;
-    grid-template-columns: 25% 25% 20% 30%;
-    border-top: 2px solid  #02203c;
+.Alerts {
+  display: grid;
+  grid-template-columns: 30% 30% 20%;
+  border-top: 2px solid #02203c;
 }
-.searchButton{
-    margin-top: 40%;
+.email {
+  margin-top: 10%;
 }
-.ResultTable{
-    grid-area: 2 / 1 / 5 / 5;
-    margin-top: 2%;
+.SearchCom {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  border-top: 2px solid #02203c;
 }
-.Date{
-    margin-top: 13%;
+.searchButton {
+  grid-area: 2/ 3 / 5/ 4;
+  margin-top: 10%;
+  margin-left: 70%;
 }
-#date-picker-inline{
-    border: #02203c;
-    
+.ResultTable {
+  grid-area: 3/ 1 / 5 / 6;
+  margin-top: 100px;
 }
-
-
-/* .getCalls { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    grid-template-rows: repeat(5, 1fr); 
-    grid-column-gap: 0px;
-    grid-row-gap: 0px; 
-    }
-    .getTitle{ grid-area: 1 / 1 / 5 / 3; } 
-    .getCallsMultiSelect { grid-area: 1 / 3 / 5 / 5; } 
-    .GetCallsButton { grid-area: 1 / 5 / 5 / 6; } 
-    .getDivider { grid-area: 5 / 1 / 6 / 6; } 
-    
-    button{
-        position: absolute;
-        top: 35%;
-    }
-
-
-.Alerts { 
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr); 
-    grid-template-rows: repeat(5, 1fr); 
-    grid-column-gap: 0px;
-    grid-row-gap: 0px; 
-    }
-    .title2 { grid-area: 1 / 1 / 5 / 3; } 
-    .email { 
-        grid-area: 1 / 3 / 5 / 5;
-        margin-top: 5%;
-    
-    } 
-    .emailMultiSelect { grid-area: 1 / 5 / 5 / 6; } 
-    .AlertDivider{ grid-area: 5 / 1 / 6 / 6; } 
-   
-    .SearchCom { 
-        display: grid; 
-        grid-template-columns: repeat(5, 1fr); 
-        grid-template-rows: repeat(5, 1fr); 
-        grid-column-gap: 0px;
-        grid-row-gap: 0px; 
-        }
-        .SearchTitle { grid-area: 1 / 1 / 6 / 3; } 
-        .searchMultiSelect { grid-area: 1 / 3 / 6 / 4; } 
-        .aorMultiSelect { grid-area: 1 / 4 / 6 / 5; } 
-        .searchButton { 
-            grid-area: 1 / 5 / 6 / 6; 
-            margin-top: 3%;
-        
-        } 
-   */
+.startDate {
+  margin-top: 14%;
+}
+.endDate {
+  margin-top: 14%;
+}
+#date-picker-inline {
+  border: #02203c;
+}

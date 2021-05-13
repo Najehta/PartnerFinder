@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 
-import { GridList, GridListTile } from '@material-ui/core';
+import { GridList, GridListTile } from "@material-ui/core";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
@@ -17,23 +17,31 @@ import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 
-const customStyle = { maxHeight: '110px', width: '240px', maxWidth: '250px'}
+const customStyle = { maxHeight: "110px", width: "240px", maxWidth: "250px" };
 
 const EU_columns = [
-  { title: "Name", field: "legalName", render: (rowData) => (
-    <GridList cols={1} cellHeight='auto'>
-    <div style={customStyle, {width: '180px'}}>{rowData.legalName}</div>
-    </GridList>
-      ) },
+  {
+    title: "Name",
+    field: "legalName",
+    render: (rowData) => (
+      <GridList cols={1} cellHeight="auto">
+        <div style={(customStyle, { width: "180px" })}>{rowData.legalName}</div>
+      </GridList>
+    ),
+  },
   { title: "Classification Type", field: "classificationType" },
   { title: "Country", field: "country" },
   { title: "Data Status", field: "dataStatus" },
   { title: "Number of EU Projects", field: "numberOfProjects" },
-  { title: "Description", field: "description", render: (rowData) => (
-    <GridList cols={1} cellHeight='auto'>
-    <div style={customStyle}>{rowData.description}</div>
-    </GridList>
-      )},
+  {
+    title: "Description",
+    field: "description",
+    render: (rowData) => (
+      <GridList cols={1} cellHeight="auto">
+        <div style={customStyle}>{rowData.description}</div>
+      </GridList>
+    ),
+  },
   {
     title: "Consortium Role",
     field: "consorsiumRoles",
@@ -41,11 +49,15 @@ const EU_columns = [
 ];
 
 const calls_columns = [
-  { title: "Title", field: "title", render: (rowData) => (
-    <GridList cols={1} cellHeight='auto'>
-    <div style={customStyle}>{rowData.title}</div>
-    </GridList>
-      ) },
+  {
+    title: "Title",
+    field: "title",
+    render: (rowData) => (
+      <GridList cols={1} cellHeight="auto">
+        <div style={customStyle}>{rowData.title}</div>
+      </GridList>
+    ),
+  },
   { title: "Call Title", field: "callTitle" },
   { title: "Identifier", field: "identifier" },
   { title: "Type", field: "type" },
@@ -59,40 +71,128 @@ const B2Match_columns = [
   { title: "Org. Name", field: "organization_name" },
   { title: "Type", field: "org_type" },
   { title: "Country", field: "address" },
-  { title: "Website", field: "org_url" ,
-  render: (rowData) => (
-
-<a href={rowData.org_url} target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
-      {rowData.org_url}{" "}
-    </a>
-  )},
-  { title: "Description", field: "description", render: (rowData) => (
-    <GridList style={customStyle} cols={1}>
-    <div style={customStyle}>{rowData.description}</div>
-    </GridList>
-      ) },
+  {
+    title: "Website",
+    field: "org_url",
+    render: (rowData) => (
+      <a
+        href={rowData.org_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.org_url}{" "}
+      </a>
+    ),
+  },
+  {
+    title: "Description",
+    field: "description",
+    render: (rowData) => (
+      <GridList style={customStyle} cols={1}>
+        <div style={customStyle}>{rowData.description}</div>
+      </GridList>
+    ),
+  },
 ];
 
-const Calls_columns = [
+const BSF_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Deadline Date", field: "deadlineDate" },
   { title: "Information", field: "information" },
   { title: "Area of research", field: "areaOfResearch" },
-  { title: "Link", field: "link" ,
-  render: (rowData) => (
-
-<a href={rowData.link} target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
-      {rowData.link}{" "}
-    </a>
-  )}
-  
+  { title: "Deadline Date", field: "deadlineDate" },
+  {
+    title: "Link",
+    field: "link",
+    render: (rowData) => (
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
+    ),
+  },
+];
+const ISF_columns = [
+  { title: "Organization Name", field: "organizationName" },
+  { title: "Information", field: "information" },
+  { title: "Institution type", field: "institutionType" },
+  { title: "Deadline Date", field: "registrationDeadline" },
+  {
+    title: "Link",
+    field: "link",
+    render: (rowData) => (
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
+    ),
+  },
+];
+const MST_columns = [
+  { title: "Organization Name", field: "organizationName" },
+  { title: "Information", field: "information" },
+  { title: "Deadline Date", field: "submissionDeadline" },
+  {
+    title: "Link",
+    field: "link",
+    render: (rowData) => (
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
+    ),
+  },
+];
+const INNOVATION_columns = [
+  { title: "Organization Name", field: "organizationName" },
+  { title: "Information", field: "information" },
+  { title: "Area of research", field: "areaOfResearch" },
+  { title: "Deadline date", field: "registrationDeadline" },
+  {
+    title: "Link",
+    field: "link",
+    render: (rowData) => (
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
+    ),
+  },
 ];
 
 const classificationTypesOptions = [
-  {label :"Small or medium-size enterprise", value:"Small or medium-size enterprise"}, {label:"International Organisation", value:"International Organisation"},
-  {label:"Higher or secondary education establishment", value: "Higher or secondary education establishment"},
-  {label:"Research Organisation", value: "Research Organisation"}, {label:"Private for profit organisation", value:"Private for profit organisation"},
-  {label:"Public organisation", value: "Public organisation"}, {label:"Other", value:"Other"}
+  {
+    label: "Small or medium-size enterprise",
+    value: "Small or medium-size enterprise",
+  },
+  { label: "International Organisation", value: "International Organisation" },
+  {
+    label: "Higher or secondary education establishment",
+    value: "Higher or secondary education establishment",
+  },
+  { label: "Research Organisation", value: "Research Organisation" },
+  {
+    label: "Private for profit organisation",
+    value: "Private for profit organisation",
+  },
+  { label: "Public organisation", value: "Public organisation" },
+  { label: "Other", value: "Other" },
 ];
 
 const events_columns = [
@@ -102,16 +202,21 @@ const events_columns = [
     title: "URL",
     field: "event_url",
     render: (rowData) => (
-      <a href={rowData.event_url} style={{color: "white"}} target="_blank" rel="noopener noreferrer">
+      <a
+        href={rowData.event_url}
+        style={{ color: "white" }}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {rowData.event_url}{" "}
       </a>
     ),
   },
-  
 ];
 
 const consorsiumRoles = [
-  {label:"Coordinator", value:"Coordinator"}, {label:"Regular", value:"Regular"}
+  { label: "Coordinator", value: "Coordinator" },
+  { label: "Regular", value: "Regular" },
 ];
 
 const tableIcons = {
@@ -238,5 +343,17 @@ const tableIcons = {
 
 // const BACKEND_URL = "http://62.90.89.14:8000/api/";
 const BACKEND_URL = "http://localhost:8000/api/";
-export { EU_columns, B2Match_columns, BACKEND_URL, tableIcons, classificationTypesOptions, consorsiumRoles, calls_columns, 
-  events_columns, Calls_columns};
+export {
+  EU_columns,
+  B2Match_columns,
+  BACKEND_URL,
+  tableIcons,
+  classificationTypesOptions,
+  consorsiumRoles,
+  calls_columns,
+  events_columns,
+  BSF_columns,
+  ISF_columns,
+  MST_columns,
+  INNOVATION_columns,
+};
