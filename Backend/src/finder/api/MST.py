@@ -1,3 +1,5 @@
+import os
+
 import requests
 from google_trans_new import google_translator
 from selenium import webdriver
@@ -241,4 +243,99 @@ def get_Mst_call_intersection(tags_call, dates_call):
 
     return result
 
+
+def updateMST():
+
+    counter = 0
+    MstCalls.objects.all().delete()
+    MapIdsMST.objects.all().delete()
+
+    _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
+
+    if get_calls_num(_url) % 10 == 0:
+        pages_number = get_calls_num(_url) // 10
+
+    else:
+        pages_number = (get_calls_num(_url) // 10) + 1
+
+    try:
+        os.remove('MstIndex')
+        os.remove('MstIndex.0')
+        os.remove('Dictionary_MST')
+        print('Deleting MST Index...')
+
+    except:
+        pass
+
+    index = make_index('MstIndex', 'MST')
+    print('Building MST Index...')
+
+    try:
+
+        data = get_calls(_url)
+        call_name, link, deadline, about, deadline_date = zip(*data)
+        call_name_list, link_list, deadline_list, about_list, deadline_date_list = list(call_name), list(link), list(
+            deadline), list(about), list(deadline_date)
+
+        for i, item in enumerate(call_name_list):
+
+            if deadline_date_list[i] is None:
+
+                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                open=False)
+            else:
+                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                open=True)
+
+            call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_mst_call(call_name_list[i], about_list[i])
+            newMap = MapIdsMST(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'MST')
+            counter += 1
+
+    except Exception as e:
+        print(e)
+
+    try:
+        skip = 10
+        while pages_number >= 2:
+
+            if skip > 10:
+                _url = _url[:-2]
+                _url = _url + str(skip)
+                new_url = re.sub("limit=10", "limit=" + str(skip + 10), _url)
+
+            else:
+                _url = _url + '&skip=' + str(skip)
+                new_url = re.sub("limit=10", "limit=" + str(skip + 10), _url)
+
+            data = get_calls(new_url)
+            call_name, link, deadline, about, deadline_date = zip(*data)
+            call_name_list, link_list, deadline_list, about_list, deadline_date_list = list(call_name), list(
+                link), list(deadline), list(about), list(deadline_date)
+
+            for i, item in enumerate(call_name_list):
+                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
+                call.save()
+
+                originalID = counter
+                indexID = len(index)
+                document = get_document_from_mst_call(call_name_list[i], about_list[i])
+                newMap = MapIdsMST(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'MST')
+                counter += 1
+
+            skip += 10
+            pages_number -= 1
+
+    except Exception as e:
+        print(e)
 

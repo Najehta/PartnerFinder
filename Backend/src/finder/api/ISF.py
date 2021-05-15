@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 import requests
@@ -256,3 +257,64 @@ def get_Isf_call_intersection(tags_call, dates_call):
             not_taken.add(call.CallID)
 
     return result
+
+
+def updateISF():
+
+    IsfCalls.objects.all().delete()
+    MapIdsISF.objects.all().delete()
+    _url = 'https://www.isf.org.il/#/support-channels/1/10'
+    name = 'Personal Research Grants'
+
+    call_names, call_links = [], []
+
+    try:
+        os.remove('IsfIndex')
+        os.remove('IsfIndex.0')
+        os.remove('Dictionary_ISF')
+        print('Deleting ISF Index...')
+
+    except:
+        pass
+
+    index = make_index('IsfIndex', 'ISF')
+    print('Building ISF Index...')
+
+    try:
+        call_names, call_links = get_proposal_names_links(_url, name)
+
+    except Exception as e:
+        print(e)
+
+    try:
+        for i, item in enumerate(call_names):
+            call_info = get_calls_status(call_links[i], item)
+
+            if call_info[7] == 'Closed':
+
+                call = IsfCalls(CallID=i, organizationName=item, status=call_info[0]
+                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                institutionType=call_info[1], numberOfPartners=call_info[2],
+                                grantPeriod=call_info[3], budget=call_info[4],
+                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=False)
+            else:
+
+                call = IsfCalls(CallID=i, organizationName=item, status=call_info[0]
+                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                institutionType=call_info[1], numberOfPartners=call_info[2],
+                                grantPeriod=call_info[3], budget=call_info[4],
+                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=True)
+
+            call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_isf_call(call_info[5])
+            newMap = MapIdsISF(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'ISF')
+
+    except Exception as e:
+        print(e)
+
+

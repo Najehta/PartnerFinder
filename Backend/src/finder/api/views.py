@@ -259,21 +259,19 @@ class CallViewSet(viewsets.ModelViewSet):
         """
         print('*' * 40, "Started consortium builder", '*' * 40)
         try:
-            # response = {'success': 'Please Turn Alerts ON!'}
-            # try:
-            #     alerts_settings = AlertsSettings.objects.all()[0]
-            # except:
-            #     alerts_settings['turned_on'] = False
-            # if not alerts_settings.turned_on:
-            #     return Response(response, status=status.HTTP_200_OK)
-            #
-            # email = alerts_settings.email
+            response = {'success': 'Please Turn Alerts ON!'}
+            try:
+                alerts_settings = AlertsSettings.objects.all()[0]
+            except:
+                alerts_settings['turned_on'] = False
+            if not alerts_settings.turned_on:
+                return Response(response, status=status.HTTP_200_OK)
+
+            email = alerts_settings.email
 
             Call.objects.all().delete()
             CallTag.objects.all().delete()
             calls = get_proposal_calls()
-            print("Getting open calls")
-            print(calls)
 
             calls_to_send = []
 
@@ -1315,10 +1313,10 @@ class MstCallsViewSet(viewsets.ModelViewSet):
 
         if get_calls_num(_url) % 10 == 0:
             pages_number = get_calls_num(_url) // 10
-            print("pages number inside if: ", pages_number)
+
         else:
             pages_number = (get_calls_num(_url) // 10) + 1
-            print("pages number inside else: ", pages_number)
+
         try:
             os.remove('MstIndex')
             os.remove('MstIndex.0')
@@ -1754,5 +1752,81 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             response = {'Error': 'Error while building Proposal Calls Alerts.'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class UpdateCallsViewSet(viewsets.ModelViewSet):
+
+    queryset = bsfCalls.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = BsfCallsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def call_update(self, request):
+
+        """
+       Method to define API to Update the organizations and add it into the local DB directly
+       :param request: HTTP request
+       :return: HTTP Response
+        """
+
+        try:
+
+            data = request.query_params['data']
+            print("This is the data:", data)
+            data = json.loads(data)
+            organizations = data['organizations']
+
+
+            if not organizations:
+                organizations = 'BSF, ISF, INNOVATION, MST'
+
+            if 'BSF' in organizations:
+
+                try:
+                    updateBSF()
+
+                except Exception as e:
+                    print(e)
+                    response = {'Error': 'Error while updating the BSF data'}
+
+
+            if 'ISF' in organizations:
+
+                try:
+                    updateISF()
+
+                except Exception as e:
+                    print(e)
+                    response = {'Error': 'Error while updating the ISF data'}
+
+
+            if 'INNOVATION' in organizations:
+
+                try:
+                    updateINNOVATION()
+
+                except Exception as e:
+                    print(e)
+                    response = {'Error': 'Error while updating the INNOVATION data'}
+
+
+            if 'MST' in organizations:
+
+                try:
+                    updateMST()
+
+                except Exception as e:
+                    print(e)
+                    response = {'Error': 'Error while updating the MST data'}
+
+            response = {'Success': organizations + ' calls updated successfully.'}
+
+        except Exception as e:
+            print(e)
+            response = {'Error': 'Error while updating the organization data'}
 
         return Response(response, status=status.HTTP_200_OK)
