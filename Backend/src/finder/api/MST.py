@@ -169,13 +169,13 @@ def get_Mst_call_by_tags(tags):
             finalRes.append(call)
 
     else:
-        tags = ''.join(tags)
+        tags = ' '.join(tags)
         index = reload_index('MstIndex')
         corpus = NLP_processor([tags], 'MST')
         res = index[corpus]
         res = process_query_result(res)
 
-        res = [pair for pair in res if pair[1] > 0.1]
+        res = [pair for pair in res if pair[1] > 0.2]
         res = sorted(res, key=lambda pair: pair[1], reverse=True)
         temp = []
 
