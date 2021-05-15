@@ -932,7 +932,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     BSF = []
                     for value in bsf_result:
-                        BSF.append({'CallID': value.CallID,
+                        BSF.append({
                                     'organizationName': value.organizationName,
                                     'deadlineDate': value.deadlineDate,
                                     'information': value.information,
@@ -952,9 +952,8 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     ISF = []
                     for value in Isf_result:
-                        ISF.append({'CallID': value.CallID,
+                        ISF.append({
                                     'organizationName': value.organizationName,
-                                    'deadlineDate': value.deadlineDate,
                                     'registrationDeadline': value.registrationDeadline,
                                     'information': value.information,
                                     'institutionType': value.institutionType,
@@ -973,9 +972,8 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     INNOVATION = []
                     for value in Innovation_result:
-                        INNOVATION.append({'CallID': value.CallID,
+                        INNOVATION.append({
                                            'organizationName': value.organizationName,
-                                           'deadlineDate': value.deadlineDate,
                                            'registrationDeadline': value.registrationDeadline,
                                            'information': value.information,
                                            'areaOfResearch': value.areaOfResearch,
@@ -994,7 +992,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                     MST = []
                     for value in mst_result:
-                        MST.append({'CallID': value.CallID,
+                        MST.append({
                                     'organizationName': value.organizationName,
                                     'submissionDeadline': value.submissionDeadline,
                                     'information': value.information,
