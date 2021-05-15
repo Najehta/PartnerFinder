@@ -1490,21 +1490,28 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
             try:
 
-                latest_id = EmailSubscription.objects.latest('ID')
-                latest_id_num = latest_id.ID + 1
+                if EmailSubscription.objects.get(email=email, status=subscription_status, organizationName= organization):
+                    response = {'Error': email + ' is already subscribed'}
 
-                email_info = EmailSubscription(ID=latest_id_num, email=email,
-                                               status=subscription_status,
-                                               organizationName=organization)
+            except:
 
-                email_info.save()
+                try:
 
-            except Exception as e:
-                print(e)
-                emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
-                emailSubscription.save()
+                    latest_id = EmailSubscription.objects.latest('ID')
+                    latest_id_num = latest_id.ID + 1
 
-            response = {'Success': 'New email have been successfully subscribed.'}
+                    email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                                   status=subscription_status,
+                                                   organizationName=organization)
+
+                    email_info.save()
+
+                except Exception as e:
+                    print(e)
+                    emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
+                    emailSubscription.save()
+
+                response = {'Success': 'New email have been successfully subscribed.'}
         except:
             response = {'Error': 'Error while updating email subscription settings'}
 
