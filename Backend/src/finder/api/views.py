@@ -1163,7 +1163,7 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = i
                 indexID = len(index)
-                document = get_document_from_isf_call(call_info[5])
+                document = get_document_from_isf_call(call_info[5], item)
                 newMap = MapIdsISF(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'ISF')

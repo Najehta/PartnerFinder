@@ -169,24 +169,27 @@ def get_Mst_call_by_tags(tags):
             finalRes.append(call)
 
     else:
-        tags = ' '.join(tags)
+
         index = reload_index('MstIndex')
-        corpus = NLP_processor([tags], 'MST')
-        res = index[corpus]
-        res = process_query_result(res)
-
-        res = [pair for pair in res if pair[1] > 0.2]
-        res = sorted(res, key=lambda pair: pair[1], reverse=True)
         temp = []
+        res = ''
+        for tag in tags:
+            corpus = NLP_processor([tag], 'MST')
+            res = index[corpus]
+            res = process_query_result(res)
 
-        for pair in res:
-            try:
-                temp.append(MapIdsMST.objects.get(indexID=pair[0]))
-            except:
-                pass
-        res = temp
+            res = [pair for pair in res if pair[1] > 0.3]
+            res = sorted(res, key=lambda pair: pair[1], reverse=True)
 
-        finalRes = []
+            for pair in res:
+
+                try:
+                        temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+                except:
+                    pass
+
+            res = temp
+
         for mapId in res:
             finalRes.append(MstCalls.objects.get(CallID=mapId.originalID))
 

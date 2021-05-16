@@ -195,15 +195,19 @@ def get_document_from_bsf_call(info, area):
     return ''.join(doc)
 
 
-def get_document_from_isf_call(info):
+def get_document_from_isf_call(info, orgName):
 
     """
     function to get the description and tags from isf call
+    :param orgName:
     :param info: call information
     :return: document
     """
 
     doc = [info]
+    for tag in orgName:
+        doc.append(tag)
+   
     return ''.join(doc)
 
 
