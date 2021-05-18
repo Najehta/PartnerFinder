@@ -341,4 +341,4 @@ def updateMST():
 
     except Exception as e:
         print(e)
-
+        raise Exception

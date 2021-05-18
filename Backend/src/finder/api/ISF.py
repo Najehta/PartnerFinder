@@ -322,5 +322,5 @@ def updateISF():
 
     except Exception as e:
         print(e)
-
+        raise Exception
 

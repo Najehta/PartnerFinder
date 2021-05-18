@@ -1792,12 +1792,11 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'BSF' in organizations:
 
                 try:
-                    updateBSF()
+                   updateBSF()
 
                 except Exception as e:
                     print(e)
-                    response = {'Error': 'Error while updating the BSF data'}
-
+                    raise Exception
 
             if 'ISF' in organizations:
 
@@ -1806,7 +1805,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
                 except Exception as e:
                     print(e)
-                    response = {'Error': 'Error while updating the ISF data'}
+                    raise Exception
 
 
             if 'INNOVATION' in organizations:
@@ -1816,7 +1815,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
                 except Exception as e:
                     print(e)
-                    response = {'Error': 'Error while updating the INNOVATION data'}
+                    raise Exception
 
 
             if 'MST' in organizations:
@@ -1826,7 +1825,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
                 except Exception as e:
                     print(e)
-                    response = {'Error': 'Error while updating the MST data'}
+                    raise Exception
 
             response = {'Success':'Proposal calls updated successfully.'}
 

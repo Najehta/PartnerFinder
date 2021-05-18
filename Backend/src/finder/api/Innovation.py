@@ -495,5 +495,5 @@ def updateINNOVATION():
 
     except Exception as e:
         print(e)
-
+        raise Exception
 
