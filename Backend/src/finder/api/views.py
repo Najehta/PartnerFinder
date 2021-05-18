@@ -974,7 +974,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                     for value in Innovation_result:
                         INNOVATION.append({
                                            'organizationName': value.organizationName,
-                                           'registrationDeadline': value.registrationDeadline,
+                                           'submissionDeadline': value.registrationDeadline,
                                            'information': value.information,
                                            'areaOfResearch': value.areaOfResearch,
                                            'link': value.link})
@@ -1484,13 +1484,30 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             email = data['email']
             organization = data['organizations']
             #organization = ''.join(organization)
-
+            #response = {'Success': 'New email have been successfully subscribed.'}
             try:
+                filtered_emails = EmailSubscription.objects.filter(email=email)
+                if filtered_emails.exists():
 
-                if EmailSubscription.objects.get(email=email, organizationName= organization):
-                    response = {'Error': email + ' is already subscribed'}
+                    if EmailSubscription.objects.filter(email=email, organizationName= organization):
+                        response = {'Error': email + ' is already subscribed'}
 
-            except:
+                    else:
+
+                        EmailSubscription.objects.filter(email=email).delete()
+
+                        latest_id = EmailSubscription.objects.latest('ID')
+                        latest_id_num = latest_id.ID + 1
+
+                        email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                                       organizationName=organization)
+
+                        email_info.save()
+                else:
+
+                    raise Exception
+
+            except Exception as e:
 
                 try:
 

@@ -142,17 +142,17 @@ def get_call_date(_url) :
         b2 = datetime(y2, m2, d2)
 
         if b1 < b2:
-            dates.append(sub_date + ' (Closed)')
+            dates.append('Closed')
             deadline_date = None
             dates.append(deadline_date)
 
         else:
 
-            dates.append(sub_date+ ' (Open)')
-            deadline_date = datetime.strptime(sub_date, "%d.%m.%Y")
+            dates.append(sub_date)
+            deadline_date = datetime.strptime(sub_date, "%d/%m/%Y")
             dates.append(deadline_date)
 
-    except :
+    except Exception as e :
         dates = []
         deadline_date = None
         dates.append('Closed')
