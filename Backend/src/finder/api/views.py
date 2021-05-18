@@ -1828,7 +1828,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                     print(e)
                     response = {'Error': 'Error while updating the MST data'}
 
-            response = {'Success': organizations + ' calls updated successfully.'}
+            response = {'Success':'Proposal calls updated successfully.'}
 
         except Exception as e:
             print(e)
