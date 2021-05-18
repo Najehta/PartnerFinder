@@ -349,5 +349,4 @@ class EmailSubscription(models.Model):
 
     ID = models.IntegerField(unique=True, null=False, blank= False)
     email = models.EmailField(max_length=300, blank=True)
-    status = models.BooleanField(default=False)
     organizationName = models.CharField(max_length=200, blank=True, null=True)

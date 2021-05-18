@@ -283,7 +283,7 @@ def updateBSF():
             indexID = len(index)
             # print("This is field name:", field_name[i])
             # print("This is event name:", event_details[i])
-            document = get_document_from_bsf_call(event_details[i], field_name[i],i)
+            document = get_document_from_bsf_call(event_details[i], field_name[i])
             newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
             newMap.save()
             index = add_document_to_curr_index(index, [document], 'BSF')

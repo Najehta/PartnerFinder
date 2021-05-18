@@ -487,7 +487,7 @@ def updateINNOVATION():
 
             originalID = counter + 1
             indexID = len(index)
-            document = get_document_from_isf_call(org_name)
+            document = get_document_from_innovation_call('Not Available', org_name)
             newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
             newMap.save()
             index = add_document_to_curr_index(index, [document], 'INNOVATION')
