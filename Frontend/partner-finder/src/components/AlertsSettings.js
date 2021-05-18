@@ -112,12 +112,12 @@ function AlertsSettings(props) {
   };
 
   /**
-   * Method that hides the alerts table 
+   * Method that hides the alerts table
    */
   const hideAlerts = () => {
     setState({ ...state, events: [], calls: [] });
   };
-  
+
   /**
    * function to get the EU calls that has consortium, at least three partners from three different countries.
    * and all the recommended events from B2match.
@@ -182,13 +182,12 @@ function AlertsSettings(props) {
         setState({ ...state, loading: false, calls: [] });
       });
   };
-  
+
   /**
-   * Method that sets the value of the scores that has been entered 
+   * Method that sets the value of the scores that has been entered
    * @param {*} event event when the user to enter a new score
    */
   const handleInputChange = (event) => {
-  
     let newState = { ...state };
     newState[event.target.id] = event.target.value;
     setState(newState);
@@ -213,14 +212,20 @@ function AlertsSettings(props) {
     let res = {};
     let check = false;
     Object.keys(state).forEach((key) => {
-      if (key !== 'email' && key !== 'calls' && key !== 'events') {
-        if (state[key] < 0 || state[key] > 1 || state[key].length === 0 || state[key] === undefined || state[key] === null) {
+      if (key !== "email" && key !== "calls" && key !== "events") {
+        if (
+          state[key] < 0 ||
+          state[key] > 1 ||
+          state[key].length === 0 ||
+          state[key] === undefined ||
+          state[key] === null
+        ) {
           res[key] = true;
           check = true;
         } else {
           res[key] = false;
         }
-      } else if (key === 'email') {
+      } else if (key === "email") {
         if (!state[key].match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
           res[key] = true;
           check = true;
@@ -230,7 +235,7 @@ function AlertsSettings(props) {
       }
     });
     setFormState(res);
-    return {check: check, res:res};
+    return { check: check, res: res };
   };
 
   /**
@@ -238,7 +243,7 @@ function AlertsSettings(props) {
      with the new value that was inserted
    */
   const updateAlert = () => {
-    let validation = formValidation()
+    let validation = formValidation();
     if (validation.check) {
       if (validation.res.email) {
         setMsgState({
@@ -354,10 +359,9 @@ function AlertsSettings(props) {
   };
 
   /**
-   * function that updates the alert results in the EU & B2MATCH manually 
+   * function that updates the alert results in the EU & B2MATCH manually
    */
   const updateAlertResults = () => {
-    
     let url = new URL(BACKEND_URL + "calls/consortium_builder/");
     fetch(url, {
       method: "GET",
@@ -370,7 +374,7 @@ function AlertsSettings(props) {
             body: "Error while updating alerts results",
             visible: true,
           });
-        }    
+        }
       })
       .catch((error) => {
         setMsgState({
@@ -379,27 +383,27 @@ function AlertsSettings(props) {
           visible: true,
         });
       });
-      url = new URL(BACKEND_URL + "b2matchalerts/alertB2match");
-      fetch(url, {
-        method: "GET",
-      })
-        .then((res) => res.json())
-        .then((resp) => {
-          if ("error" in resp) {
-            setMsgState({
-              title: "Failed",
-              body: "Error while updating alerts results",
-              visible: true,
-            });
-          }       
-        })
-        .catch((error) => {
+    url = new URL(BACKEND_URL + "b2matchalerts/alertB2match");
+    fetch(url, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("error" in resp) {
           setMsgState({
             title: "Failed",
             body: "Error while updating alerts results",
             visible: true,
           });
+        }
+      })
+      .catch((error) => {
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating alerts results",
+          visible: true,
         });
+      });
   };
   return (
     <React.Fragment>
@@ -414,13 +418,15 @@ function AlertsSettings(props) {
         style={{ marginBottom: "30px", marginLeft: "50px" }}
         className="alert_email"
       >
-        <h2 style={{marginTop:'25px'}} id="textFontFamily">E-mail</h2>
+        <h2 style={{ marginTop: "25px" }} id="textFontFamily">
+          E-mail
+        </h2>
         <TextField
           id="email"
           style={{
             borderRadius: "3px",
             backgroundColor: "#02203c",
-            marginBottom: "45px"
+            marginBottom: "45px",
           }}
           onChange={handleInputChange}
           className={AlertsSettings.textField}
@@ -1007,7 +1013,7 @@ function AlertsSettings(props) {
           round
           variant="contained"
           id="BackgroundColor"
-          style={{'marginLeft' : '10%'}}
+          style={{ marginLeft: "10%" }}
           onClick={() => updateAlertResults()}
         >
           Update Alerts Results

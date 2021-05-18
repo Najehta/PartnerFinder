@@ -5,6 +5,10 @@ import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import { BACKEND_URL } from "../utils";
+import { Dialog, DialogTitle, DialogContent } from "@material-ui/core/";
+import { BeatLoader } from "react-spinners";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +26,11 @@ const Alert = (props) => {
     { label: "Ministry Of Science And Technology", value: "MST" },
     { label: "Innovation Isreal", value: "INNOVATION" },
   ];
+  const [msgState, setMsgState] = React.useState({
+    title: "",
+    body: "",
+    visible: false,
+  });
   const customStyles = {
     menu: (provided, state) => ({
       ...provided,
@@ -52,14 +61,15 @@ const Alert = (props) => {
     singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
   };
 
-  const [selected, setSelected] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState([]);
 
   const [state, setState] = React.useState({
     loading: false,
     firstLoading: true,
+    email: "",
   });
   const handleChoose = (event) => {
-    setSelected(event);
+    setSelectedOrganization(event);
     // props.setState({ ...props.state, selected: event });
   };
 
@@ -84,6 +94,111 @@ const Alert = (props) => {
   const [formState, setFormState] = React.useState({
     email: false,
   });
+  //subscribe handle
+  const subscribe = () => {
+    setState({ ...state, loading: true });
+    let organizations = selectedOrganization.map((value) => {
+      return value.value;
+    });
+    console.log("Email", state.email);
+    let email = state.email;
+    let params = {
+      data: JSON.stringify({
+        email: email,
+        organizations: organizations,
+      }),
+    };
+    console.log("params:", params);
+
+    let url = new URL(BACKEND_URL + "EmailSubscription/set_emails");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+
+  // Unsubscribe handle
+  const unsubscribe = () => {
+    setState({ ...state, loading: true });
+    let organizations = selectedOrganization.map((value) => {
+      return value.value;
+    });
+
+    let params = {
+      data: JSON.stringify({
+        email: state.email,
+        organizations: organizations,
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "EmailSubscription/set_emails/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
 
   const classes = useStyles();
   return (
@@ -93,8 +208,15 @@ const Alert = (props) => {
         <h5>Enter your email to receive updates</h5>
       </div>
       <div className="email">
+        <h2>Email</h2>
         <TextField
           id="email"
+          style={{
+            borderRadius: "3px",
+            width: "95%",
+            height: "100px",
+            backgroundColor: "white",
+          }}
           onChange={handleInputChange}
           className={Alert.textField}
           value={state.email}
@@ -112,13 +234,67 @@ const Alert = (props) => {
           <MultiSelect
             options={options}
             styles={customStyles}
-            value={selected}
+            value={selectedOrganization}
             onChange={handleChoose}
             focusSearchOnOpen={true}
             className="select"
             labelledBy={"Select"}
           />
         </FormControl>
+      </div>
+
+      <div className="subscribtion">
+        <Button
+          color="primary"
+          round
+          variant="contained"
+          id="BackgroundColor"
+          onClick={() => subscribe()}
+          disabled={state.loading}
+        >
+          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
+          {state && state.loading && (
+            <Dialog
+              disableBackdropClick
+              disableEscapeKeyDown
+              open={true}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle className={classes.title}>LOADING</DialogTitle>
+              <DialogContent style={{ "margin-left": "17px" }}>
+                <BeatLoader />
+              </DialogContent>
+            </Dialog>
+          )}
+          {state && !state.loading && <span>Subscribe</span>}
+        </Button>
+
+        <Button
+          color="primary"
+          round
+          variant="contained"
+          id="BackgroundColor"
+          onClick={() => unsubscribe()}
+          disabled={state.loading}
+        >
+          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
+          {state && state.loading && (
+            <Dialog
+              disableBackdropClick
+              disableEscapeKeyDown
+              open={true}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle className={classes.title}>LOADING</DialogTitle>
+              <DialogContent style={{ "margin-left": "17px" }}>
+                <BeatLoader />
+              </DialogContent>
+            </Dialog>
+          )}
+          {state && !state.loading && <span>Unsubsribe</span>}
+        </Button>
       </div>
     </div>
   );

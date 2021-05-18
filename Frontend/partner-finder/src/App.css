@@ -6,14 +6,14 @@ body {
   font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
-  color: rgb(251, 251, 251);
+  color: #283747(31, 29, 29);
 }
 
 #text_select {
   font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
-  color: white;
+  color: 283747 (19, 15, 15);
   font-size: 13px;
 }
 
@@ -28,7 +28,7 @@ h1 {
   font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
-  color: #050505;
+  color: #283747;
 }
 
 h2 {
@@ -172,7 +172,7 @@ pre {
 .multi-select {
   background-color: #283747;
   color: "white";
-  --rmsc-gray: white;
+  --rmsc-gray: #283747;
 }
 
 .go977458394.selected {
@@ -184,17 +184,17 @@ pre {
 }
 
 .go4079732705 .gray {
-  color: white;
+  color: #283747;
 }
 
 .go4079732705,
 .gray span {
-  color: white;
+  color: #283747;
 }
 
 .dropdown-heading-value span {
   font-size: 13px;
-  color: white;
+  color: #283747;
   /* outline-color: white;
   color-adjust: white;
   text-decoration: white;
@@ -340,7 +340,7 @@ div.ReactTags__tagInput {
 
 div.ReactTags__tagInput input.ReactTags__tagInputField,
 div.ReactTags__tagInput input.ReactTags__tagInputField {
-  height: 31px;
+  height: 38px;
   margin: 0;
   font-size: 14px;
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
@@ -351,7 +351,7 @@ div.ReactTags__tagInput input.ReactTags__tagInputField {
   border: 1px solid #283747;
   padding: 0 4px;
   background-color: #f6f7f8;
-  color: white;
+  color: rgb(7, 6, 6);
 }
 
 div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder {
@@ -403,7 +403,7 @@ div.ReactTags__suggestions li mark {
 div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   background: #283747;
   cursor: pointer;
-  color: white;
+  color: rgb(10, 10, 10);
 }
 
 .MuiDivider {
@@ -421,9 +421,17 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 .MuiTypography-caption {
   color: white;
 }
+.MuiInputBase-input {
+  width: 100%;
+  height: 10em;
+}
 
 #exitColor {
   background-color: red;
+}
+.MuiOutlinedInput-root {
+  height: 41%;
+  padding: 0px;
 }
 
 #italy,
@@ -454,5 +462,5 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
     "Bitstream Vera Sans Mono", monospace;
   font-style: normal;
   font-variant: normal;
-  color: white;
+  color: rgb(15, 15, 15);
 }
