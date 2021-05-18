@@ -10,10 +10,9 @@ import {
   DialogTitle,
   DialogContent,
 } from "@material-ui/core/";
+import { Msgtoshow } from "./Msgtoshow";
 
-import {
-  BACKEND_URL,
-} from "../utils";
+import { BACKEND_URL } from "../utils";
 
 import { BeatLoader } from "react-spinners";
 //???
@@ -73,31 +72,6 @@ const Getcalls = (props) => {
     setselectedOrganization(event);
     //props.setState({ ...props.state, selected: event });
   };
-  //Button consts
-
-  const searchByOrg = () => {
-    // if (formValidation()) {
-    //   setMsgState({
-    //     title: "Error",
-    //     body: "Please fill the tag field",
-    //     visible: true,
-    //   });
-    // } else {
-    //   let countriesToSearch = countrySearched.map((value) => {
-    //     return value.label;
-    //   })
-    //   let typeTosSearch = type.map((value) => {
-    //     return value.label;
-    //   })
-    //   let roleToSearch = '';
-    //   if (role !== '') {
-    //     roleToSearch = role.label;
-    //   }
-    //   genericSearch(tags, countriesToSearch, typeTosSearch, roleToSearch);
-    // }
-  };
-
-
 
   const updateOrganizations = () => {
     setState({ ...state, loading: true });
@@ -112,7 +86,7 @@ const Getcalls = (props) => {
     };
 
     let url = new URL(BACKEND_URL + "update/call_update/");
-    
+
     //searchParams?
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
@@ -124,12 +98,14 @@ const Getcalls = (props) => {
       .then((res) => res.json())
       .then((resp) => {
         if ("Error" in resp) {
+          setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
             body: "Error while updating the Organizations data.",
             visible: true,
           });
         } else {
+          setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
             body: "Organizations data has been updated successfully.",
@@ -137,13 +113,14 @@ const Getcalls = (props) => {
           });
         }
       })
-      .catch((error) =>
+      .catch((error) => {
+        setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data.",
+          body: "Error while updating Organizations data",
           visible: true,
-        })
-      );
+        });
+      });
   };
 
   const [msgState, setMsgState] = React.useState({
@@ -154,6 +131,10 @@ const Getcalls = (props) => {
 
   return (
     <div className="getCalls">
+      <Msgtoshow
+        {...msgState}
+        handleClose={() => setMsgState({ ...msgState, visible: false })}
+      />
       <div className="getTitle">
         <h1>Get calls from:</h1>
         <h5>Select an organization,then press Update now</h5>
@@ -175,18 +156,32 @@ const Getcalls = (props) => {
         </FormControl>
       </div>
       <div className="GetCallsButton">
-      <Button
+        <Button
           color="primary"
           round
           variant="contained"
           id="BackgroundColor"
-          onClick={updateOrganizations}
-          style={{ width: "20%" }}
+          onClick={() => updateOrganizations()}
+          disabled={state.loading}
         >
-          Update Now
+          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
+          {state && state.loading && (
+            <Dialog
+              disableBackdropClick
+              disableEscapeKeyDown
+              open={true}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle className={classes.title}>LOADING</DialogTitle>
+              <DialogContent style={{ "margin-left": "17px" }}>
+                <BeatLoader />
+              </DialogContent>
+            </Dialog>
+          )}
+          {state && !state.loading && <span>Update</span>}
         </Button>
       </div>
-      {/* <Divider variant="middle" className='getDivider'></Divider> */}
     </div>
   );
 };
