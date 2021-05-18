@@ -1482,13 +1482,12 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             data = request.query_params['data']
             data = json.loads(data)
             email = data['email']
-            subscription_status = data['status']
-            organization = data['organizationName']
-            organization = ''.join(organization)
+            organization = data['organizations']
+            #organization = ''.join(organization)
 
             try:
 
-                if EmailSubscription.objects.get(email=email, status=subscription_status, organizationName= organization):
+                if EmailSubscription.objects.get(email=email, organizationName= organization):
                     response = {'Error': email + ' is already subscribed'}
 
             except:
@@ -1499,14 +1498,13 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                     latest_id_num = latest_id.ID + 1
 
                     email_info = EmailSubscription(ID=latest_id_num, email=email,
-                                                   status=subscription_status,
                                                    organizationName=organization)
 
                     email_info.save()
 
                 except Exception as e:
                     print(e)
-                    emailSubscription = EmailSubscription(email=email, status=subscription_status, ID=1, organizationName=organization)
+                    emailSubscription = EmailSubscription(email=email, ID=1, organizationName=organization)
                     emailSubscription.save()
 
                 response = {'Success': 'New email have been successfully subscribed.'}
@@ -1530,10 +1528,10 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
         available_calls = []
         calls_deadline = []
         try:
-            response = {'success': 'Please Turn Email Alerts ON!'}
+            response = {'Error': 'Please insert at least one email!'}
 
             try:
-                email_sub = EmailSubscription.objects.filter(status=True)
+                email_sub = EmailSubscription.objects.all()
 
                 for item in email_sub:
                     email = item.email
@@ -1752,11 +1750,12 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
             except Exception as e:
                 print(e)
-                email_sub['status'] = False
 
         except Exception as e:
             print(e)
             response = {'Error': 'Error while building Proposal Calls Alerts.'}
+
+        response = {'Success': 'Email alerts sent successfully'}
 
         return Response(response, status=status.HTTP_200_OK)
 
