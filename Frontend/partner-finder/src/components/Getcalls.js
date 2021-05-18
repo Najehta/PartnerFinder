@@ -10,6 +10,11 @@ import {
   DialogTitle,
   DialogContent,
 } from "@material-ui/core/";
+
+import {
+  BACKEND_URL,
+} from "../utils";
+
 import { BeatLoader } from "react-spinners";
 //???
 const useStyles = makeStyles((theme) => ({
@@ -25,8 +30,8 @@ const Getcalls = (props) => {
   const options = [
     { label: "BSF", value: "BSF" },
     { label: "ISF", value: "ISF" },
-    { label: "MSF", value: "MSF" },
-    { label: "Innovation Isreal", value: "Innovation Isreal" },
+    { label: "Ministry Of Science And Technology", value: "MST" },
+    { label: "Innovation Isreal", value: "INNOVATION" },
   ];
   const customStyles = {
     menu: (provided, state) => ({
@@ -58,14 +63,14 @@ const Getcalls = (props) => {
     singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
   };
 
-  const [selected, setSelected] = useState([]);
+  const [selectedOrganization, setselectedOrganization] = useState([]);
 
   const [state, setState] = React.useState({
     loading: false,
     firstLoading: true,
   });
   const handleChoose = (event) => {
-    setSelected(event);
+    setselectedOrganization(event);
     //props.setState({ ...props.state, selected: event });
   };
   //Button consts
@@ -92,6 +97,61 @@ const Getcalls = (props) => {
     // }
   };
 
+
+
+  const updateOrganizations = () => {
+    setState({ ...state, loading: true });
+    let organizations = selectedOrganization.map((value) => {
+      return value.value;
+    });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: organizations,
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+    
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) =>
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data.",
+          visible: true,
+        })
+      );
+  };
+
+  const [msgState, setMsgState] = React.useState({
+    title: "",
+    body: "",
+    visible: false,
+  });
+
   return (
     <div className="getCalls">
       <div className="getTitle">
@@ -106,7 +166,7 @@ const Getcalls = (props) => {
           <MultiSelect
             options={options}
             styles={customStyles}
-            value={selected}
+            value={selectedOrganization}
             onChange={handleChoose}
             focusSearchOnOpen={true}
             className="select"
@@ -115,30 +175,15 @@ const Getcalls = (props) => {
         </FormControl>
       </div>
       <div className="GetCallsButton">
-        <Button
+      <Button
           color="primary"
           round
           variant="contained"
           id="BackgroundColor"
-          onClick={() => searchByOrg()}
-          disabled={state.loading}
+          onClick={updateOrganizations}
+          style={{ width: "20%" }}
         >
-          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
-          {state && state.loading && (
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={true}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle className={classes.title}>LOADING</DialogTitle>
-              <DialogContent style={{ "margin-left": "17px" }}>
-                <BeatLoader />
-              </DialogContent>
-            </Dialog>
-          )}
-          {state && !state.loading && <span>Update Now</span>}
+          Update Now
         </Button>
       </div>
       {/* <Divider variant="middle" className='getDivider'></Divider> */}

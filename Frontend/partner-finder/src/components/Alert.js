@@ -19,8 +19,8 @@ const Alert = (props) => {
   const options = [
     { label: "BSF", value: "BSF" },
     { label: "ISF", value: "ISF" },
-    { label: "MSF", value: "MSF" },
-    { label: "Innovation Isreal", value: "Innovation Isreal" },
+    { label: "Ministry Of Science And Technology", value: "MST" },
+    { label: "Innovation Isreal", value: "INNOVATION" },
   ];
   const customStyles = {
     menu: (provided, state) => ({
