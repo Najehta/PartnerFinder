@@ -919,16 +919,20 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             tags = data['tags']
             from_date = data['start_date']
             to_date = data['end_date']
+            call_status = data['status']
 
 
             if not organizations:
                 organizations = 'BSF, ISF, INNOVATION, MST'
 
+            if len(call_status) == 0:
+                call_status = 'Open and Closed'
+
             if 'BSF' in organizations:
 
                 try:
 
-                    bsf_result = get_bsf_call_by(tags, from_date, to_date)
+                    bsf_result = get_bsf_call_by(tags, from_date, to_date, call_status)
 
                     BSF = []
                     for value in bsf_result:
@@ -948,7 +952,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                 try:
 
-                    Isf_result = get_Isf_call_by(tags, from_date, to_date)
+                    Isf_result = get_Isf_call_by(tags, from_date, to_date, call_status)
 
                     ISF = []
                     for value in Isf_result:
@@ -968,7 +972,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                 try :
 
-                    Innovation_result = get_Innovation_call_by(tags, from_date, to_date)
+                    Innovation_result = get_Innovation_call_by(tags, from_date, to_date, call_status)
 
                     INNOVATION = []
                     for value in Innovation_result:
@@ -988,7 +992,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                 try:
 
-                    mst_result = get_Mst_call_by(tags, from_date, to_date)
+                    mst_result = get_Mst_call_by(tags, from_date, to_date, call_status)
 
                     MST = []
                     for value in mst_result:
@@ -1451,19 +1455,25 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             data = json.loads(data)
             email = data['email']
 
-            EmailSubscriptions = EmailSubscription.objects.all()
+            try :
 
-            for item in EmailSubscriptions:
-                if item.email == email:
-                    EmailSubscription.objects.filter(email= item.email).delete()
+                filtered_emails = EmailSubscription.objects.filter(email=email)
+
+                if filtered_emails.exists():
+                    EmailSubscription.objects.filter(email=email).delete()
+                    response = {'Success': 'Email ' + email + ' deleted successfully'}
+
+                else:
+                    response = {'Error': 'Email ' + email + ' did not subscribe yet'}
 
 
-            response = {'Success': 'Email ' + email + ' deleted successfully'}
-
+            except Exception as e:
+                print(e)
+                response = {'Error': 'Failed to unsubscribe the email'}
 
         except Exception as e:
                     print(e)
-                    response = {'Error':'Error while deleting the subscribed email'}
+                    response = {'Error':'Error while parsing the data'}
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -1486,30 +1496,11 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
             #organization = ''.join(organization)
             #response = {'Success': 'New email have been successfully subscribed.'}
             try:
+
                 filtered_emails = EmailSubscription.objects.filter(email=email)
                 if filtered_emails.exists():
 
-                    if EmailSubscription.objects.filter(email=email, organizationName= organization):
-                        response = {'Error': email + ' is already subscribed'}
-
-                    else:
-
-                        EmailSubscription.objects.filter(email=email).delete()
-
-                        latest_id = EmailSubscription.objects.latest('ID')
-                        latest_id_num = latest_id.ID + 1
-
-                        email_info = EmailSubscription(ID=latest_id_num, email=email,
-                                                       organizationName=organization)
-
-                        email_info.save()
-                else:
-
-                    raise Exception
-
-            except Exception as e:
-
-                try:
+                    EmailSubscription.objects.filter(email=email).delete()
 
                     latest_id = EmailSubscription.objects.latest('ID')
                     latest_id_num = latest_id.ID + 1
@@ -1519,12 +1510,30 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                     email_info.save()
 
-                except Exception as e:
-                    print(e)
-                    emailSubscription = EmailSubscription(email=email, ID=1, organizationName=organization)
-                    emailSubscription.save()
+                    response = {'Success': 'New email have been successfully subscribed.'}
 
-                response = {'Success': 'New email have been successfully subscribed.'}
+                else:
+
+                    try:
+
+                        latest_id = EmailSubscription.objects.latest('ID')
+                        latest_id_num = latest_id.ID + 1
+
+                        email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                                       organizationName=organization)
+
+                        email_info.save()
+
+                    except Exception as e:
+                        print(e)
+                        emailSubscription = EmailSubscription(email=email, ID=1, organizationName=organization)
+                        emailSubscription.save()
+
+                    response = {'Success': 'New email have been successfully subscribed.'}
+
+            except Exception as e:
+                response = {'Error': 'Error while updating email subscription settings'}
+
         except:
             response = {'Error': 'Error while updating email subscription settings'}
 

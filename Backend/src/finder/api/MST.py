@@ -136,7 +136,7 @@ def get_calls_num(_url):
     return calls_number
 
 
-def get_Mst_call_by(tags, first_date, second_date):
+def get_Mst_call_by(tags, first_date, second_date, call_status):
 
     """
    Method to return all the relevant calls by tags and dates
@@ -145,11 +145,10 @@ def get_Mst_call_by(tags, first_date, second_date):
    """
 
     tags_call = get_Mst_call_by_tags(tags)
-    # print("Related call to "+tags+" is: ", tags_call)
-    dates_call = get_Mst_call_by_dates(first_date, second_date)
-    # print("Related call to " + first_date + " and "+second_date+ "is: ", dates_call)
 
-    result = get_Mst_call_intersection(tags_call, dates_call)
+    dates_call = get_Mst_call_by_dates(first_date, second_date)
+
+    result = get_Mst_call_intersection(tags_call, dates_call, call_status)
 
     return result
 
@@ -224,7 +223,7 @@ def get_Mst_call_by_dates(first_date, second_date):
         return calls.filter(deadlineDate__gte=from_date, deadlineDate__lte=to_date)
 
 
-def get_Mst_call_intersection(tags_call, dates_call):
+def get_Mst_call_intersection(tags_call, dates_call, status):
 
     """
    Method to intersect all the calls result together
@@ -232,17 +231,45 @@ def get_Mst_call_intersection(tags_call, dates_call):
    :return: calls list
    """
 
-    result = []
-    already_taken = set()
+    call_status = False
 
-    for call in tags_call:
-        already_taken.add(call.CallID)
+    if 'Open and Closed' in status:
 
-    not_taken = set()
-    for call in dates_call:
-        if call.CallID in already_taken and call.CallID not in not_taken:
-            result.append(call)
-            not_taken.add(call.CallID)
+        result = []
+        already_taken = set()
+
+        for call in tags_call:
+            already_taken.add(call.CallID)
+
+        not_taken = set()
+        for call in dates_call:
+            if call.CallID in already_taken and call.CallID not in not_taken:
+                result.append(call)
+                not_taken.add(call.CallID)
+
+    else:
+
+        if status == 'Open':
+            call_status = True
+
+        if status == 'Closed':
+            call_status = False
+
+        result = []
+        already_taken = set()
+
+        for call in tags_call:
+            if call.open == call_status:
+                already_taken.add(call.CallID)
+
+            else:
+                pass
+
+        not_taken = set()
+        for call in dates_call:
+            if call.CallID in already_taken and call_status == call.open and call.CallID not in not_taken:
+                result.append(call)
+                not_taken.add(call.CallID)
 
     return result
 
