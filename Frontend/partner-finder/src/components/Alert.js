@@ -9,6 +9,7 @@ import { BACKEND_URL } from "../utils";
 import { Dialog, DialogTitle, DialogContent } from "@material-ui/core/";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@material-ui/core";
+import { Msgtoshow } from "./Msgtoshow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +25,7 @@ const Alert = (props) => {
     { label: "BSF", value: "BSF" },
     { label: "ISF", value: "ISF" },
     { label: "Ministry Of Science And Technology", value: "MST" },
-    { label: "Innovation Isreal", value: "INNOVATION" },
+    { label: "Innovation Israel", value: "INNOVATION" },
   ];
   const [msgState, setMsgState] = React.useState({
     title: "",
@@ -96,113 +97,152 @@ const Alert = (props) => {
   });
   //subscribe handle
   const subscribe = () => {
-    setState({ ...state, loading: true });
-    let organizations = selectedOrganization.map((value) => {
-      return value.value;
-    });
-    console.log("Email", state.email);
-    let email = state.email;
-    let params = {
-      data: JSON.stringify({
-        email: email,
-        organizations: organizations,
-      }),
-    };
-    console.log("params:", params);
+    if (
+      selectedOrganization.length === 0 ||
+      selectedOrganization === undefined ||
+      selectedOrganization === null
+    ) {
+      setMsgState({
+        title: "Error",
+        body: "Please choose an organization",
+        visible: true,
+      });
+    } else if (formValidation()) {
+      setMsgState({
+        title: "Failed",
+        body: "Invalid Email",
+        visible: true,
+      });
+    } else {
+      setState({ ...state, loading: true });
+      let organizations = selectedOrganization.map((value) => {
+        return value.value;
+      });
+      console.log("Email", state.email);
+      let email = state.email;
+      let params = {
+        data: JSON.stringify({
+          email: email,
+          organizations: organizations,
+        }),
+      };
+      console.log("params:", params);
 
-    let url = new URL(BACKEND_URL + "EmailSubscription/set_emails");
+      let url = new URL(BACKEND_URL + "EmailSubscription/set_emails/");
 
-    //searchParams?
-    Object.keys(params).forEach((key) =>
-      url.searchParams.append(key, params[key])
-    );
+      //searchParams?
+      Object.keys(params).forEach((key) =>
+        url.searchParams.append(key, params[key])
+      );
 
-    fetch(url, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if ("Error" in resp) {
+      fetch(url, {
+        method: "POST",
+      })
+        .then((res) => res.json())
+        .then((resp) => {
+          if ("Error" in resp) {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Failed",
+              body: "The email is already subscribed",
+              visible: true,
+            });
+          } else {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Success",
+              body: "You have successfully subscribed",
+              visible: true,
+            });
+          }
+        })
+        .catch((error) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while adding the email",
             visible: true,
           });
-        } else {
-          setState({ ...state, loading: false });
-          setMsgState({
-            title: "Success",
-            body: "Organizations data has been updated successfully.",
-            visible: true,
-          });
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        setMsgState({
-          title: "Failed",
-          body: "Error while updating Organizations data",
-          visible: true,
         });
-      });
+    }
+  };
+  const formValidation = () => {
+    if (
+      !state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ||
+      state.email === ""
+    ) {
+      return true;
+    }
+    return false;
   };
 
   // Unsubscribe handle
   const unsubscribe = () => {
-    setState({ ...state, loading: true });
-    let organizations = selectedOrganization.map((value) => {
-      return value.value;
-    });
+    if (formValidation()) {
+      setMsgState({
+        title: "Failed",
+        body: "Invalid Email",
+        visible: true,
+      });
+    } else {
+      setState({ ...state, loading: true });
+      let organizations = selectedOrganization.map((value) => {
+        return value.value;
+      });
 
-    let params = {
-      data: JSON.stringify({
-        email: state.email,
-        organizations: organizations,
-      }),
-    };
+      let params = {
+        data: JSON.stringify({
+          email: state.email,
+          organizations: organizations,
+        }),
+      };
 
-    let url = new URL(BACKEND_URL + "EmailSubscription/set_emails/");
+      let url = new URL(BACKEND_URL + "EmailSubscription/delete_email/");
 
-    //searchParams?
-    Object.keys(params).forEach((key) =>
-      url.searchParams.append(key, params[key])
-    );
+      //searchParams?
+      Object.keys(params).forEach((key) =>
+        url.searchParams.append(key, params[key])
+      );
 
-    fetch(url, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if ("Error" in resp) {
+      fetch(url, {
+        method: "POST",
+      })
+        .then((res) => res.json())
+        .then((resp) => {
+          if ("Error" in resp) {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Failed",
+              body: "Error while updating the Organizations data.",
+              visible: true,
+            });
+          } else {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Success",
+              body: "Unsubscribed successfully",
+              visible: true,
+            });
+          }
+        })
+        .catch((error) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while unsubscribe the email",
             visible: true,
           });
-        } else {
-          setState({ ...state, loading: false });
-          setMsgState({
-            title: "Success",
-            body: "Organizations data has been updated successfully.",
-            visible: true,
-          });
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        setMsgState({
-          title: "Failed",
-          body: "Error while updating Organizations data",
-          visible: true,
         });
-      });
+    }
   };
 
   const classes = useStyles();
   return (
     <div className="Alerts">
+      <Msgtoshow
+        {...msgState}
+        handleClose={() => setMsgState({ ...msgState, visible: false })}
+      />
       <div className="title">
         <h1>Alert Subcription</h1>
         <h5>Enter your email to receive updates</h5>
