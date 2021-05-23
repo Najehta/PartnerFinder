@@ -911,6 +911,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
         """
 
         BSF, ISF, INNOVATION, MST = [], [], [], []
+
         try:
             data = request.query_params['data']
             print("This is the data:", data)
@@ -978,7 +979,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                     for value in Innovation_result:
                         INNOVATION.append({
                                            'organizationName': value.organizationName,
-                                           'submissionDeadline': value.registrationDeadline,
+                                           'submissionDeadline': value.submissionDeadline,
                                            'information': value.information,
                                            'areaOfResearch': value.areaOfResearch,
                                            'link': value.link})

@@ -285,37 +285,53 @@ def get_bsf_call_intersection(tags_call, dates_call, status):
 
 def updateBSF():
 
-    bsfCalls.objects.all().delete()
-    MapIdsBSF.objects.all().delete()
+    # bsfCalls.objects.all().delete()
+    # MapIdsBSF.objects.all().delete()
     _url = 'https://www.bsf.org.il/calendar/'
     deadline = get_events_deadline(_url)  # deadline is a list of strings
     event_details = get_events_details(_url)  # event_details is a list of strings
     field_name = get_field_name(_url)  # field_name is a list of strings
 
-    try:
-        os.remove('BsfIndex')
-        os.remove('BsfIndex.0')
-        os.remove('Dictionary_BSF')
-        print('Deleting BSF Index...')
-    except:
-        pass
+    # try:
+    #     os.remove('BsfIndex')
+    #     os.remove('BsfIndex.0')
+    #     os.remove('Dictionary_BSF')
+    #     print('Deleting BSF Index...')
+    # except:
+    #     pass
 
-    index = make_index('BsfIndex', 'BSF')
-    print('Building BSF Index...')
+    #index = make_index('BsfIndex', 'BSF')
+    index = reload_index('BsfIndex')
+    print('Reloading BSF Index...')
 
     try:
+
         for i, item in enumerate(deadline):
-            date = bsfCalls(CallID=i, deadlineDate=item, organizationName='NSF-BSF', information=event_details[i],
-                            areaOfResearch=field_name[i], link='https://www.bsf.org.il/calendar/', open=True)
-            date.save()
-            originalID = i
-            indexID = len(index)
-            # print("This is field name:", field_name[i])
-            # print("This is event name:", event_details[i])
-            document = get_document_from_bsf_call(event_details[i], field_name[i])
-            newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
-            newMap.save()
-            index = add_document_to_curr_index(index, [document], 'BSF')
+
+            try:
+
+                bsfCalls.objects.get(areaOfResearch=field_name[i])
+                print("This is already exist ", field_name[i])
+                
+            except bsfCalls.DoesNotExist as e:
+
+                print("Its not in the DB ", field_name[i])
+
+                latest_id = MapIdsBSF.objects.latest('originalID')
+
+                date = bsfCalls(CallID=latest_id.originalID + 1, deadlineDate=item, organizationName='NSF-BSF',
+                                information=event_details[i],
+                                areaOfResearch=field_name[i], link='https://www.bsf.org.il/calendar/', open=True)
+                date.save()
+                originalID = latest_id.originalID + 1
+                indexID = len(index)
+                # print("This is field name:", field_name[i])
+                # print("This is event name:", event_details[i])
+                document = get_document_from_bsf_call(event_details[i], field_name[i])
+                newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'BSF')
+
 
     except Exception as e:
         print(e)
