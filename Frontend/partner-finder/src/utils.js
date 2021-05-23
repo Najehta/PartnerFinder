@@ -159,7 +159,7 @@ const INNOVATION_columns = [
   { title: "Organization Name", field: "organizationName" },
   { title: "Information", field: "information" },
   { title: "Area of research", field: "areaOfResearch" },
-  { title: "Deadline date", field: "submisionDeadline" },
+  { title: "Deadline date", field: "submissionDeadline" },
   {
     title: "Link",
     field: "link",

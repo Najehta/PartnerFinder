@@ -147,6 +147,7 @@ const Search = (props) => {
     setState({ ...state, loading: true });
     tags = tags.map((tag) => tag.text);
     let url = new URL(BACKEND_URL + "proposal/call_search/");
+  
     let params = {
       data: JSON.stringify({
         organizations: organization,
@@ -264,10 +265,10 @@ const Search = (props) => {
   };
   //open closed megration
   const option = [
-    { label: "Open", value: "open" },
-    { label: "Closed", value: "closed" },
+    { label: "Open", value: "Open" },
+    { label: "Closed", value: "losed" },
   ];
-  const [status, setStatus] = React.useState("");
+  const [status, setStatus] = React.useState({label:"Status",value:""});
 
   const handleChange = (event) => {
     setStatus(event);
