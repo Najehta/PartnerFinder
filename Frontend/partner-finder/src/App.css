@@ -19,10 +19,10 @@ body {
 
 #text_select::hover {
   color: black;
-  background-color: #f1f3f5;
+  background-color: whitesmoke;
 }
 .label {
-  background-color: #ececec;
+  background-color: whitesmoke;
 }
 h1 {
   font-family: "Helvetica Neue";
@@ -138,12 +138,12 @@ pre {
   /* height: 50%; */
 }
 .Search {
-  color: white;
+  color: #283747;
   margin-left: 20px;
   font-size: 9.5px;
 }
 #fields {
-  background-color: white;
+  background-color: rgb(27, 25, 25);
   size: 2px;
   height: 2px;
 }
@@ -176,11 +176,11 @@ pre {
 }
 
 .go977458394.selected {
-  color: black;
+  color: #283747;
 }
 
 .go977458394 :hover {
-  color: black;
+  color: #283747;
 }
 
 .go4079732705 .gray {
@@ -202,7 +202,7 @@ pre {
 }
 
 .go2885254090 input {
-  color: white;
+  color: #283747;
 }
 
 .go1053659416 dropdown-heading {
@@ -215,7 +215,7 @@ pre {
   color: white;
 }
 .MuiFormControl-root {
-  color: white;
+  color: rgb(231, 226, 226);
 }
 .dropdown-heading,
 .dropdown-heading-value {
@@ -239,7 +239,7 @@ pre {
 
 .select_role css-2b097c-container {
   background-color: #283747;
-  color: "white";
+  color: "#283747";
 }
 
 .css-yk16xz-control {
@@ -252,7 +252,7 @@ pre {
 }
 
 .MuiTypography-h6 {
-  color: white;
+  color: #283747;
   font-style: normal;
   font-variant: normal;
   text-align: center;
@@ -311,7 +311,9 @@ pre {
   display: grid;
   grid-template-columns: 0.29fr 0.3fr;
 }
-
+.MuiSelect-iconOpen {
+  background-color: #283747;
+}
 #BackgroundColor {
   background-color: #283747;
   font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
@@ -433,7 +435,9 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   height: 41%;
   padding: 0px;
 }
-
+.css-26l3qy-menu {
+  color: #283747;
+}
 #italy,
 #france,
 #germany,

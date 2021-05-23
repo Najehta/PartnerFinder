@@ -29,11 +29,20 @@ import {
 } from "@material-ui/pickers";
 import { Msgtoshow } from "./Msgtoshow";
 import moment from "moment";
+import Select from "react-select";
+import InputLabel from "@material-ui/core/InputLabel";
 //???
 const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: "center",
     fontSize: 30,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -58,9 +67,9 @@ const Search = (props) => {
   const customStyles = {
     menu: (provided, state) => ({
       ...provided,
-      backgroundColor: "white",
+      backgroundColor: "#283747",
       borderBottom: "1px dotted pink",
-      color: "white",
+      color: "//#region ",
       fontSize: "13px",
     }),
     placeholder: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
@@ -77,7 +86,7 @@ const Search = (props) => {
       backgroundColor: "white",
       fontSize: "13px",
       "&:hover": {
-        backgroundColor: "#f1f3f5",
+        backgroundColor: "//#endregion",
         color: "black",
         fontSize: "13px",
       },
@@ -144,6 +153,7 @@ const Search = (props) => {
         tags: tags,
         start_date: startDate,
         end_date: endDate,
+        status: status.value,
       }),
     };
     //searchParams?
@@ -185,7 +195,7 @@ const Search = (props) => {
         }
       })
       .catch((error) => {
-        setData({ BFS: [], ISF: [], MST: [], INNOVATION: [] });
+        // setData({ BFS: [], ISF: [], MST: [], INNOVATION: [] });
         // props.setState({ ...props.state, data: { EU: [], B2MATCH: [] } });
         setMsgState({
           title: "Failed",
@@ -251,6 +261,16 @@ const Search = (props) => {
 
   const handleEndDateChange = (date) => {
     setEndDate(moment(date).format("DD/MM/YYYY"));
+  };
+  //open closed megration
+  const option = [
+    { label: "Open", value: "open" },
+    { label: "Closed", value: "closed" },
+  ];
+  const [status, setStatus] = React.useState("");
+
+  const handleChange = (event) => {
+    setStatus(event);
   };
 
   return (
@@ -328,7 +348,16 @@ const Search = (props) => {
           />
         </div>
       </MuiPickersUtilsProvider>
-
+      <div className="status">
+        <FormControl variant="filled" className={classes.formControl}>
+          <Select
+            native
+            value={status}
+            onChange={handleChange}
+            options={option}
+          ></Select>
+        </FormControl>
+      </div>
       <div className="searchButton">
         <Button
           color="primary"
