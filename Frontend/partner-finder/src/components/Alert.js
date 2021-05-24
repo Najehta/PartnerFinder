@@ -10,6 +10,7 @@ import { Dialog, DialogTitle, DialogContent } from "@material-ui/core/";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@material-ui/core";
 import { Msgtoshow } from "./Msgtoshow";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -284,57 +285,63 @@ const Alert = (props) => {
       </div>
 
       <div className="subscribtion">
-        <Button
-          color="primary"
-          round
-          variant="contained"
-          id="BackgroundColor"
-          onClick={() => subscribe()}
-          disabled={state.loading}
-        >
-          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
-          {state && state.loading && (
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={true}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle className={classes.title}>LOADING</DialogTitle>
-              <DialogContent style={{ "margin-left": "17px" }}>
-                <BeatLoader />
-              </DialogContent>
-            </Dialog>
-          )}
-          {state && !state.loading && <span>Subscribe</span>}
-        </Button>
+        <ButtonGroup disableElevation variant="contained" color="primary">
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => subscribe()}
+            disabled={state.loading}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Subscribe</span>}
+          </Button>
 
-        <Button
-          color="primary"
-          round
-          variant="contained"
-          id="BackgroundColor"
-          onClick={() => unsubscribe()}
-          disabled={state.loading}
-        >
-          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
-          {state && state.loading && (
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={true}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle className={classes.title}>LOADING</DialogTitle>
-              <DialogContent style={{ "margin-left": "17px" }}>
-                <BeatLoader />
-              </DialogContent>
-            </Dialog>
-          )}
-          {state && !state.loading && <span>Unsubsribe</span>}
-        </Button>
+          <Button
+            color="secondary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => unsubscribe()}
+            disabled={state.loading}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Unsubsribe</span>}
+          </Button>
+        </ButtonGroup>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ import {
 import { Msgtoshow } from "./Msgtoshow";
 import moment from "moment";
 import Select from "react-select";
-import InputLabel from "@material-ui/core/InputLabel";
+
 //???
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -96,8 +96,8 @@ const Search = (props) => {
   /////input
   const [selectedOrganization, setselectedOrganization] = useState([]);
   const [tags, setTags] = React.useState([]);
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
+  const [startDate, setStartDate] = React.useState();
+  const [endDate, setEndDate] = React.useState();
   ////////////////
   const [state, setState] = React.useState({
     loading: false,
@@ -105,25 +105,19 @@ const Search = (props) => {
   });
   const handleChoose = (event) => {
     setselectedOrganization(event);
-    console.log(selectedOrganization, event, "EVENT");
+
     //props.setState({ ...props.state, selectedOrganization: event });
   };
   // search methods
 
   const searchProposalCalls = () => {
-    // if (formValidation()) {
-    //   setMsgState({
-    //     title: "Error",
-    //     body: "Please fill the tag field",
-    //     visible: true,
-    //   });
-    // }
-
     let orgToSearch = selectedOrganization.map((value) => {
       return value.value;
     });
     //what to do with date
     //how to check if the input zero
+    // let tempStartDate=moment(start).format("DD/MM/YYYY")
+
     callsSearch(orgToSearch, tags, startDate, endDate);
   };
 
@@ -147,16 +141,17 @@ const Search = (props) => {
     setState({ ...state, loading: true });
     tags = tags.map((tag) => tag.text);
     let url = new URL(BACKEND_URL + "proposal/call_search/");
-  
+    var g1 = new Date();
     let params = {
       data: JSON.stringify({
         organizations: organization,
         tags: tags,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: moment(startDate).format("DD/MM/YYYY"),
+        end_date: moment(endDate).format("DD/MM/YYYY"),
         status: status.value,
       }),
     };
+
     //searchParams?
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
@@ -257,18 +252,18 @@ const Search = (props) => {
   //date
 
   const handleStartDateChange = (date) => {
-    setStartDate(moment(date).format("DD/MM/YYYY"));
+    setStartDate(date);
   };
 
   const handleEndDateChange = (date) => {
-    setEndDate(moment(date).format("DD/MM/YYYY"));
+    setEndDate(date);
   };
   //open closed megration
   const option = [
     { label: "Open", value: "Open" },
     { label: "Closed", value: "losed" },
   ];
-  const [status, setStatus] = React.useState({label:"Status",value:""});
+  const [status, setStatus] = React.useState({ label: "Status", value: "" });
 
   const handleChange = (event) => {
     setStatus(event);
