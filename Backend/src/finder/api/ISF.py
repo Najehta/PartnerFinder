@@ -293,21 +293,10 @@ def get_Isf_call_intersection(tags_call, dates_call, status):
 
 def updateISF():
 
-    # IsfCalls.objects.all().delete()
-    # MapIdsISF.objects.all().delete()
     _url = 'https://www.isf.org.il/#/support-channels/1/10'
     name = 'Personal Research Grants'
 
     call_names, call_links = [], []
-
-    # try:
-    #     os.remove('IsfIndex')
-    #     os.remove('IsfIndex.0')
-    #     os.remove('Dictionary_ISF')
-    #     print('Deleting ISF Index...')
-    #
-    # except:
-    #     pass
 
     index = reload_index('IsfIndex')
     print('Reloading ISF Index...')

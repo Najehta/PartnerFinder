@@ -1258,13 +1258,13 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')
-                counter = i
 
             for i,item in enumerate(urls_list):
                 org_name = names_list[i]
                 date = date_list[i]
                 str_date = date.strftime("%d/%m/%Y")
 
+                counter = InnovationCalls.objects.latest('CallID').CallID
 
                 call = InnovationCalls(CallID=counter + 1, organizationName= org_name,registrationDeadline= str_date,
                                          submissionDeadline= str_date, information= 'Not Available',

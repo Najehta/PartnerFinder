@@ -446,25 +446,14 @@ def get_Innovation_call_intersection(tags_call, dates_call, status):
 
 def updateINNOVATION():
 
-    InnovationCalls.objects.all().delete()
-    MapIdsINNOVATION.objects.all().delete()
-
     _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
     names, urls = (), ()
     names_list, urls_list, date_list = [], [], []
     counter = 0
 
-    try:
-        os.remove('InnovationIndex')
-        os.remove('InnovationIndex.0')
-        os.remove('Dictionary_INNOVATION')
-        print('Deleting Innovation Index...')
 
-    except:
-        pass
-
-    index = make_index('InnovationIndex', 'INNOVATION')
-    print('Building Innovation Index...')
+    index = reload_index('InnovationIndex')
+    print('Reloading Innovation Index...')
 
     try:
         names_url = get_calls_org(_url)
@@ -475,50 +464,83 @@ def updateINNOVATION():
         print(e)
 
     try:
+
         for i, item in enumerate(urls):
             org_name = names[i]
             date = get_call_date(item)
             info = get_call_info(item)
             field = get_call_field(item)
 
-            if date[2] is None:
+            try:
 
-                call = InnovationCalls(CallID=i, organizationName=org_name, registrationDeadline=date[0],
-                                       submissionDeadline=date[1], information=info,
-                                       areaOfResearch=field, link=item, deadlineDate=date[2], open=False)
-            else:
-                call = InnovationCalls(CallID=i, organizationName=org_name, registrationDeadline=date[0],
-                                       submissionDeadline=date[1], information=info,
-                                       areaOfResearch=field, link=item, deadlineDate=date[2], open=True)
+                existed_call = InnovationCalls.objects.get(organizationName=org_name)
+                if existed_call.submissionDeadline != date[1]:
+                    existed_call.submissionDeadline = date[1]
+                    existed_call.save()
 
-            call.save()
+                else:
+                    print("This call already exist ", org_name)
 
-            originalID = i
-            indexID = len(index)
-            document = get_document_from_innovation_call(info, field)
-            newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
-            newMap.save()
-            index = add_document_to_curr_index(index, [document], 'INNOVATION')
-            counter = i
+            except InnovationCalls.DoesNotExist:
+
+                print("This call is not in the DB ", item)
+                latest_id = InnovationCalls.objects.latest('CallID')
+
+                if date[2] is None:
+
+                    call = InnovationCalls(CallID=latest_id.CallID + 1, organizationName=org_name, registrationDeadline=date[0],
+                                           submissionDeadline=date[1], information=info,
+                                           areaOfResearch=field, link=item, deadlineDate=date[2], open=False)
+                else:
+                    call = InnovationCalls(CallID=latest_id.CallID + 1, organizationName=org_name, registrationDeadline=date[0],
+                                           submissionDeadline=date[1], information=info,
+                                           areaOfResearch=field, link=item, deadlineDate=date[2], open=True)
+
+                    call.save()
+
+                    originalID = latest_id.CallID + 1
+                    indexID = len(index)
+                    document = get_document_from_innovation_call(info, field)
+                    newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
+                    newMap.save()
+                    index = add_document_to_curr_index(index, [document], 'INNOVATION')
+
 
         for i, item in enumerate(urls_list):
+
             org_name = names_list[i]
             date = date_list[i]
             str_date = date.strftime("%d/%m/%Y")
 
-            call = InnovationCalls(CallID=counter + 1, organizationName=org_name, registrationDeadline=str_date,
-                                   submissionDeadline=str_date, information='Not Available',
-                                   areaOfResearch='Not Available', link=item, deadlineDate=date, open=True)
+            counter = InnovationCalls.objects.latest('CallID').CallID
 
-            call.save()
+            try:
 
-            originalID = counter + 1
-            indexID = len(index)
-            document = get_document_from_innovation_call('Not Available', org_name)
-            newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
-            newMap.save()
-            index = add_document_to_curr_index(index, [document], 'INNOVATION')
-            counter += 1
+                existed_call = InnovationCalls.objects.get(organizationName=org_name)
+                if existed_call.submissionDeadline != str_date:
+                    existed_call.submissionDeadline = str_date
+                    existed_call.save()
+
+                else:
+                    print("This call already exist ", org_name)
+
+            except InnovationCalls.DoesNotExist:
+
+                print("This call is not in the DB ", item)
+
+                call = InnovationCalls(CallID=counter + 1, organizationName=org_name, registrationDeadline=str_date,
+                                       submissionDeadline=str_date, information='Not Available',
+                                       areaOfResearch='Not Available', link=item, deadlineDate=date, open=True)
+
+                call.save()
+
+                originalID = counter + 1
+                indexID = len(index)
+                document = get_document_from_innovation_call('Not Available', org_name)
+                newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'INNOVATION')
+                counter += 1
 
     except Exception as e:
         print(e)
