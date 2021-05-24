@@ -483,7 +483,7 @@ def updateINNOVATION():
 
             except InnovationCalls.DoesNotExist:
 
-                print("This call is not in the DB ", item)
+                print("This call is not in the DB ", org_name)
                 latest_id = InnovationCalls.objects.latest('CallID')
 
                 if date[2] is None:

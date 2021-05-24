@@ -277,9 +277,6 @@ def get_Mst_call_intersection(tags_call, dates_call, status):
 def updateMST():
 
     counter = 0
-    MstCalls.objects.all().delete()
-    MapIdsMST.objects.all().delete()
-
     _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
 
     if get_calls_num(_url) % 10 == 0:
@@ -288,17 +285,9 @@ def updateMST():
     else:
         pages_number = (get_calls_num(_url) // 10) + 1
 
-    try:
-        os.remove('MstIndex')
-        os.remove('MstIndex.0')
-        os.remove('Dictionary_MST')
-        print('Deleting MST Index...')
 
-    except:
-        pass
-
-    index = make_index('MstIndex', 'MST')
-    print('Building MST Index...')
+    index = reload_index('MstIndex')
+    print('Reloading MST Index...')
 
     try:
 
@@ -309,25 +298,40 @@ def updateMST():
 
         for i, item in enumerate(call_name_list):
 
-            if deadline_date_list[i] is None:
+            try:
 
-                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
-                                open=False)
-            else:
-                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
-                                open=True)
+                existed_call = MstCalls.objects.get(organizationName=item, information=about_list[i])
+                if existed_call.submissionDeadline != deadline_list[i]:
+                    existed_call.submissionDeadline = deadline_list[i]
+                    existed_call.save()
 
-            call.save()
+                else:
+                    print("This call already exist ", item)
 
-            originalID = i
-            indexID = len(index)
-            document = get_document_from_mst_call(call_name_list[i], about_list[i])
-            newMap = MapIdsMST(originalID=originalID, indexID=indexID)
-            newMap.save()
-            index = add_document_to_curr_index(index, [document], 'MST')
-            counter += 1
+            except MstCalls.DoesNotExist:
+
+                print("This call is not in the DB ", item)
+
+                if deadline_date_list[i] is None:
+
+                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                    open=False)
+                else:
+
+                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                    open=True)
+
+                call.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_mst_call(call_name_list[i], about_list[i])
+                newMap = MapIdsMST(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'MST')
+                counter += 1
 
     except Exception as e:
         print(e)
@@ -350,18 +354,35 @@ def updateMST():
             call_name_list, link_list, deadline_list, about_list, deadline_date_list = list(call_name), list(
                 link), list(deadline), list(about), list(deadline_date)
 
-            for i, item in enumerate(call_name_list):
-                call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
-                call.save()
+            counter = MstCalls.objects.latest('CallID').CallID
 
-                originalID = counter
-                indexID = len(index)
-                document = get_document_from_mst_call(call_name_list[i], about_list[i])
-                newMap = MapIdsMST(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'MST')
-                counter += 1
+            for i, item in enumerate(call_name_list):
+
+                try:
+                  
+                    existed_call = MstCalls.objects.get(organizationName=item, information=about_list[i])
+                    if existed_call.submissionDeadline != deadline_list[i]:
+                        existed_call.submissionDeadline = deadline_list[i]
+                        existed_call.save()
+
+                    else:
+                        print("This call already exist ", item)
+
+                except MstCalls.DoesNotExist:
+
+                    print("This call is not in the DB ", item)
+
+                    call = MstCalls(CallID=counter + 1, organizationName=item, submissionDeadline=deadline_list[i],
+                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
+                    call.save()
+
+                    originalID = counter + 1
+                    indexID = len(index)
+                    document = get_document_from_mst_call(call_name_list[i], about_list[i])
+                    newMap = MapIdsMST(originalID=originalID, indexID=indexID)
+                    newMap.save()
+                    index = add_document_to_curr_index(index, [document], 'MST')
+                    counter += 1
 
             skip += 10
             pages_number -= 1
