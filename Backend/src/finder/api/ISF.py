@@ -184,19 +184,19 @@ def get_Isf_call_by_tags(tags):
 
     else:
 
-        index = reload_index('IsfIndex')
-        temp = []
-        res = ''
-        for tag in tags:
-            corpus = NLP_processor([tag], 'ISF')
+        if len(tags) == 1:
+
+            tags = ' '.join(tags)
+            index = reload_index('IsfIndex')
+            corpus = NLP_processor([tags], 'ISF')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.3]
+            res = [pair for pair in res if pair[1] > 0.2]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
+            temp = []
 
             for pair in res:
-
                 try:
 
                     temp.append(MapIdsISF.objects.get(indexID=pair[0]))
@@ -205,6 +205,30 @@ def get_Isf_call_by_tags(tags):
                     pass
 
             res = temp
+
+        else:
+
+            index = reload_index('IsfIndex')
+            temp = []
+            res = ''
+            for tag in tags:
+                corpus = NLP_processor([tag], 'ISF')
+                res = index[corpus]
+                res = process_query_result(res)
+
+                res = [pair for pair in res if pair[1] > 0.3]
+                res = sorted(res, key=lambda pair: pair[1], reverse=True)
+
+                for pair in res:
+
+                    try:
+
+                        temp.append(MapIdsISF.objects.get(indexID=pair[0]))
+
+                    except:
+                        pass
+
+                res = temp
 
         for mapId in res:
             finalRes.append(IsfCalls.objects.get(CallID=mapId.originalID))

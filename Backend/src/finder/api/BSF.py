@@ -174,26 +174,48 @@ def get_bsf_call_by_tags(tags):
 
     else:
 
-        #tags = ' '.join(tags)
-        index = reload_index('BsfIndex')
-        temp = []
-        res = ''
-        for tag in tags:
-            corpus = NLP_processor([tag], 'BSF')
+        if len(tags) == 1:
+
+            tags = ' '.join(tags)
+            index = reload_index('BsfIndex')
+            corpus = NLP_processor([tags], 'BSF')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.3]
+            res = [pair for pair in res if pair[1] > 0.2]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
+            temp = []
 
             for pair in res:
-
                 try:
+
                     temp.append(MapIdsBSF.objects.get(indexID=pair[0]))
+
                 except:
                     pass
 
             res = temp
+
+        else:
+            index = reload_index('BsfIndex')
+            temp = []
+            res = ''
+            for tag in tags:
+                corpus = NLP_processor([tag], 'BSF')
+                res = index[corpus]
+                res = process_query_result(res)
+
+                res = [pair for pair in res if pair[1] > 0.3]
+                res = sorted(res, key=lambda pair: pair[1], reverse=True)
+
+                for pair in res:
+
+                    try:
+                        temp.append(MapIdsBSF.objects.get(indexID=pair[0]))
+                    except:
+                        pass
+
+                res = temp
 
 
         for mapId in res:

@@ -929,6 +929,11 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             if len(call_status) == 0:
                 call_status = 'Open and Closed'
 
+            if call_status == 'Closed':
+                from_date = ''
+                to_date = ''
+
+
             if 'BSF' in organizations:
 
                 try:

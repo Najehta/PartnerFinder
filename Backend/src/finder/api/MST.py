@@ -169,25 +169,49 @@ def get_Mst_call_by_tags(tags):
 
     else:
 
-        index = reload_index('MstIndex')
-        temp = []
-        res = ''
-        for tag in tags:
-            corpus = NLP_processor([tag], 'MST')
+        if len(tags) == 1:
+
+            tags = ' '.join(tags)
+            index = reload_index('MstIndex')
+            corpus = NLP_processor([tags], 'MST')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.3]
+            res = [pair for pair in res if pair[1] > 0.2]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
+            temp = []
 
             for pair in res:
-
                 try:
-                        temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+
+                    temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+
                 except:
                     pass
 
             res = temp
+
+        else:
+
+            index = reload_index('MstIndex')
+            temp = []
+            res = ''
+            for tag in tags:
+                corpus = NLP_processor([tag], 'MST')
+                res = index[corpus]
+                res = process_query_result(res)
+
+                res = [pair for pair in res if pair[1] > 0.3]
+                res = sorted(res, key=lambda pair: pair[1], reverse=True)
+
+                for pair in res:
+
+                    try:
+                            temp.append(MapIdsMST.objects.get(indexID=pair[0]))
+                    except:
+                        pass
+
+                res = temp
 
         for mapId in res:
             finalRes.append(MstCalls.objects.get(CallID=mapId.originalID))
@@ -359,7 +383,7 @@ def updateMST():
             for i, item in enumerate(call_name_list):
 
                 try:
-                  
+
                     existed_call = MstCalls.objects.get(organizationName=item, information=about_list[i])
                     if existed_call.submissionDeadline != deadline_list[i]:
                         existed_call.submissionDeadline = deadline_list[i]
