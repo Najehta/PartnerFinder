@@ -1,6 +1,6 @@
 import datetime
 import traceback
-
+from dateutil.parser import parse
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -36,7 +36,7 @@ from email.mime.text import MIMEText
 from urllib.request import urlopen as req
 import re
 import os
-
+import pytz
 
 class OrganizationProfileViewSet(viewsets.ModelViewSet):
     queryset = OrganizationProfile.objects.all()
@@ -926,11 +926,15 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
             if not organizations:
                 organizations = 'BSF, ISF, INNOVATION, MST'
 
-            if len(call_status) == 0:
-                call_status = 'Open and Closed'
 
             if call_status == 'Closed':
                 from_date = ''
+                to_date = ''
+
+            today = datetime.now(pytz.timezone('Israel'))
+            today_date = today.strftime("%d/%m/%Y")
+
+            if today_date == to_date and call_status == 'Open':
                 to_date = ''
 
 
@@ -1259,7 +1263,7 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = i
                 indexID = len(index)
-                document = get_document_from_innovation_call(info, field)
+                document = get_document_from_innovation_call(org_name, info, field)
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')
@@ -1279,7 +1283,7 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = counter + 1
                 indexID = len(index)
-                document = get_document_from_innovation_call('Not Available', org_name)
+                document = get_document_from_innovation_call('Not Available', org_name, "")
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')

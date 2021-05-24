@@ -122,17 +122,17 @@ def process_query_result(result):
     return pairs
 
 
-def add_document_to_curr_index(index, documents,type):
+def add_document_to_curr_index(index, documents,org_type):
 
     """
     function to add new documents to existent index
     :param index: current index
     :param documents: list of lists of strings
-    :param type: string to know which repository
+    :param org_type: string to know which repository
     :return: updated index
     """
 
-    corpus = NLP_processor(documents,type)
+    corpus = NLP_processor(documents,org_type)
     index.num_features += len(corpus) * 1000
     for doc in corpus:
         index.num_features += (len(doc) * 2)
@@ -211,16 +211,20 @@ def get_document_from_isf_call(info, orgName):
     return ''.join(doc)
 
 
-def get_document_from_innovation_call(info, area):
+def get_document_from_innovation_call(orgName, info, area):
 
     """
     function to get the description and tags from innovation call
+    :param orgName: Organization name
     :param info: call information
     :param area: tags
     :return: document
     """
 
     doc = [info]
+    for tag in orgName:
+        doc.append(tag)
+
     for tag in area:
         doc.append(tag)
 

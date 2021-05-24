@@ -348,7 +348,7 @@ def get_Innovation_call_by_tags(tags):
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.2]
+            res = [pair for pair in res if pair[1] > 0.3]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -363,6 +363,7 @@ def get_Innovation_call_by_tags(tags):
             res = temp
 
         else:
+
             index = reload_index('InnovationIndex')
             temp = []
             res = ''
@@ -523,7 +524,7 @@ def updateINNOVATION():
 
                     originalID = latest_id.CallID + 1
                     indexID = len(index)
-                    document = get_document_from_innovation_call(info, field)
+                    document = get_document_from_innovation_call(org_name, info, field)
                     newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                     newMap.save()
                     index = add_document_to_curr_index(index, [document], 'INNOVATION')
@@ -559,7 +560,7 @@ def updateINNOVATION():
 
                 originalID = counter + 1
                 indexID = len(index)
-                document = get_document_from_innovation_call('Not Available', org_name)
+                document = get_document_from_innovation_call('Not Available', org_name, "")
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')
