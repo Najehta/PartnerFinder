@@ -311,22 +311,20 @@ def updateBSF():
             try:
 
                 bsfCalls.objects.get(areaOfResearch=field_name[i])
-                print("This is already exist ", field_name[i])
-                
-            except bsfCalls.DoesNotExist as e:
+                print("This call already exist ", field_name[i])
 
-                print("Its not in the DB ", field_name[i])
+            except bsfCalls.DoesNotExist:
 
-                latest_id = MapIdsBSF.objects.latest('originalID')
+                print("This call is not in the DB ", field_name[i])
 
-                date = bsfCalls(CallID=latest_id.originalID + 1, deadlineDate=item, organizationName='NSF-BSF',
+                latest_id = bsfCalls.objects.latest('CallID')
+
+                date = bsfCalls(CallID=latest_id.CallID + 1, deadlineDate=item, organizationName='NSF-BSF',
                                 information=event_details[i],
                                 areaOfResearch=field_name[i], link='https://www.bsf.org.il/calendar/', open=True)
                 date.save()
-                originalID = latest_id.originalID + 1
+                originalID = latest_id.CallID + 1
                 indexID = len(index)
-                # print("This is field name:", field_name[i])
-                # print("This is event name:", event_details[i])
                 document = get_document_from_bsf_call(event_details[i], field_name[i])
                 newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
                 newMap.save()
