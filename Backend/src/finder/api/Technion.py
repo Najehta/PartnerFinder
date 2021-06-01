@@ -23,9 +23,10 @@ from selenium import webdriver
 #from .QueryProcess import *
 
 
-def get_calls(_url):
+def get_calls_data(_url):
 
     field, link, title, date = [], [], [], []
+    data = {}
 
     try:
 
@@ -36,6 +37,7 @@ def get_calls(_url):
         page_html = driver.page_source
         page_soup = soup(page_html, "html.parser")
 
+        sleep(1)
 
         field_element = page_soup.find_all("td", {"class": "three area"})
         for item in field_element:
@@ -60,24 +62,75 @@ def get_calls(_url):
 
         date_element = page_soup.find_all("td", {"class": ""})
         for item in date_element:
-            date.append(item.text.strip())
+            temp = item.text.strip()
+            date.append(datetime.strptime(temp, "%d/%m/%y"))
 
+        sleep(1)
+        driver.quit()
 
     except Exception as e:
         print(e)
 
-    return title, date, field, link
+
+    data['title'] = title
+    data['date'] = date
+    data['field'] = field
+    data['link'] = link
+
+    return data
 
 def get_call_information(links):
 
-    get_client = Request(links, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'})
 
-    page_html = req(get_client).read()
-    page_soup = soup(page_html, "html.parser")
+    information = ''
 
-    table_element = page_soup.find("table", {"class": "fund"})
-    information = table_element.p.text
+    try:
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(links)
+
+        page_html = driver.page_source
+        page_soup = soup(page_html, "html.parser")
+        sleep(1)
+        table_element = page_soup.find("table", {"class": "fund"})
+        information = table_element.p.text
+
+        driver.quit()
+
+    except Exception as e:
+
+        information = 'Please login to Technion website to see more information'
+        driver.quit()
+
+    if len(information) == 0 or len(information) == 1:
+        information = 'Please login to Technion website to see more information'
 
     return information
 
 
+def get_calls_num(_url):
+
+    calls_number = 0
+
+    try:
+
+        PATH = '/Users/najeh/chromedriver'
+        driver = webdriver.Chrome(PATH)
+        driver.get(_url)
+
+        page_html = driver.page_source
+        page_soup = soup(page_html, "html.parser")
+
+        number_element = page_soup.find_all("span", {"class": "bold"})
+        calls_number = int(number_element[1].text)
+
+        driver.quit()
+
+    except Exception as e:
+        print(e)
+
+    return calls_number
+
+
+# _url = 'https://www.trdf.co.il/eng/Current_Calls_for_Proposals.html?fund=allfunds&type=alltypes&ql=0'
+# print(get_calls_data(_url))

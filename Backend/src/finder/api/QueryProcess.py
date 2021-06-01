@@ -26,6 +26,9 @@ def NLP_processor(documents, type):
     if type == 'INNOVATION':
         dir = 'Dictionary_INNOVATION'
 
+    if type == 'Technion':
+        dir = 'Dictionary_Technion'
+
     # print("This is the documents",documents)
 
     tokens = [process_document(doc) for doc in documents]
@@ -247,3 +250,16 @@ def get_document_from_mst_call(topic, info):
     return ''.join(doc)
 
 
+def get_document_from_technion_call(topic, info):
+
+    """
+    function to get the description and tags from innovation call
+    :param info: call information
+    :param topic: call topic
+    :return: document
+    """
+    doc = [topic]
+    for tag in info:
+        doc.append(tag)
+
+    return ''.join(doc)

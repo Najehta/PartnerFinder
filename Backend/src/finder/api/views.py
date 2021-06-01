@@ -7,14 +7,14 @@ from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, IsfCalls, InnovationCalls, MstCalls,bsfCalls, \
-     MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, Call, OrganizationProfile, MapIds, \
-    CallTag, EmailSubscription
+     TechnionCalls, MapIdsTechnion, MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, Call, \
+    OrganizationProfile, MapIds, CallTag, EmailSubscription
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
     AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, \
     EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer\
-    , MstCallsSerializer, BsfCallsSerializer, EmailSubscriptionSerializer
+    , MstCallsSerializer, BsfCallsSerializer, TechnionCallsSerializer, EmailSubscriptionSerializer
 import json
 
 import operator
@@ -29,6 +29,7 @@ from .BSF import *
 from .ISF import *
 from.Innovation import *
 from .MST import *
+from .Technion import *
 from .QueryProcess import *
 from .emails import *
 from email.mime.multipart import MIMEMultipart
@@ -1411,6 +1412,128 @@ class MstCallsViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             response = {'error': 'Error while adding MST calls to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class TechnionCallsViewSet(viewsets.ModelViewSet):
+
+    queryset = TechnionCalls.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = TechnionCallsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_technioncalls_to_db(self, request):
+
+        """
+         Method to define API add Technion calls and the generated index to the local DB
+         :param request: HTTP request
+         :return: HTTP response
+         """
+
+        TechnionCalls.objects.all().delete()
+        MapIdsTechnion.objects.all().delete()
+
+        _url = 'https://www.trdf.co.il/eng/Current_Calls_for_Proposals.html?fund=allfunds&type=alltypes&ql=0'
+
+        calls_number = get_calls_num(_url)
+
+        if calls_number % 20 == 0:
+            pages_number = calls_number // 20
+
+        else:
+            pages_number = (calls_number // 20) + 1
+
+        try:
+            os.remove('TechnionIndex')
+            os.remove('TechnionIndex.0')
+            os.remove('Dictionary_Technion')
+            print('Deleting Technion Index...')
+
+        except:
+            pass
+
+        index = make_index('TechnionIndex', 'Technion')
+        print('Building Technion Index...')
+
+        try:
+
+            data = get_calls_data(_url)
+
+            title = data['title']
+            field = data['field']
+            date = data['date']
+            links = data['link']
+
+
+            for i,item in enumerate (date):
+                info = get_call_information(links[i])
+                call = TechnionCalls(CallID=i, deadlineDate=item,organizationName=title[i],
+                                     information=info, areaOfResearch=field[i],
+                                     link=links[i], open=True)
+                call.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_technion_call(info, field[i])
+                newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'Technion')
+
+
+        except Exception as e:
+            print(e)
+            response = {'error': 'Error while adding Technion calls to DB'}
+
+
+        try:
+
+            page_content = 20
+
+            while pages_number >= 2:
+
+                if _url[-2:] == '=0':
+                    _url = _url[:-1]
+                    new_url = _url + str(page_content)
+
+                else:
+                    new_url = _url + str(page_content)
+
+                data = get_calls_data(new_url)
+
+                title = data['title']
+                field = data['field']
+                date = data['date']
+                links = data['link']
+
+                latest_id = TechnionCalls.objects.latest('CallID')
+                latest_id_num = latest_id.CallID + 1
+
+                for i, item in enumerate(date):
+                    info = get_call_information(links[i])
+                    call = TechnionCalls(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
+                                         information=info, areaOfResearch=field[i],
+                                         link=links[i], open=True)
+                    call.save()
+
+                    originalID = latest_id_num
+                    indexID = len(index)
+                    document = get_document_from_technion_call(info, field[i])
+                    newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
+                    newMap.save()
+                    index = add_document_to_curr_index(index, [document], 'Technion')
+                    latest_id_num += 1
+
+                page_content += 20
+                pages_number -=1
+
+            response = {'success': 'Technion calls added successfully.'}
+
+        except Exception as e:
+            print(e)
+            response = {'error': 'Error while adding Technion calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
 

@@ -308,6 +308,23 @@ class bsfCalls(models.Model):
    def __str__(self):
        return self.organizationName
 
+class TechnionCalls(models.Model):
+
+   """
+   Technion Website Calls
+   """
+   CallID = models.IntegerField(unique=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+   def __str__(self):
+       return self.organizationName
+
+
 class MapIdsBSF(models.Model):
     """
     class to define the data model of mapping between organization id and document id that
@@ -339,6 +356,16 @@ class MapIdsINNOVATION(models.Model):
     """
     originalID = models.IntegerField(unique=True)
     indexID = models.IntegerField()
+
+
+class MapIdsTechnion(models.Model):
+    """
+    class to define the data model of mapping between organization id and document id that
+    relates to this organization in the inverted index
+    """
+    originalID = models.IntegerField(unique=True)
+    indexID = models.IntegerField()
+
 
 
 class EmailSubscription(models.Model):

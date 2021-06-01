@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from ..models import OrganizationProfile, Address, Tag, Event, Participants, Location, \
     TagP, MapIds, Call, CallTag, AlertsSettings, UpdateSettings, Scores, EventsForAlerts,\
-    IsfCalls, InnovationCalls, MstCalls, bsfCalls, EmailSubscription
+    IsfCalls, InnovationCalls, MstCalls, bsfCalls, TechnionCalls, EmailSubscription
 
 
 class MapIdsSerializer(serializers.ModelSerializer):
@@ -116,6 +116,11 @@ class InnovationCallsSerializer(serializers.ModelSerializer):
 class MstCallsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MstCalls
+        fields = '__all__'
+
+class TechnionCallsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TechnionCalls
         fields = '__all__'
 
 class EmailSubscriptionSerializer(serializers.ModelSerializer):
