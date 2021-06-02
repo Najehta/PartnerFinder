@@ -3,8 +3,6 @@ from datetime import datetime
 from ..models import MapIdsTechnion, TechnionCalls
 import requests
 
-
-# from selenium import webdriver
 import nltk
 from nltk import tokenize
 from operator import itemgetter

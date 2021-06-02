@@ -1232,6 +1232,7 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
             print(e)
 
         try:
+
             for i,item in enumerate(urls):
                 org_name = names[i]
                 date = get_call_date(item)
@@ -1624,15 +1625,25 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                 filtered_emails = EmailSubscription.objects.filter(email=email)
                 if filtered_emails.exists():
 
-                    EmailSubscription.objects.filter(email=email).delete()
+                    if len(filtered_emails) > 1:
 
-                    latest_id = EmailSubscription.objects.latest('ID')
-                    latest_id_num = latest_id.ID + 1
+                        EmailSubscription.objects.filter(email=email).delete()
 
-                    email_info = EmailSubscription(ID=latest_id_num, email=email,
-                                                   organizationName=organization)
+                        latest_id = EmailSubscription.objects.latest('ID')
+                        latest_id_num = latest_id.ID + 1
 
-                    email_info.save()
+                        email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                                        organizationName=organization)
+
+                        email_info.save()
+
+                    else:
+                        EmailSubscription.objects.filter(email=email).delete()
+
+                        email_info = EmailSubscription(ID=1, email=email,
+                                                       organizationName=organization)
+
+                        email_info.save()
 
                     response = {'Success': 'New email have been successfully subscribed.'}
 
@@ -1705,7 +1716,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                                 date = calls_deadline[i]
                                 str_date = date.strftime("%d/%m/%Y")
-                                calls += '<li>' + item + ' (' + str_date + ')' + '.</li>'
+                                calls += '<li>' + item + '<b>' +' Deadline: (' + str_date  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1758,7 +1769,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i,item in calls_list:
-                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i]  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1788,7 +1799,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                             response = {'Error': 'NO calls is open in ISF right now '}
 
 
-                    if 'Innovation' in organization:
+                    if 'INNOVATION' in organization:
 
                         try:
 
@@ -1813,7 +1824,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i,item in enumerate(calls_list):
-                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1869,7 +1880,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i, item in enumerate(calls_list):
-                                calls += '<li>' + item + ' (' + deadline_list[i] + ')' + '.</li>'
+                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' +'.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1897,6 +1908,62 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                         else:
                             response = {'Error': 'NO calls is open in MST right now '}
+
+
+                    if 'Technion' in organization:
+
+                        try:
+
+                            technion_calls = TechnionCalls.objects.filter(open=True)
+                            calls_list = []
+                            deadline_list = []
+
+                            for value in technion_calls:
+                                calls_list.append(value.organizationName)
+                                temp_date = value.deadlineDate
+                                str_date = temp_date.strftime("%d/%m/%Y")
+                                deadline_list.append(str_date)
+
+                        except:
+                            calls_list = []
+                            deadline_list = []
+                            response = {'Error': 'Error while Getting Technion available call'}
+
+                        if len(calls_list) != 0:
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i,item in enumerate(calls_list):
+                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                                       <html>
+                                                         <head><h3>You have new Technion proposal calls that might interest you</h3></head>
+                                                         <body>
+                                                           <ol>
+                                                           {}
+                                                           </ol>
+                                                           <br>
+                                                           <p> For more information please visit: https://www.trdf.co.il/eng/Current_Calls_for_Proposals/</p> 
+                                                           <br>
+                                                           {}
+                                                         </body>
+                                                       </html>
+                                                       """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'Technion Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in Technion right now '}
+
 
             except Exception as e:
                 print(e)
