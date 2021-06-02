@@ -2043,6 +2043,15 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                     print(e)
                     raise Exception
 
+            if 'Technion' in organizations:
+
+                try:
+                    updateTechnion()
+
+                except Exception as e:
+                    print(e)
+                    raise Exception
+
             response = {'Success':'Proposal calls updated successfully.'}
 
         except Exception as e:

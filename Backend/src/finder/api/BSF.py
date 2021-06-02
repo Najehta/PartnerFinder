@@ -307,22 +307,19 @@ def get_bsf_call_intersection(tags_call, dates_call, status):
 
 def updateBSF():
 
-    # bsfCalls.objects.all().delete()
-    # MapIdsBSF.objects.all().delete()
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
     _url = 'https://www.bsf.org.il/calendar/'
     deadline = get_events_deadline(_url)  # deadline is a list of strings
     event_details = get_events_details(_url)  # event_details is a list of strings
     field_name = get_field_name(_url)  # field_name is a list of strings
 
-    # try:
-    #     os.remove('BsfIndex')
-    #     os.remove('BsfIndex.0')
-    #     os.remove('Dictionary_BSF')
-    #     print('Deleting BSF Index...')
-    # except:
-    #     pass
+    today = datetime.today()
+    date_passed = bsfCalls.objects.filter(deadlineDate__lte=today).delete()
 
-    #index = make_index('BsfIndex', 'BSF')
     index = reload_index('BsfIndex')
     print('Reloading BSF Index...')
 

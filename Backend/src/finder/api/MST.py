@@ -304,14 +304,19 @@ def get_Mst_call_intersection(tags_call, dates_call, status):
 
 def updateMST():
 
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
     counter = 0
     _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
 
-    if get_calls_num(_url) % 10 == 0:
-        pages_number = get_calls_num(_url) // 10
+    if get_calls_number(_url) % 10 == 0:
+        pages_number = get_calls_number(_url) // 10
 
     else:
-        pages_number = (get_calls_num(_url) // 10) + 1
+        pages_number = (get_calls_number(_url) // 10) + 1
 
 
     index = reload_index('MstIndex')
@@ -339,6 +344,9 @@ def updateMST():
             except MstCalls.DoesNotExist:
 
                 print("This call is not in the DB ", item)
+
+                last_call = MstCalls.objects.latest('CallID')
+                counter = last_call.CallID + 1
 
                 if deadline_date_list[i] is None:
 

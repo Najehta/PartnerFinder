@@ -23,6 +23,12 @@ from .QueryProcess import *
 
 def get_calls_data(_url):
 
+    """
+      Method to scrape all the proposal calls from Technion website
+      :param : _url
+      :return: object that contain arrays
+      """
+
     field, link, title, date = [], [], [], []
     data = {}
 
@@ -79,6 +85,11 @@ def get_calls_data(_url):
 
 def get_call_information(links):
 
+    """
+      Method to scrape and information inside the call link t
+      :param : _url
+      :return: calls information
+      """
 
     information = ''
 
@@ -107,6 +118,12 @@ def get_call_information(links):
 
 
 def get_calls_num(_url):
+
+    """
+       Method to scrape and return the calls number from Technion website
+       :param : _url
+       :return: calls number
+       """
 
     calls_number = 0
 
@@ -292,5 +309,138 @@ def get_technion_call_intersection(tags_call, dates_call, status):
 
     return result
 
-# _url = 'https://www.trdf.co.il/eng/Current_Calls_for_Proposals.html?fund=allfunds&type=alltypes&ql=0'
-# print(get_calls_data(_url))
+
+def updateTechnion():
+
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
+    _url = 'https://www.trdf.co.il/eng/Current_Calls_for_Proposals.html?fund=allfunds&type=alltypes&ql=0'
+
+    calls_number = get_calls_num(_url)
+
+    if calls_number % 20 == 0:
+        pages_number = calls_number // 20
+
+    else:
+        pages_number = (calls_number // 20) + 1
+
+
+    index = reload_index('TechnionIndex')
+    print('Reloading Technion Index...')
+
+    try:
+
+        today = datetime.today()
+        date_passed = TechnionCalls.objects.filter(deadlineDate__lte=today).delete()
+
+        data = get_calls_data(_url)
+
+        title = data['title']
+        field = data['field']
+        date = data['date']
+        links = data['link']
+
+        for i, item in enumerate(date):
+
+
+            try:
+
+                existed_call = TechnionCalls.objects.get(link=links[i])
+                if existed_call.deadlineDate != item:
+                    existed_call.deadlineDate = item
+                    existed_call.save()
+
+                else:
+                    print("This call already exist ", title[i])
+
+            except TechnionCalls.DoesNotExist:
+
+                print("This call is not in the DB ", title[i])
+
+                latest_id = TechnionCalls.objects.latest('CallID')
+                latest_id_num = latest_id.CallID + 1
+                info = get_call_information(links[i])
+
+                call = TechnionCalls(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
+                                     information=info, areaOfResearch=field[i],
+                                     link=links[i], open=True)
+                call.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_technion_call(title[i], field[i], info)
+                newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'Technion')
+
+
+    except Exception as e:
+        print(e)
+
+
+    try:
+
+        page_content = 20
+
+        while pages_number >= 2:
+
+            if _url[-2:] == '=0':
+                _url = _url[:-1]
+                new_url = _url + str(page_content)
+
+            else:
+                new_url = _url + str(page_content)
+
+            data = get_calls_data(new_url)
+
+            title = data['title']
+            field = data['field']
+            date = data['date']
+            links = data['link']
+
+            latest_id = TechnionCalls.objects.latest('CallID')
+            latest_id_num = latest_id.CallID + 1
+
+            for i, item in enumerate(date):
+
+                try:
+
+                    existed_call = TechnionCalls.objects.get(link=links[i])
+                    if existed_call.deadlineDate != item:
+                        existed_call.deadlineDate = item
+                        existed_call.save()
+
+                    else:
+                        print("This call already exist ", title[i])
+
+                except TechnionCalls.DoesNotExist:
+
+                    print("This call is not in the DB ", title[i])
+
+                    info = get_call_information(links[i])
+
+                    call = TechnionCalls(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
+                                         information=info, areaOfResearch=field[i],
+                                         link=links[i], open=True)
+                    call.save()
+
+                    originalID = latest_id_num
+                    indexID = len(index)
+                    document = get_document_from_technion_call(title[i], field[i], info)
+                    newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
+                    newMap.save()
+                    index = add_document_to_curr_index(index, [document], 'Technion')
+                    latest_id_num += 1
+
+            page_content += 20
+            pages_number -= 1
+
+
+
+    except Exception as e:
+        print(e)
+        raise Exception
+

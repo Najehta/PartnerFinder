@@ -470,6 +470,11 @@ def get_Innovation_call_intersection(tags_call, dates_call, status):
 
 def updateINNOVATION():
 
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
     _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
     names, urls = (), ()
     names_list, urls_list, date_list = [], [], []
@@ -497,7 +502,7 @@ def updateINNOVATION():
 
             try:
 
-                existed_call = InnovationCalls.objects.get(organizationName=org_name)
+                existed_call = InnovationCalls.objects.get(link=item)
                 if existed_call.submissionDeadline != date[1]:
                     existed_call.submissionDeadline = date[1]
                     existed_call.save()
@@ -540,7 +545,7 @@ def updateINNOVATION():
 
             try:
 
-                existed_call = InnovationCalls.objects.get(organizationName=org_name)
+                existed_call = InnovationCalls.objects.get(link=item)
                 if existed_call.submissionDeadline != str_date:
                     existed_call.submissionDeadline = str_date
                     existed_call.save()

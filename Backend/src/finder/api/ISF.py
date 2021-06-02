@@ -317,6 +317,11 @@ def get_Isf_call_intersection(tags_call, dates_call, status):
 
 def updateISF():
 
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
     _url = 'https://www.isf.org.il/#/support-channels/1/10'
     name = 'Personal Research Grants'
 
