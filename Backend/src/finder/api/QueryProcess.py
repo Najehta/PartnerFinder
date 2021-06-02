@@ -191,11 +191,9 @@ def get_document_from_bsf_call(info, area):
     :return: document
     """
 
-    doc = [info]
-    for tag in area:
-        doc.append(tag)
+    doc = info + " " + area
 
-    return ''.join(doc)
+    return doc
 
 
 def get_document_from_isf_call(info, orgName):
@@ -207,11 +205,9 @@ def get_document_from_isf_call(info, orgName):
     :return: document
     """
 
-    doc = [info]
-    for tag in orgName:
-        doc.append(tag)
-   
-    return ''.join(doc)
+    doc = orgName + " " + info
+
+    return doc
 
 
 def get_document_from_innovation_call(orgName, info, area):
@@ -224,14 +220,9 @@ def get_document_from_innovation_call(orgName, info, area):
     :return: document
     """
 
-    doc = [info]
-    for tag in orgName:
-        doc.append(tag)
+    doc = orgName + " " + info + " " + area
 
-    for tag in area:
-        doc.append(tag)
-
-    return ''.join(doc)
+    return doc
 
 
 def get_document_from_mst_call(topic, info):
@@ -243,23 +234,21 @@ def get_document_from_mst_call(topic, info):
     :return: document
     """
 
-    doc = [topic]
-    for tag in info:
-        doc.append(tag)
+    doc = topic + " " + info
 
-    return ''.join(doc)
+    return doc
 
 
-def get_document_from_technion_call(topic, info):
+def get_document_from_technion_call(topic, field, info):
 
     """
-    function to get the description and tags from innovation call
+    function to get the description and tags from Technion call
+    :param topic: call title
+    :param field: call field
     :param info: call information
-    :param topic: call topic
     :return: document
     """
-    doc = [topic]
-    for tag in info:
-        doc.append(tag)
-
-    return ''.join(doc)
+    doc = topic + " " + field + " " + info
+    print(doc)
+    print('*' * 100)
+    return doc

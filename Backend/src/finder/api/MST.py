@@ -109,7 +109,7 @@ def get_calls(_url):
 
     return list_of_data
 
-def get_calls_num(_url):
+def get_calls_number(_url):
 
     """
    Method to return the number of proposal calls
@@ -117,22 +117,26 @@ def get_calls_num(_url):
    :return: number of calls
    """
     try:
+
         PATH = '/Users/najeh/chromedriver'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
+
+        t.sleep(1)
+
+        page_html = driver.execute_script(
+            'return document.getElementsByClassName("h1 reforma-medium xs-me-10 dark-blue-txt ng-binding")[0].innerHTML')
+
+        page_soup = soup(page_html, "html.parser")
+        calls_number = str(page_soup)
+        calls_number = int(calls_number)
 
     except Exception as e:
         print(e)
         return
 
-    page_html = driver.execute_script(
-        'return document.getElementsByClassName("h1 reforma-medium xs-me-10 dark-blue-txt ng-binding")[0].innerHTML')
-
-    page_soup = soup(page_html, "html.parser")
-    calls_number = str(page_soup)
-    calls_number = int(calls_number)
-
     driver.quit()
+
     return calls_number
 
 

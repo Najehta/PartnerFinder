@@ -911,7 +911,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
         """
 
-        BSF, ISF, INNOVATION, MST = [], [], [], []
+        BSF, ISF, INNOVATION, MST, Technion = [], [], [], [], []
 
         try:
             data = request.query_params['data']
@@ -925,7 +925,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
             if not organizations:
-                organizations = 'BSF, ISF, INNOVATION, MST'
+                organizations = 'BSF, ISF, INNOVATION, MST, Technion'
 
 
             if call_status == 'Closed':
@@ -1017,38 +1017,27 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                         print(e)
 
 
-            if BSF and ISF and INNOVATION and MST :
-                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST}
-            elif BSF and not ISF and not INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF':[], 'INNOVATION':[], 'MST':[]}
-            elif not BSF and ISF and not INNOVATION and not MST:
-                response = {'BSF':[], 'ISF': ISF, 'INNOVATION':[], 'MST':[]}
-            elif not BSF and not ISF and INNOVATION and not MST:
-                response = {'BSF':[], 'ISF':[], 'INNOVATION': INNOVATION, 'MST':[]}
-            elif not BSF and not ISF and not INNOVATION and MST:
-                response = {'BSF':[], 'ISF':[], 'INNOVATION': [],'MST': MST}
-            elif BSF and ISF and not INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION':[], 'MST':[]}
-            elif BSF and not ISF and INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF':[], 'INNOVATION': INNOVATION, 'MST':[]}
-            elif BSF and not ISF and not INNOVATION and MST:
-                response = {'BSF': BSF, 'ISF':[], 'INNOVATION': [], 'MST': MST}
-            elif BSF and ISF and INNOVATION and not MST:
-                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST':[]}
-            elif not BSF and ISF and INNOVATION and not MST:
-                response = {'BSF':[], 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST':[]}
-            elif not BSF and ISF and INNOVATION and MST:
-                response = {'BSF':[], 'ISF': ISF, 'INNOVATION': INNOVATION,'MST': MST}
-            elif not BSF and ISF and not INNOVATION and MST:
-                response = {'BSF':[], 'ISF': ISF,'INNOVATION': [], 'MST': MST}
-            elif not BSF and not ISF and INNOVATION and MST:
-                response = {'BSF':[], 'ISF':[], 'INNOVATION': INNOVATION, 'MST': MST}
-            elif BSF and not ISF and INNOVATION and MST:
-                response = {'BSF': BSF,'ISF':[], 'INNOVATION': INNOVATION, 'MST': MST}
-            elif BSF and ISF and not INNOVATION and MST:
-                response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': [], 'MST': MST}
-            else:
-                response = {'BSF': [], 'ISF': [], 'INNOVATION': [], 'MST': []}
+            if 'Technion' in organizations:
+
+                try:
+
+                    technion_result = get_technion_call_by(tags, from_date, to_date, call_status)
+
+                    Technion = []
+                    for value in technion_result:
+                        Technion.append({
+                                        'organizationName': value.organizationName,
+                                        'deadlineDate': value.deadlineDate,
+                                        'information': value.information,
+                                        'areaOfResearch': value.areaOfResearch,
+                                        'link': value.link})
+
+                except Exception as e:
+                        print(e)
+
+
+            response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST, 'Technion': Technion}
+
         except:
             response = {'Error': 'Error while searching for calls'}
 
@@ -1094,10 +1083,9 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
             for i,item in enumerate (deadline):
                 date = bsfCalls(CallID=i, deadlineDate=item, organizationName= 'NSF-BSF',information=event_details[i] ,areaOfResearch=field_name[i], link= 'https://www.bsf.org.il/calendar/', open=True)
                 date.save()
+
                 originalID = i
                 indexID = len(index)
-                # print("This is field name:", field_name[i])
-                # print("This is event name:", event_details[i])
                 document = get_document_from_bsf_call(event_details[i], field_name[i])
                 newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
                 newMap.save()
@@ -1265,9 +1253,10 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
                 originalID = i
                 indexID = len(index)
                 document = get_document_from_innovation_call(org_name, info, field)
+                index = add_document_to_curr_index(index, [document], 'INNOVATION')
                 newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
                 newMap.save()
-                index = add_document_to_curr_index(index, [document], 'INNOVATION')
+
 
             for i,item in enumerate(urls_list):
                 org_name = names_list[i]
@@ -1322,13 +1311,13 @@ class MstCallsViewSet(viewsets.ModelViewSet):
         MapIdsMST.objects.all().delete()
 
         _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
+        calls_number = get_calls_number(_url)
 
-
-        if get_calls_num(_url) % 10 == 0:
-            pages_number = get_calls_num(_url) // 10
+        if calls_number % 10 == 0:
+            pages_number = calls_number // 10
 
         else:
-            pages_number = (get_calls_num(_url) // 10) + 1
+            pages_number = (calls_number // 10) + 1
 
         try:
             os.remove('MstIndex')
@@ -1375,7 +1364,9 @@ class MstCallsViewSet(viewsets.ModelViewSet):
 
 
         try:
+
             skip = 10
+
             while pages_number >= 2:
 
                 if skip > 10:
@@ -1477,7 +1468,7 @@ class TechnionCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = i
                 indexID = len(index)
-                document = get_document_from_technion_call(info, field[i])
+                document = get_document_from_technion_call(title[i], field[i], info)
                 newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'Technion')
@@ -1520,7 +1511,7 @@ class TechnionCallsViewSet(viewsets.ModelViewSet):
 
                     originalID = latest_id_num
                     indexID = len(index)
-                    document = get_document_from_technion_call(info, field[i])
+                    document = get_document_from_technion_call(title[i], field[i], info)
                     newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
                     newMap.save()
                     index = add_document_to_curr_index(index, [document], 'Technion')
