@@ -31,6 +31,7 @@ const Getcalls = (props) => {
     { label: "ISF", value: "ISF" },
     { label: "Ministry Of Science And Technology", value: "MST" },
     { label: "Innovation Isreal", value: "INNOVATION" },
+    { label: "Technion", value: "Technion" },
   ];
   const customStyles = {
     menu: (provided, state) => ({

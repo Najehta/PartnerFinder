@@ -29,6 +29,7 @@ h1 {
   font-style: normal;
   font-variant: normal;
   color: #283747;
+  margin-top: 0px;
 }
 
 h2 {
@@ -37,6 +38,7 @@ h2 {
   font-style: normal;
   font-variant: normal;
   color: #283747;
+  margin-top: 6px;
 }
 
 h3 {
@@ -50,15 +52,13 @@ h3 {
   color: #283747;
 }
 h5 {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   color: #283747;
 }
 p {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 14px;
@@ -66,8 +66,7 @@ p {
   line-height: 20px;
 }
 blockquote {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 21px;
@@ -75,8 +74,7 @@ blockquote {
   line-height: 30px;
 }
 pre {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 13px;
@@ -85,8 +83,7 @@ pre {
 }
 
 h3 {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 14px;
@@ -94,8 +91,7 @@ h3 {
   line-height: 15.4px;
 }
 p {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 14px;
@@ -103,8 +99,7 @@ p {
   line-height: 20px;
 }
 blockquote {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 21px;
@@ -114,8 +109,7 @@ blockquote {
 }
 
 pre {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 13px;
@@ -168,6 +162,7 @@ pre {
 .select_role {
   width: 200px;
 }
+/* new style */
 
 .multi-select {
   background-color: #283747;
@@ -184,7 +179,7 @@ pre {
 }
 
 .go4079732705 .gray {
-  color: #283747;
+  color: #f8f9fa;
 }
 
 .go4079732705,
@@ -202,7 +197,7 @@ pre {
 }
 
 .go2885254090 input {
-  color: #283747;
+  color: whitesmoke;
 }
 
 .go1053659416 dropdown-heading {
@@ -233,7 +228,7 @@ pre {
   color: "white";
 }
 .go2885254090 input {
-  background-color: #283747;
+  background-color: #a1a8af;
   color: "white";
 }
 
@@ -316,8 +311,7 @@ pre {
 }
 #BackgroundColor {
   background-color: #283747;
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
 }
@@ -343,13 +337,12 @@ div.ReactTags__tagInput {
 div.ReactTags__tagInput input.ReactTags__tagInputField,
 div.ReactTags__tagInput input.ReactTags__tagInputField {
   height: 38px;
-  margin: 0;
+  margin: 0px;
   font-size: 14px;
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
-  width: 100%;
+  width: 20vw;
   border: 1px solid #283747;
   padding: 0 4px;
   background-color: #f6f7f8;
@@ -364,8 +357,7 @@ div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder {
 div.ReactTags__selected span.ReactTags__tag {
   border: 1px solid #283747;
   background: #283747;
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   font-size: 16px;
@@ -432,8 +424,9 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   background-color: red;
 }
 .MuiOutlinedInput-root {
-  height: 41%;
-  padding: 0px;
+  width: 20vw;
+  height: 38px;
+  margin: 0px;
 }
 .css-26l3qy-menu {
   color: #283747;
@@ -462,8 +455,7 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
 #start_up,
 #RD,
 #company {
-  font-family: "Lucida Sans Typewriter", "Lucida Console", monaco,
-    "Bitstream Vera Sans Mono", monospace;
+  font-family: "Helvetica Neue";
   font-style: normal;
   font-variant: normal;
   color: rgb(15, 15, 15);

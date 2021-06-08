@@ -9,6 +9,7 @@ import {
   ISF_columns,
   MST_columns,
   INNOVATION_columns,
+  Technion_columns,
   BACKEND_URL,
 } from "../utils";
 import FormControl from "@material-ui/core/FormControl";
@@ -63,6 +64,7 @@ const Search = (props) => {
     { label: "ISF", value: "ISF" },
     { label: "Ministry Of Science And Technology", value: "MST" },
     { label: "Innovation Israel", value: "INNOVATION" },
+    { label: "Technion", value: "Technion" },
   ];
   const customStyles = {
     menu: (provided, state) => ({
@@ -96,8 +98,9 @@ const Search = (props) => {
   /////input
   const [selectedOrganization, setselectedOrganization] = useState([]);
   const [tags, setTags] = React.useState([]);
-  const [startDate, setStartDate] = React.useState();
-  const [endDate, setEndDate] = React.useState();
+  const [startDate, setStartDate] = React.useState(new Date());
+  const [endDate, setEndDate] = React.useState(new Date());
+
   ////////////////
   const [state, setState] = React.useState({
     loading: false,
@@ -208,6 +211,7 @@ const Search = (props) => {
     ISF: [],
     MST: [],
     INNOVATION: [],
+    Technion: [],
   });
   //tags consts------------------
 
@@ -261,7 +265,7 @@ const Search = (props) => {
   //open closed megration
   const option = [
     { label: "Open", value: "Open" },
-    { label: "Closed", value: "losed" },
+    { label: "Closed", value: "Closed" },
   ];
   const [status, setStatus] = React.useState({ label: "Status", value: "" });
 
@@ -270,146 +274,169 @@ const Search = (props) => {
   };
 
   return (
-    <div className="SearchCom">
+    <div className="parent">
       <div className="SearchTitle">
         <h1>Search For Calls</h1>
       </div>
-      <div className="searchMultiSelect">
-        <h2 id="textFontFamily">Organizations</h2>
-        <FormControl id="text_select">
-          <MultiSelect
-            options={options}
-            styles={customStyles}
-            value={selectedOrganization}
-            onChange={handleChoose}
-            focusSearchOnOpen={true}
-            className="select"
-            labelledBy={"Select"}
-          />
-        </FormControl>
-      </div>
-      <div className="Tags">
-        <h2>Tags</h2>
-        <ReactTags
-          tags={tags}
-          handleDelete={deleteTag}
-          handleAddition={addTag}
-          handleDrag={dragTag}
-          delimiters={delimiters}
-          handleInputChange={changeTagInput}
-        />
-
-        {formState && formState.tags ? (
-          <Typography
-            variant="caption"
-            display="block"
-            gutterBottom
-            style={{ color: "red", fontWeight: "bold" }}
-          >
-            Enter at least one tag
-          </Typography>
-        ) : null}
-      </div>
-
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <div className="startDate">
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="dd/MM/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Start Date"
-            value={startDate}
-            onChange={handleStartDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
-          />
+      <div className="SearchCom">
+        <div className="searchMultiSelect">
+          <h2 id="textFontFamily" className="textEdit">
+            Organizations
+          </h2>
+          <FormControl id="text_select">
+            <MultiSelect
+              options={options}
+              styles={customStyles}
+              value={selectedOrganization}
+              onChange={handleChoose}
+              focusSearchOnOpen={true}
+              className="select"
+              labelledBy={"Select"}
+            />
+          </FormControl>
         </div>
-
-        <div className="endDate">
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="dd/MM/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="End Date"
-            value={endDate}
-            onChange={handleEndDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
+        <div className="Tags">
+          <h2 id="textFontFamily">Tags</h2>
+          <ReactTags
+            tags={tags}
+            handleDelete={deleteTag}
+            handleAddition={addTag}
+            handleDrag={dragTag}
+            delimiters={delimiters}
+            handleInputChange={changeTagInput}
           />
-        </div>
-      </MuiPickersUtilsProvider>
-      <div className="status">
-        <FormControl variant="filled" className={classes.formControl}>
-          <Select
-            native
-            value={status}
-            onChange={handleChange}
-            options={option}
-          ></Select>
-        </FormControl>
-      </div>
-      <div className="searchButton">
-        <Button
-          color="primary"
-          round
-          variant="contained"
-          id="BackgroundColor"
-          onClick={() => searchProposalCalls()}
-          disabled={state.loading}
-        >
-          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
-          {state && state.loading && (
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={true}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
+
+          {formState && formState.tags ? (
+            <Typography
+              variant="caption"
+              display="block"
+              gutterBottom
+              style={{ color: "red", fontWeight: "bold" }}
             >
-              <DialogTitle className={classes.title}>LOADING</DialogTitle>
-              <DialogContent style={{ "margin-left": "17px" }}>
-                <BeatLoader />
-              </DialogContent>
-            </Dialog>
-          )}
-          {state && !state.loading && <span>Search</span>}
-        </Button>
-      </div>
+              Enter at least one tag
+            </Typography>
+          ) : null}
+        </div>
 
-      <div className="ResultTable">
-        <div className="BsfTable">
-          {data && data.BSF.length === 0 ? null : (
-            <ResultsTable title={"BSF"} columns={BSF_columns} data={data.BSF} />
-          )}
-        </div>
-        <div className="ISFTable">
-          {data && data.ISF.length === 0 ? null : (
-            <ResultsTable title={"ISF"} columns={ISF_columns} data={data.ISF} />
-          )}
-        </div>
-        <div className="MSTTable">
-          {data && data.MST.length === 0 ? null : (
-            <ResultsTable
-              title={"Ministry Of Science And Technology"}
-              columns={MST_columns}
-              data={data.MST}
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <div className="startDate">
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Start Date"
+              value={startDate}
+              onChange={handleStartDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
             />
-          )}
-        </div>
-        <div className="INNOVATIONTable">
-          {data && data.INNOVATION.length === 0 ? null : (
-            <ResultsTable
-              title={"Innovation Israel"}
-              columns={INNOVATION_columns}
-              data={data.INNOVATION}
+          </div>
+
+          <div className="endDate">
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="End Date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
             />
-          )}
+          </div>
+        </MuiPickersUtilsProvider>
+        <div className="status">
+          <FormControl variant="filled" className={classes.formControl}>
+            <Select
+              native
+              value={status}
+              onChange={handleChange}
+              options={option}
+            ></Select>
+          </FormControl>
+        </div>
+        <div className="searchButton">
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => searchProposalCalls()}
+            disabled={state.loading}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Search</span>}
+          </Button>
+        </div>
+
+        <div className="ResultTable">
+          <div className="BsfTable">
+            {data && data.BSF.length === 0 ? null : (
+              <ResultsTable
+                title={"BSF"}
+                columns={BSF_columns}
+                data={data.BSF}
+              />
+            )}
+          </div>
+          <div className="ISFTable">
+            {data && data.ISF.length === 0 ? null : (
+              <ResultsTable
+                title={"ISF"}
+                columns={ISF_columns}
+                data={data.ISF}
+              />
+            )}
+          </div>
+          <div className="MSTTable">
+            {data && data.MST.length === 0 ? null : (
+              <ResultsTable
+                title={"Ministry Of Science And Technology"}
+                columns={MST_columns}
+                data={data.MST}
+              />
+            )}
+          </div>
+          <div className="INNOVATIONTable">
+            {data && data.INNOVATION.length === 0 ? null : (
+              <ResultsTable
+                title={"Innovation Israel"}
+                columns={INNOVATION_columns}
+                data={data.INNOVATION}
+              />
+            )}
+          </div>
+          <div className="TechnionTable">
+            {data && data.Technion.length === 0 ? null : (
+              <ResultsTable
+                title={"Technion"}
+                columns={Technion_columns}
+                data={data.Technion}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

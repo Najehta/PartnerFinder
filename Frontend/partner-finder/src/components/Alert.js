@@ -27,6 +27,7 @@ const Alert = (props) => {
     { label: "ISF", value: "ISF" },
     { label: "Ministry Of Science And Technology", value: "MST" },
     { label: "Innovation Israel", value: "INNOVATION" },
+    { label: "Technion", value: "Technion" },
   ];
   const [msgState, setMsgState] = React.useState({
     title: "",
@@ -249,7 +250,7 @@ const Alert = (props) => {
         <h5>Enter your email to receive updates</h5>
       </div>
       <div className="email">
-        <h2>Email</h2>
+        <h2 className="test">Email</h2>
         <TextField
           id="email"
           style={{

@@ -176,6 +176,28 @@ const INNOVATION_columns = [
   },
 ];
 
+const Technion_columns = [
+  { title: "Organization Name", field: "organizationName" },
+  { title: "Deadline date", field: "deadlineDate" },
+  { title: "Information", field: "information" },
+  { title: "Area of research", field: "areaOfResearch" },
+
+  {
+    title: "Link",
+    field: "link",
+    render: (rowData) => (
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
+    ),
+  },
+];
+
 const classificationTypesOptions = [
   {
     label: "Small or medium-size enterprise",
@@ -356,4 +378,5 @@ export {
   ISF_columns,
   MST_columns,
   INNOVATION_columns,
+  Technion_columns,
 };
