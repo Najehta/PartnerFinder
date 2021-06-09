@@ -214,8 +214,8 @@ const Alert = (props) => {
           if ("Error" in resp) {
             setState({ ...state, loading: false });
             setMsgState({
-              title: "Failed",
-              body: "Error while updating the Organizations data.",
+              title: "Error",
+              body: "This email did not subscribed yet",
               visible: true,
             });
           } else {

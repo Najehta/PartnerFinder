@@ -249,6 +249,5 @@ def get_document_from_technion_call(topic, field, info):
     :return: document
     """
     doc = topic + " " + field + " " + info
-    print(doc)
-    print('*' * 100)
+
     return doc

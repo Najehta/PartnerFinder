@@ -45,7 +45,7 @@ function ResultsTable(props) {
                   style={{
                     backgroundColor: "#02203c",
                     color: "white",
-                    "&:hover": {
+                    "hover": {
                       color:"white",
                     }
                   }}
@@ -56,12 +56,12 @@ function ResultsTable(props) {
             }}
             options={{
               tableSortLabelStyle:{
-                "&:hover": {
+                "hover": {
                   color:"white",
                 }
               },
               sortLablelStyle: {
-                "&:hover": {
+                "hover": {
                   color:"white",
                 }
               },

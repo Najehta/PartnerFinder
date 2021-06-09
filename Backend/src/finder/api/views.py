@@ -1716,7 +1716,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                                 date = calls_deadline[i]
                                 str_date = date.strftime("%d/%m/%Y")
-                                calls += '<li>' + item + '<b>' +' Deadline: (' + str_date  + ')' + '</b>' + '.</li>'
+                                calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + str_date  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1769,7 +1769,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i,item in calls_list:
-                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i]  + ')' + '</b>' + '.</li>'
+                                calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i]  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1824,7 +1824,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i,item in enumerate(calls_list):
-                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
+                                calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1880,7 +1880,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i, item in enumerate(calls_list):
-                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' +'.</li>'
+                                calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' +'.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
@@ -1935,7 +1935,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
 
                             calls = ''
                             for i,item in enumerate(calls_list):
-                                calls += '<li>' + item + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
+                                calls += '<li>' + item + '<br>' +'<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
                             signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'

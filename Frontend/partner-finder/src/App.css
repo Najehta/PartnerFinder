@@ -1,5 +1,5 @@
 body {
-  background-color: white;
+  background:white;
 }
 
 #textFontFamily {
@@ -27,6 +27,7 @@ body {
 h1 {
   font-family: "Helvetica Neue";
   font-style: normal;
+  font-size: 2.33vw;
   font-variant: normal;
   color: #283747;
   margin-top: 0px;
@@ -34,7 +35,7 @@ h1 {
 
 h2 {
   font-family: "Helvetica Neue";
-
+  
   font-style: normal;
   font-variant: normal;
   color: #283747;
@@ -247,10 +248,11 @@ pre {
 }
 
 .MuiTypography-h6 {
-  color: #283747;
+  display: flex;
+  color: white;
   font-style: normal;
   font-variant: normal;
-  text-align: center;
+  font-size: xx-large !important;
 }
 .input_row {
   color: black;
@@ -394,10 +396,17 @@ div.ReactTags__suggestions li mark {
   background: #283747;
   font-weight: 600;
 }
-div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
-  background: #283747;
-  cursor: pointer;
-  color: rgb(10, 10, 10);
+
+.MuiTableSortLabel-root.MuiTableSortLabel-active {
+  color: white !important;
+}
+
+.MuiTableSortLabel-root:hover {
+  color: white !important;
+}
+
+.MuiTableSortLabel-root:focus {
+  color: white !important;
 }
 
 .MuiDivider {
@@ -405,12 +414,6 @@ div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   margin: 100px;
 }
 
-.MuiTableSortLabel-root:hover {
-  color: white;
-}
-.MuiButtonBase-root MuiTableSortLabel-root:hover {
-  color: white;
-}
 
 .MuiTypography-caption {
   color: white;

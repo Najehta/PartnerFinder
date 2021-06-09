@@ -267,7 +267,7 @@ const Search = (props) => {
     { label: "Open", value: "Open" },
     { label: "Closed", value: "Closed" },
   ];
-  const [status, setStatus] = React.useState({ label: "Status", value: "" });
+  const [status, setStatus] = React.useState({ label: "Status", value: "Open" });
 
   const handleChange = (event) => {
     setStatus(event);
@@ -392,7 +392,7 @@ const Search = (props) => {
         </div>
 
         <div className="ResultTable">
-          <div className="BsfTable">
+         
             {data && data.BSF.length === 0 ? null : (
               <ResultsTable
                 title={"BSF"}
@@ -400,8 +400,8 @@ const Search = (props) => {
                 data={data.BSF}
               />
             )}
-          </div>
-          <div className="ISFTable">
+        
+          
             {data && data.ISF.length === 0 ? null : (
               <ResultsTable
                 title={"ISF"}
@@ -409,8 +409,7 @@ const Search = (props) => {
                 data={data.ISF}
               />
             )}
-          </div>
-          <div className="MSTTable">
+    
             {data && data.MST.length === 0 ? null : (
               <ResultsTable
                 title={"Ministry Of Science And Technology"}
@@ -418,8 +417,8 @@ const Search = (props) => {
                 data={data.MST}
               />
             )}
-          </div>
-          <div className="INNOVATIONTable">
+        
+
             {data && data.INNOVATION.length === 0 ? null : (
               <ResultsTable
                 title={"Innovation Israel"}
@@ -427,8 +426,8 @@ const Search = (props) => {
                 data={data.INNOVATION}
               />
             )}
-          </div>
-          <div className="TechnionTable">
+   
+        
             {data && data.Technion.length === 0 ? null : (
               <ResultsTable
                 title={"Technion"}
@@ -436,7 +435,7 @@ const Search = (props) => {
                 data={data.Technion}
               />
             )}
-          </div>
+
         </div>
       </div>
     </div>

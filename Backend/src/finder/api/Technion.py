@@ -204,15 +204,16 @@ def get_technion_call_by_tags(tags):
             res = temp
 
         else:
-            index = reload_index('BsfIndex')
+
+            index = reload_index('TechnionIndex')
             temp = []
             res = ''
             for tag in tags:
-                corpus = NLP_processor([tag], 'BSF')
+                corpus = NLP_processor([tag], 'Technion')
                 res = index[corpus]
                 res = process_query_result(res)
 
-                res = [pair for pair in res if pair[1] > 0.3]
+                res = [pair for pair in res if pair[1] > 0.2]
                 res = sorted(res, key=lambda pair: pair[1], reverse=True)
 
                 for pair in res:

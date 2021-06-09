@@ -75,55 +75,69 @@ const Getcalls = (props) => {
   };
 
   const updateOrganizations = () => {
-    setState({ ...state, loading: true });
-    let organizations = selectedOrganization.map((value) => {
-      return value.value;
-    });
 
-    let params = {
-      data: JSON.stringify({
-        organizations: organizations,
-      }),
-    };
+    if (
+      selectedOrganization.length === 0 ||
+      selectedOrganization === undefined ||
+      selectedOrganization === null
+    ) {
+      setMsgState({
+        title: "Error",
+        body: "Please choose an organization",
+        visible: true,
+      });
+    }
+    else{
+      setState({ ...state, loading: true });
+      let organizations = selectedOrganization.map((value) => {
+        return value.value;
+      });
 
-    let url = new URL(BACKEND_URL + "update/call_update/");
+      let params = {
+        data: JSON.stringify({
+          organizations: organizations,
+        }),
+      };
 
-    //searchParams?
-    Object.keys(params).forEach((key) =>
-      url.searchParams.append(key, params[key])
-    );
+      let url = new URL(BACKEND_URL + "update/call_update/");
 
-    fetch(url, {
-      method: "POST",
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if ("Error" in resp) {
+      //searchParams?
+      Object.keys(params).forEach((key) =>
+        url.searchParams.append(key, params[key])
+      );
+
+      fetch(url, {
+        method: "POST",
+      })
+        .then((res) => res.json())
+        .then((resp) => {
+          if ("Error" in resp) {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Failed",
+              body: "Error while updating the Organizations data.",
+              visible: true,
+            });
+          } else {
+            setState({ ...state, loading: false });
+            setMsgState({
+              title: "Success",
+              body: "Organizations data has been updated successfully.",
+              visible: true,
+            });
+          }
+        })
+        .catch((error) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating Organizations data",
             visible: true,
           });
-        } else {
-          setState({ ...state, loading: false });
-          setMsgState({
-            title: "Success",
-            body: "Organizations data has been updated successfully.",
-            visible: true,
-          });
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        setMsgState({
-          title: "Failed",
-          body: "Error while updating Organizations data",
-          visible: true,
         });
-      });
+      }
   };
-
+  
   const [msgState, setMsgState] = React.useState({
     title: "",
     body: "",

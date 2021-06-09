@@ -178,9 +178,11 @@ const INNOVATION_columns = [
 
 const Technion_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Deadline date", field: "deadlineDate" },
   { title: "Information", field: "information" },
   { title: "Area of research", field: "areaOfResearch" },
+  { title: "Deadline date", field: "deadlineDate" },
+  
+ 
 
   {
     title: "Link",
