@@ -7,14 +7,16 @@ from rest_framework.decorators import action
 from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, IsfCalls, InnovationCalls, MstCalls,bsfCalls, \
-     TechnionCalls, MapIdsTechnion, MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, Call, \
+     TechnionCalls, EuCalls,MapIdsTechnion, MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, MapIdsEU,Call, \
     OrganizationProfile, MapIds, CallTag, EmailSubscription
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
     AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, \
     EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer\
-    , MstCallsSerializer, BsfCallsSerializer, TechnionCallsSerializer, EmailSubscriptionSerializer
+    , MstCallsSerializer, BsfCallsSerializer, TechnionCallsSerializer, EuCallsSerializer,\
+    EmailSubscriptionSerializer
+
 import json
 
 import operator
@@ -30,6 +32,7 @@ from .ISF import *
 from.Innovation import *
 from .MST import *
 from .Technion import *
+from .EUCALLS import *
 from .QueryProcess import *
 from .emails import *
 from email.mime.multipart import MIMEMultipart
@@ -1526,6 +1529,66 @@ class TechnionCallsViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(e)
             response = {'error': 'Error while adding Technion calls to DB'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+
+class EuCallsViewSet(viewsets.ModelViewSet):
+    queryset = EuCalls.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = EuCallsSerializer
+
+    @action(detail=False, methods=['POST'])
+    def add_eucalls_to_db(self, request):
+
+        """
+        Method to define API add EU calls and the generated index to the local DB
+        :param request: HTTP request
+        :return: HTTP response
+        """
+
+        EuCalls.objects.all().delete()
+        MapIdsEU.objects.all().delete()
+
+        calls_obj = get_eu_calls()
+
+        try:
+            os.remove('EuIndex')
+            os.remove('EuIndex.0')
+            os.remove('Dictionary_Eu')
+            print('Deleting EU Index...')
+
+        except:
+            pass
+
+        index = make_index('EuIndex', 'EU')
+        print('Building EU Index...')
+
+        try:
+            for i, item in enumerate(calls_obj):
+
+                newCall = EuCalls(CallID=i, organizationName=calls_obj[i]['identifier'],
+                                  information=calls_obj[i]['callTitle'],
+                                  areaOfResearch=calls_obj[i]['tags'],
+                                  link=calls_obj[i]['link'],
+                                  deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
+                newCall.save()
+
+                originalID = i
+                indexID = len(index)
+                document = get_document_from_eu_call(calls_obj[i]['callTitle'], calls_obj[i]['tags'])
+                newMap = MapIdsEU(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'EU')
+
+            response = {'success': 'EU calls added successfully.'}
+
+        except Exception as e:
+            print(e)
+            response = {'error': 'Error while adding EU calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
 

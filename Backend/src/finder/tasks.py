@@ -62,12 +62,12 @@ def add_bsfcalls_to_db():
 
 
 @periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
-               name="Update ISF Proposal Calls", ignore_result=True)
+               name="Update BSF Proposal Calls", ignore_result=True)
 
 def add_isfcalls_to_db():
 
     """
-    automatic task that executes every week on sunday at 7:00 AM to update ISF calls
+    automatic task that executes every week on sunday at 7:05 AM to update ISF calls
     :return:
     """
 
@@ -75,13 +75,13 @@ def add_isfcalls_to_db():
     response = requests.get(url)
 
 
-@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
-               name="Update Innovation Israel Proposal Calls", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=5, hour=4, day_of_week='sun')),
+               name="Update ISF Proposal Calls", ignore_result=True)
 
-def add_isfcalls_to_db():
+def add_innovcalls_to_db():
 
     """
-    automatic task that executes every week on sunday at 7:00 AM to update Innovation Israel calls
+    automatic task that executes every week on sunday at 7:15 AM to update Innovation Israel calls
     :return:
     """
 
@@ -89,13 +89,13 @@ def add_isfcalls_to_db():
     response = requests.get(url)
 
 
-@periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),
-               name="Update MST Proposal Calls", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=15, hour=4, day_of_week='sun')),
+               name="Update Innovation Israel Proposal Calls", ignore_result=True)
 
 def add_mstcalls_to_db():
 
     """
-    automatic task that executes every week on sunday at 7:00 AM to update MST calls
+    automatic task that executes every week on sunday at 7:25 AM to update MST calls
     :return:
     """
 
@@ -103,8 +103,39 @@ def add_mstcalls_to_db():
     response = requests.get(url)
 
 
-@periodic_task(run_every=(crontab(minute=0, hour=7, day_of_week='sun')),
-               name="Email Proposal Calls Alert", ignore_result=True)
+@periodic_task(run_every=(crontab(minute=25, hour=4, day_of_week='sun')),
+               name="Update MST Proposal Calls", ignore_result=True)
+
+
+def add_technioncalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 7:40 AM to update Technion calls
+    :return:
+    """
+
+    url = URL + 'technioncalls/add_technioncalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=40, hour=4, day_of_week='sun')),
+               name="Update Technion Proposal Calls", ignore_result=True)
+
+def add_eucalls_to_db():
+
+    """
+    automatic task that executes every week on sunday at 8:10 AM to update EU calls
+    :return:
+    """
+
+    url = URL + 'eucalls/add_eucalls_to_db/'
+    response = requests.get(url)
+
+
+@periodic_task(run_every=(crontab(minute=10, hour=5, day_of_week='sun')),
+               name="Update Technion Proposal Calls", ignore_result=True)
+
+
 
 def send_emails():
 

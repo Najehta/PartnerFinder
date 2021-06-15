@@ -29,6 +29,9 @@ def NLP_processor(documents, type):
     if type == 'Technion':
         dir = 'Dictionary_Technion'
 
+    if type == 'EU':
+        dir = 'Dictionary_Eu'
+
     # print("This is the documents",documents)
 
     tokens = [process_document(doc) for doc in documents]
@@ -178,7 +181,6 @@ def make_index(path, type):
     corpus = NLP_processor([], type)
     tfidf = gensim.models.TfidfModel(corpus)
 
-    # build the index
     return gensim.similarities.Similarity(path, tfidf[corpus], num_features=10000)
 
 
@@ -249,5 +251,17 @@ def get_document_from_technion_call(topic, field, info):
     :return: document
     """
     doc = topic + " " + field + " " + info
+
+    return doc
+
+def get_document_from_eu_call(title, tags):
+
+    """
+    function to get the description and tags from EU call
+    :param title: call title
+    :param tags: call tags
+    :return: document
+    """
+    doc = title + " " + tags
 
     return doc

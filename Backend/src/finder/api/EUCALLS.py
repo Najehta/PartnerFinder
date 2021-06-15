@@ -7,9 +7,9 @@ from datetime import datetime
 #from .Utils import *
 
 
-def get_proposal_calls():
+def get_eu_calls():
     """
-    function to get all proposal calls for grants that are open and have at least three months deadline
+    function to get all proposal calls for grants that are open
     :return: list of object of open calls
     """
 
@@ -23,28 +23,22 @@ def get_proposal_calls():
     res = response.json()['fundingData']['GrantTenderObj']
     grants = []
     for obj in res:
+        #obj['workProgrammepart']['wp_website']
         if 'type' in obj and obj['type'] == 1:
-            obj = get_call_related_attributes(obj)
-            obj = get_rest_attributes(obj)
-            try:
-                check_dates = [is_valid_date(date)
-                               for date in obj['deadlineDatesLong']]
-            except:
-                continue
+            obj = get_attributes(obj)
 
-            if any(check_dates) and is_valid_status(obj) and is_relevant_action(obj):
-                obj = get_call_to_save(obj)
+            if is_valid_status(obj) :
+
                 grants.append(obj)
 
+    print('Number of calls: ', len(grants))
     return grants
 
 LIST_OF_CALLS_ATTRIBUTES = {'type', 'status', 'ccm2Id', 'identifier', 'title', 'callTitle',
-                            'deadlineDatesLong', 'tags', 'keywords', 'sumbissionProcedure'}
+                            'deadlineDatesLong', 'tags', 'keywords', 'sumbissionProcedure', 'workProgrammepart'}
 
-REST_ATTRIBUTES = {'description', 'conditions',
-                   'ccm2Id', 'focusArea', 'supportInfo', 'actions'}
 
-def get_call_related_attributes(obj):
+def get_attributes(obj):
     """
     function to get related attributes from call object
     :param obj: call object
@@ -52,49 +46,36 @@ def get_call_related_attributes(obj):
     """
     resObj = {}
     for atr in LIST_OF_CALLS_ATTRIBUTES:
-        if atr in obj:
+
+        if 'deadlineDatesLong' in atr:
+            time_stamp = obj['deadlineDatesLong'][0]
+            time_stamp = time_stamp // 1000
+            dt_object = datetime.fromtimestamp(time_stamp)
+            resObj[atr] = dt_object
+
+        elif 'tags' in atr and 'tags' in obj:
+            keyword_str = ', '.join(obj[atr])
+            resObj[atr] = keyword_str
+
+        elif 'workProgrammepart' in atr and 'workProgrammepart' in obj:
+
+            if 'wp_website' in obj ['workProgrammepart']:
+                resObj['link'] = obj['workProgrammepart']['wp_website']
+            else:
+                resObj['link'] = 'https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search'
+
+        elif 'workProgrammepart' in atr and 'workProgrammepart'  not in obj:
+            resObj['workProgrammepart'] = ''
+            resObj['link'] = 'https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search'
+
+        elif atr in obj:
             resObj[atr] = obj[atr]
+
         else:
             resObj[atr] = ''
 
     return resObj
 
-def get_rest_attributes(obj):
-    """
-    function to get specific attributes for call object from another API
-    :param obj: call object
-    :return: new call object with additional attributes
-    """
-    id = obj['identifier'].lower()
-    url = 'https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/' + id + '.json'
-
-    try:
-        response = requests.get(url)
-        response = response.json()['TopicDetails']
-        for atr in REST_ATTRIBUTES:
-            if atr in response:
-                obj[atr] = response[atr]
-            else:
-                obj[atr] = ''
-        return obj
-    except:
-        return {}
-
-
-
-def is_valid_date(date):
-    """
-    function to check if the deadline is more than three months from now
-    :param date: deadline date
-    :return: True/False
-    """
-    try:
-        date //= 1000
-        three_months = datetime.now() + relativedelta(months=+3)
-        three_months = time.mktime(three_months.timetuple())
-        return date >= three_months
-    except:
-        return False
 
 def is_valid_status(obj):
     """
@@ -107,52 +88,5 @@ def is_valid_status(obj):
     except:
         return False
 
-def is_relevant_action(obj):
-    """
-    function to check if the demand actions tags are being included in the call object actions
-    :param obj: call object
-    :return: True/False
-    """
-    tags = ['ia', 'ria']  # tags of actions from the client
-    try:
-        for action in obj['actions']:
-            types = action['types']
-            curr_tags = []
-            for type in types:
-                type = type.lower()
-                type.replace('-', '')
-                type.replace(' ', '')
-                curr_tags.extend(type.lower())
-            curr_tags = ''.join(curr_tags)
-            for tag in tags:
-                if tag in curr_tags:
-                    return True
-    except:
-        return False
 
-def get_call_to_save(obj):
-    """
-    function to return only relevant attributes to save in the inner DB
-    :param obj: EU call object
-    :return: call object to save
-    """
-    finalObj = {}
-    for atr in LIST_OF_CALLS_ATTRIBUTES:
-        try:
-            if atr == 'tags' or atr == 'keywords':
-                if 'tagsAndKeywords' in finalObj:
-                    finalObj['tagsAndKeywords'].extend(obj[atr])
-                else:
-                    finalObj['tagsAndKeywords'] = [tag for tag in obj[atr]]
-            elif atr == 'sumbissionProcedure' or atr == 'status':
-                finalObj[atr] = obj[atr]['abbreviation']
-            elif atr == 'deadlineDatesLong':
-                finalObj[atr] = (max(obj['deadlineDatesLong']) // 1000)
-            else:
-                finalObj[atr] = obj[atr]
-        except:
-            finalObj[atr] = ''
-
-    return finalObj
-
-print(get_proposal_calls())
+# print(get_eu_calls())

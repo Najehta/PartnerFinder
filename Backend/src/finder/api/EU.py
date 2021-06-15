@@ -501,8 +501,8 @@ def get_proposal_calls():
             obj = get_call_related_attributes(obj)
             obj = get_rest_attributes(obj)
 
-            # if 'callTitle' in obj:
-            #     print("curr grant ", obj['callTitle'])
+            if 'callTitle' in obj:
+                print("curr grant ", obj['callTitle'])
 
             # try:
             #     check_dates = [is_valid_date(date)
@@ -511,7 +511,7 @@ def get_proposal_calls():
             #     continue
 
             # any(check_dates) and
-            if  is_valid_status(obj) and is_relevant_action(obj):
+            if  is_valid_status(obj):
                 obj = get_call_to_save(obj)
                 grants.append(obj)
                 print("added obj", obj)
