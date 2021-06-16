@@ -333,6 +333,7 @@ class EuCalls(models.Model):
    CallID = models.IntegerField(unique=True, null=True)
    organizationName = models.CharField(max_length=200, blank=True, null=True)
    information = models.CharField(max_length=200, blank=True, null=True)
+   title = models.CharField(max_length=200, blank=True, null=True)
    areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
    link = models.CharField(max_length=200, blank=True, null=True)
    deadlineDate = models.DateField(max_length=200, blank=True, null=True)

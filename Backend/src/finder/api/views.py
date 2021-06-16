@@ -1591,7 +1591,8 @@ class EuCallsViewSet(viewsets.ModelViewSet):
             for i, item in enumerate(calls_obj):
 
                 newCall = EuCalls(CallID=i, organizationName=calls_obj[i]['identifier'],
-                                  information=calls_obj[i]['callTitle'],
+                                  information=calls_obj[i]['title'],
+                                  title = calls_obj[i]['callTitle'],
                                   areaOfResearch=calls_obj[i]['tags'],
                                   link=calls_obj[i]['link'],
                                   deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
@@ -1599,7 +1600,7 @@ class EuCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = i
                 indexID = len(index)
-                document = get_document_from_eu_call(calls_obj[i]['identifier'],calls_obj[i]['callTitle'],calls_obj[i]['tags'])
+                document = get_document_from_eu_call(calls_obj[i]['identifier'],calls_obj[i]['title'],calls_obj[i]['tags'])
                 newMap = MapIdsEU(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'EU')
@@ -2047,6 +2048,60 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                         else:
                             response = {'Error': 'NO calls is open in Technion right now '}
 
+
+                    if 'EU' in organization:
+
+                        try:
+
+                            eu_calls = EuCalls.objects.filter(open=True)
+                            calls_list = []
+                            deadline_list = []
+
+                            for value in eu_calls:
+                                calls_list.append(value.information)
+                                temp_date = value.deadlineDate
+                                str_date = temp_date.strftime("%d/%m/%Y")
+                                deadline_list.append(str_date)
+
+                        except:
+                            calls_list = []
+                            deadline_list = []
+                            response = {'Error': 'Error while Getting EU available call'}
+
+                        if len(calls_list) != 0:
+
+                            body = MIMEMultipart('alternative')
+
+                            calls = ''
+                            for i,item in enumerate(calls_list):
+                                calls += '<li>' + item + '<br>' +'<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
+                                calls += '<br>'
+
+                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            html = """\
+                                                       <html>
+                                                         <head><h3>You have new EU proposal calls that might interest you</h3></head>
+                                                         <body>
+                                                           <ol>
+                                                           {}
+                                                           </ol>
+                                                           <br>
+                                                           <p> For more information please visit: https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-search</p> 
+                                                           <br>
+                                                           {}
+                                                         </body>
+                                                       </html>
+                                                       """.format(calls, signature)
+
+                            response = {'Success': 'Finished building Proposal Calls Alert.'}
+
+                            content = MIMEText(html, 'html')
+                            body.attach(content)
+                            body['Subject'] = 'EU Proposal Calls Alert'
+                            email_processing(receiver_email=email, message=body)
+
+                        else:
+                            response = {'Error': 'NO calls is open in EU right now '}
 
             except Exception as e:
                 print(e)
