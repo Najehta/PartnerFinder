@@ -18,7 +18,10 @@ import Box from "@material-ui/core/Box";
 import moment from "moment";
 import { Msgtoshow } from "./Msgtoshow";
 import { BACKEND_URL } from "../utils";
-import Calls from './P_Calls';
+
+import Search from "./Search";
+import GetAlerts from "./Alert";
+import GetUpdates from "./Getcalls";
 
 function MainScene(props) {
   const { children, value, index, ...other } = props;
@@ -118,7 +121,7 @@ export default function NavTabs() {
   });
   const [searchState, setSearchState] = React.useState({
     tags: [],
-    type: [], 
+    type: [],
     role: "",
     countrySearched: [],
     data: { EU: [], B2MATCH: [] },
@@ -171,7 +174,6 @@ export default function NavTabs() {
       });
   }
 
-  
   if (alertsState.firstLoading) {
     let newState = { ...alertsState, firstLoading: false };
     let newMail = "";
@@ -255,102 +257,90 @@ export default function NavTabs() {
   }
 
   /**
-   * 
-   * @param {*} event 
-   * @param {*} newValue 
+   *
+   * @param {*} event
+   * @param {*} newValue
    */
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-
-  if (state.firstLoading)
-  {
-    if(!alertsState.firstLoading && !updatesState.firstLoading)
-    {
-      setState({...state, firstLoading: false});
+  if (state.firstLoading) {
+    if (!alertsState.firstLoading && !updatesState.firstLoading) {
+      setState({ ...state, firstLoading: false });
     }
   }
 
   return (
     <div>
-    {state.firstLoading? <Dialog
-      disableBackdropClick
-      disableEscapeKeyDown
-      open={true}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle className={classes.title}>LOADING</DialogTitle>
-      <DialogContent style={{ "margin-left": "17px" }}>
-        <BeatLoader />
-      </DialogContent>
-    </Dialog>: <div className={classes.root}>
-    <Msgtoshow
-        {...msgState}
-        handleClose={() => setMsgState({ ...msgState, visible: false })}
-      />
-      <AppBar id="BackgroundColor" position="static">
-        <Tabs
-          classes={{
-            indicator: classes.indicator,
-          }}
-          variant="fullWidth"
-          value={value}
-          onChange={handleChange}
+      {state.firstLoading ? (
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          open={true}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
         >
-          <LinkTab
-            label={
-              <span id="textFontFamily" className={classes.tabsText}>
-                Basic Search
-              </span>
-            }
-            href="/search"
-            {...a11yProps(0)}
+          <DialogTitle className={classes.title}>LOADING</DialogTitle>
+          <DialogContent style={{ "margin-left": "17px" }}>
+            <BeatLoader />
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <div className={classes.root}>
+          <Msgtoshow
+            {...msgState}
+            handleClose={() => setMsgState({ ...msgState, visible: false })}
           />
-          <LinkTab
-            label={
-              <span id="textFontFamily" className={classes.tabsText}>
-                Alerts Settings
-              </span>
-            }
-            href="/settings"
-            {...a11yProps(1)}
-          />
-          <LinkTab
-            label={
-              <span id="textFontFamily" className={classes.tabsText}>
-                Updates
-              </span>
-            }
-            href="/updates"
-            {...a11yProps(2)}
-          />
-          <LinkTab
-            label={
-              <span id="textFontFamily" className={classes.tabsText}>
-                Proposal Calls
-              </span>
-            }
-            href="/calls"
-            {...a11yProps(3)}
-          />
-
-        </Tabs>
-      </AppBar>
-      <MainScene value={value} index={0}>
-        <SearchDetails state={searchState} setState={setSearchState} />
-      </MainScene>
-      <MainScene value={value} index={1}>
-        <AlertsSettings state={alertsState} setState={setAlertsState} />
-      </MainScene>
-      <MainScene value={value} index={2}>
-        <Updates state={updatesState} setState={setUpdatesState} />
-      </MainScene>
-      <MainScene value={value} index={3}>
-        <Calls />
-      </MainScene>
-    </div>}
+          <AppBar id="BackgroundColor" position="static">
+            <Tabs
+              classes={{
+                indicator: classes.indicator,
+              }}
+              variant="fullWidth"
+              value={value}
+              onChange={handleChange}
+            >
+              <LinkTab
+                label={
+                  <span id="textFontFamily" className={classes.tabsText}>
+                    Search
+                  </span>
+                }
+                href="/search"
+                {...a11yProps(0)}
+              />
+              <LinkTab
+                label={
+                  <span id="textFontFamily" className={classes.tabsText}>
+                    Get Alerts
+                  </span>
+                }
+                href="/settings"
+                {...a11yProps(1)}
+              />
+              <LinkTab
+                label={
+                  <span id="textFontFamily" className={classes.tabsText}>
+                    Get Updates
+                  </span>
+                }
+                href="/updates"
+                {...a11yProps(2)}
+              />
+            </Tabs>
+          </AppBar>
+          <MainScene value={value} index={0}>
+            <Search />
+          </MainScene>
+          <MainScene value={value} index={1}>
+            <GetAlerts />
+          </MainScene>
+          <MainScene value={value} index={2}>
+            <GetUpdates />
+          </MainScene>
+        </div>
+      )}
     </div>
   );
 }

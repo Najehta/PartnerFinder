@@ -24,15 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Getcalls = (props) => {
   const classes = useStyles();
-
-  //MultiSelect parameters definition
-  const options = [
-    { label: "BSF", value: "BSF" },
-    { label: "ISF", value: "ISF" },
-    { label: "Ministry Of Science And Technology", value: "MST" },
-    { label: "Innovation Isreal", value: "INNOVATION" },
-    { label: "Technion", value: "Technion" },
-  ];
   const customStyles = {
     menu: (provided, state) => ({
       ...provided,
@@ -63,81 +54,289 @@ const Getcalls = (props) => {
     singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
   };
 
-  const [selectedOrganization, setselectedOrganization] = useState([]);
-
   const [state, setState] = React.useState({
     loading: false,
     firstLoading: true,
   });
-  const handleChoose = (event) => {
-    setselectedOrganization(event);
-    //props.setState({ ...props.state, selected: event });
-  };
 
-  const updateOrganizations = () => {
+  const updateBsf = () => {
+    setState({ ...state, loading: true });
 
-    if (
-      selectedOrganization.length === 0 ||
-      selectedOrganization === undefined ||
-      selectedOrganization === null
-    ) {
-      setMsgState({
-        title: "Error",
-        body: "Please choose an organization",
-        visible: true,
-      });
-    }
-    else{
-      setState({ ...state, loading: true });
-      let organizations = selectedOrganization.map((value) => {
-        return value.value;
-      });
+    let params = {
+      data: JSON.stringify({
+        organizations: ["BSF"],
+      }),
+    };
 
-      let params = {
-        data: JSON.stringify({
-          organizations: organizations,
-        }),
-      };
+    let url = new URL(BACKEND_URL + "update/call_update/");
 
-      let url = new URL(BACKEND_URL + "update/call_update/");
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
 
-      //searchParams?
-      Object.keys(params).forEach((key) =>
-        url.searchParams.append(key, params[key])
-      );
-
-      fetch(url, {
-        method: "POST",
-      })
-        .then((res) => res.json())
-        .then((resp) => {
-          if ("Error" in resp) {
-            setState({ ...state, loading: false });
-            setMsgState({
-              title: "Failed",
-              body: "Error while updating the Organizations data.",
-              visible: true,
-            });
-          } else {
-            setState({ ...state, loading: false });
-            setMsgState({
-              title: "Success",
-              body: "Organizations data has been updated successfully.",
-              visible: true,
-            });
-          }
-        })
-        .catch((error) => {
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating Organizations data",
+            body: "Error while updating the Organizations data.",
             visible: true,
           });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
         });
-      }
+      });
   };
-  
+
+  const updateIsf = () => {
+    setState({ ...state, loading: true });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: ["ISF"],
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+  const updateMst = () => {
+    setState({ ...state, loading: true });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: ["MST"],
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+  const updateInnovation = () => {
+    setState({ ...state, loading: true });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: ["INNOVATION"],
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+  const updateTechnion = () => {
+    setState({ ...state, loading: true });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: ["Technion"],
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+  const updateEu = () => {
+    setState({ ...state, loading: true });
+
+    let params = {
+      data: JSON.stringify({
+        organizations: ["EU"],
+      }),
+    };
+
+    let url = new URL(BACKEND_URL + "update/call_update/");
+
+    //searchParams?
+    Object.keys(params).forEach((key) =>
+      url.searchParams.append(key, params[key])
+    );
+
+    fetch(url, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if ("Error" in resp) {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Failed",
+            body: "Error while updating the Organizations data.",
+            visible: true,
+          });
+        } else {
+          setState({ ...state, loading: false });
+          setMsgState({
+            title: "Success",
+            body: "Organizations data has been updated successfully.",
+            visible: true,
+          });
+        }
+      })
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        setMsgState({
+          title: "Failed",
+          body: "Error while updating Organizations data",
+          visible: true,
+        });
+      });
+  };
+
   const [msgState, setMsgState] = React.useState({
     title: "",
     body: "",
@@ -150,52 +349,212 @@ const Getcalls = (props) => {
         {...msgState}
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
-      <div className="getTitle">
-        <h1>Get calls from:</h1>
-        <h5>Select an organization,then press Update now</h5>
-      </div>
-      <div className="getCallsMultiSelect">
-        <h2 id="textFontFamily" style={{ color: "#02203c" }}>
-          Organizations
-        </h2>
-        <FormControl id="text_select">
-          <MultiSelect
-            options={options}
-            styles={customStyles}
-            value={selectedOrganization}
-            onChange={handleChoose}
-            focusSearchOnOpen={true}
-            className="select"
-            labelledBy={"Select"}
-          />
-        </FormControl>
-      </div>
-      <div className="GetCallsButton">
-        <Button
-          color="primary"
-          round
-          variant="contained"
-          id="BackgroundColor"
-          onClick={() => updateOrganizations()}
-          disabled={state.loading}
-        >
-          {state && state.loading && <i className="fa fa-refresh fa-spin"></i>}
-          {state && state.loading && (
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={true}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle className={classes.title}>LOADING</DialogTitle>
-              <DialogContent style={{ "margin-left": "17px" }}>
-                <BeatLoader />
-              </DialogContent>
-            </Dialog>
-          )}
-          {state && !state.loading && <span>Update</span>}
-        </Button>
+      <h1 style={{ fontSize: "50px" }}>Updates</h1>
+      <div className="UpdateParent">
+        <div className="BsfUpdate">
+          <h1>BSF</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateBsf()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
+        <div className="IsfUpdate">
+          <h1>ISF</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateIsf()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
+        <div className="MstUpdate">
+          <h1>Ministry Of Science And Technology</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateMst()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
+        <div className="InnovationUpdate">
+          <h1>Innovation Israel</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateInnovation()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
+        <div className="TechnionUpdate">
+          <h1>Technion</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateTechnion()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
+        <div className="EuUpdate">
+          <h1>EU</h1>
+          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+            Last Update :
+          </h2>
+          <Button
+            color="primary"
+            round
+            variant="contained"
+            id="BackgroundColor"
+            onClick={() => updateEu()}
+            disabled={state.loading}
+            style={{ "margin-left": "50px", "margin-top": "50px" }}
+          >
+            {state && state.loading && (
+              <i className="fa fa-refresh fa-spin"></i>
+            )}
+            {state && state.loading && (
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={true}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                <DialogContent style={{ "margin-left": "17px" }}>
+                  <BeatLoader />
+                </DialogContent>
+              </Dialog>
+            )}
+            {state && !state.loading && <span>Update Now</span>}
+          </Button>
+        </div>
       </div>
     </div>
   );

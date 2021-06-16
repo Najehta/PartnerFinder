@@ -1,9 +1,0 @@
-.Calls-grid {
-  display: grid;
-  grid-auto-rows: 200px 250px;
-  margin: 2%;
-}
-.ResultTable {
-  display: grid;
-  row-gap: 40px;
-}

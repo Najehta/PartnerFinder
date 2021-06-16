@@ -1,15 +1,13 @@
-.getCalls {
+.UpdateParent {
   display: grid;
-  grid-template-columns: 25vw 25vw 10vw;
-}
-.GetCallsButton {
-  margin-top: 62px;
+  grid-template-columns: 50% 50%;
+  margin: 20px;
+  gap: 100px;
 }
 
 .Alerts {
   display: grid;
   grid-template-columns: 20vw 25vw 25vw 20vw;
-  border-top: 2px solid #02203c;
 }
 .email {
   margin-top: 50px;
@@ -26,15 +24,10 @@
 .subscribtion {
   margin-top: 112px;
 }
-/* .parent {
-  display: grid;
-  grid-template-rows: 40px 40px;
-  
-} */
+
 .SearchTitle {
   display: block;
   text-align: center;
-  border-top: 2px solid #02203c;
   padding-top: 30px;
   margin-bottom: 30px;
 }

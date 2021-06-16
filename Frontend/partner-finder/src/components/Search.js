@@ -267,7 +267,10 @@ const Search = (props) => {
     { label: "Open", value: "Open" },
     { label: "Closed", value: "Closed" },
   ];
-  const [status, setStatus] = React.useState({ label: "Status", value: "Open" });
+  const [status, setStatus] = React.useState({
+    label: "Status",
+    value: "Open",
+  });
 
   const handleChange = (event) => {
     setStatus(event);
@@ -392,50 +395,37 @@ const Search = (props) => {
         </div>
 
         <div className="ResultTable">
-         
-            {data && data.BSF.length === 0 ? null : (
-              <ResultsTable
-                title={"BSF"}
-                columns={BSF_columns}
-                data={data.BSF}
-              />
-            )}
-        
-          
-            {data && data.ISF.length === 0 ? null : (
-              <ResultsTable
-                title={"ISF"}
-                columns={ISF_columns}
-                data={data.ISF}
-              />
-            )}
-    
-            {data && data.MST.length === 0 ? null : (
-              <ResultsTable
-                title={"Ministry Of Science And Technology"}
-                columns={MST_columns}
-                data={data.MST}
-              />
-            )}
-        
+          {data && data.BSF.length === 0 ? null : (
+            <ResultsTable title={"BSF"} columns={BSF_columns} data={data.BSF} />
+          )}
 
-            {data && data.INNOVATION.length === 0 ? null : (
-              <ResultsTable
-                title={"Innovation Israel"}
-                columns={INNOVATION_columns}
-                data={data.INNOVATION}
-              />
-            )}
-   
-        
-            {data && data.Technion.length === 0 ? null : (
-              <ResultsTable
-                title={"Technion"}
-                columns={Technion_columns}
-                data={data.Technion}
-              />
-            )}
+          {data && data.ISF.length === 0 ? null : (
+            <ResultsTable title={"ISF"} columns={ISF_columns} data={data.ISF} />
+          )}
 
+          {data && data.MST.length === 0 ? null : (
+            <ResultsTable
+              title={"Ministry Of Science And Technology"}
+              columns={MST_columns}
+              data={data.MST}
+            />
+          )}
+
+          {data && data.INNOVATION.length === 0 ? null : (
+            <ResultsTable
+              title={"Innovation Israel"}
+              columns={INNOVATION_columns}
+              data={data.INNOVATION}
+            />
+          )}
+
+          {data && data.Technion.length === 0 ? null : (
+            <ResultsTable
+              title={"Technion"}
+              columns={Technion_columns}
+              data={data.Technion}
+            />
+          )}
         </div>
       </div>
     </div>
