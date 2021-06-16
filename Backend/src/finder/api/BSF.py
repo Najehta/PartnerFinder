@@ -2,7 +2,8 @@ import os
 from datetime import datetime
 from ..models import MapIdsBSF, bsfCalls
 import requests
-
+from views import setUpdateTime
+import time
 
 # from selenium import webdriver
 import nltk
@@ -354,9 +355,12 @@ def updateBSF():
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'BSF')
 
+        if not setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple())):
+            raise
 
     except Exception as e:
         print(e)
+        setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple()))
         raise Exception
 
 

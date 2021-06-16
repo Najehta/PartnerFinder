@@ -11,9 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup as soup, element
 from .QueryProcess import *
-
-
+from views import setUpdateTime
 import time
+
 
 def get_calls_status(_url, click):
 
@@ -389,7 +389,11 @@ def updateISF():
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'ISF')
 
+        if not setUpdateTime(isfDate=time.mktime(datetime.now().timetuple())):
+            raise
+
     except Exception as e:
         print(e)
+        setUpdateTime(isfDate=time.mktime(datetime.now().timetuple()))
         raise Exception
 

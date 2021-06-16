@@ -10,6 +10,9 @@ from datetime import datetime
 from .QueryProcess import *
 from ..models import MstCalls, MapIdsMST
 from langdetect import detect
+from views import setUpdateTime
+import time
+
 
 
 def get_calls(_url):
@@ -430,6 +433,10 @@ def updateMST():
             skip += 10
             pages_number -= 1
 
+            if not setUpdateTime(mstDate=time.mktime(datetime.now().timetuple())):
+                raise
+
     except Exception as e:
         print(e)
+        setUpdateTime(mstDate=time.mktime(datetime.now().timetuple()))
         raise Exception

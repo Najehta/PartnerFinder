@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 from ..models import MapIdsTechnion, TechnionCalls
 import requests
+from views import setUpdateTime
+import time
 
 import nltk
 from nltk import tokenize
@@ -443,9 +445,11 @@ def updateTechnion():
             page_content += 20
             pages_number -= 1
 
-
+            if not setUpdateTime(technionDate=time.mktime(datetime.now().timetuple())):
+                raise
 
     except Exception as e:
         print(e)
+        setUpdateTime(technionDate=time.mktime(datetime.now().timetuple()))
         raise Exception
 

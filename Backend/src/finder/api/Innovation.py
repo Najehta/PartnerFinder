@@ -2,6 +2,8 @@ import os
 
 import requests
 from ..models import InnovationCalls, MapIdsINNOVATION
+from views import setUpdateTime
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -578,7 +580,11 @@ def updateINNOVATION():
                 index = add_document_to_curr_index(index, [document], 'INNOVATION')
                 counter += 1
 
+        if not setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple())):
+            raise
+
     except Exception as e:
         print(e)
+        setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple()))
         raise Exception
 
