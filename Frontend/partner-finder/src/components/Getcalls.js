@@ -349,13 +349,13 @@ const Getcalls = (props) => {
         {...msgState}
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
-      <h1 style={{ fontSize: "50px" }}>Updates</h1>
+      <h1 style={{ fontSize: "45px" }}>Updates</h1>
       <div className="UpdateParent">
         <div className="BsfUpdate">
-          <h1>BSF</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+          <h2 style={{ fontSize: "28px" }}>BSF</h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
             Last Update :
-          </h2>
+          </h3>
           <Button
             color="primary"
             round
@@ -363,7 +363,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateBsf()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>
@@ -386,10 +386,10 @@ const Getcalls = (props) => {
           </Button>
         </div>
         <div className="IsfUpdate">
-          <h1>ISF</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+          <h2 style={{ fontSize: "28px" }}>ISF</h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
             Last Update :
-          </h2>
+          </h3>
           <Button
             color="primary"
             round
@@ -397,7 +397,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateIsf()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>
@@ -420,10 +420,12 @@ const Getcalls = (props) => {
           </Button>
         </div>
         <div className="MstUpdate">
-          <h1>Ministry Of Science And Technology</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
-            Last Update :
+          <h2 style={{ fontSize: "28px" }}>
+            Ministry Of Science And Technology
           </h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            Last Update :
+          </h3>
           <Button
             color="primary"
             round
@@ -431,7 +433,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateMst()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>
@@ -454,10 +456,10 @@ const Getcalls = (props) => {
           </Button>
         </div>
         <div className="InnovationUpdate">
-          <h1>Innovation Israel</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+          <h2 style={{ fontSize: "28px" }}>Innovation Israel</h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
             Last Update :
-          </h2>
+          </h3>
           <Button
             color="primary"
             round
@@ -465,7 +467,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateInnovation()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>
@@ -488,10 +490,10 @@ const Getcalls = (props) => {
           </Button>
         </div>
         <div className="TechnionUpdate">
-          <h1>Technion</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+          <h2 style={{ fontSize: "28px" }}>Others Via Technion</h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
             Last Update :
-          </h2>
+          </h3>
           <Button
             color="primary"
             round
@@ -499,7 +501,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateTechnion()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>
@@ -522,10 +524,10 @@ const Getcalls = (props) => {
           </Button>
         </div>
         <div className="EuUpdate">
-          <h1>EU</h1>
-          <h2 id="textFontFamily" style={{ "margin-left": "50px" }}>
+          <h2 style={{ fontSize: "28px" }}>EU</h2>
+          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
             Last Update :
-          </h2>
+          </h3>
           <Button
             color="primary"
             round
@@ -533,7 +535,7 @@ const Getcalls = (props) => {
             id="BackgroundColor"
             onClick={() => updateEu()}
             disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "50px" }}
+            style={{ "margin-left": "50px", "margin-top": "20px" }}
           >
             {state && state.loading && (
               <i className="fa fa-refresh fa-spin"></i>

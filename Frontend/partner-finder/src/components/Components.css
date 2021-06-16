@@ -25,16 +25,11 @@
   margin-top: 112px;
 }
 
-.SearchTitle {
-  display: block;
-  text-align: center;
-  padding-top: 30px;
-  margin-bottom: 30px;
-}
-
 .SearchCom {
   display: grid;
-  grid-template-columns: 25vw 25vw 15vw 15vw 10vw;
+  grid-template-columns: 25vw 25vw 15vw 15vw 9.39vw;
+  margin-left: 3.5%;
+  margin-right: 3.5%;
 }
 .status {
   margin-top: 64px;
@@ -52,7 +47,8 @@
 
 .ResultTable {
   grid-area: 3/ 1 / 4 / 6;
-  margin-top: 20px;
+  margin-top: 60px;
+  row-gap: 40px;
 }
 
 .startDate {

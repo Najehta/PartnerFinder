@@ -11,7 +11,7 @@ import { BeatLoader } from "react-spinners";
 import { Button } from "@material-ui/core";
 import { Msgtoshow } from "./Msgtoshow";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-
+import { MultiSelectOptions } from "../utils";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -22,13 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Alert = (props) => {
-  const options = [
-    { label: "BSF", value: "BSF" },
-    { label: "ISF", value: "ISF" },
-    { label: "Ministry Of Science And Technology", value: "MST" },
-    { label: "Innovation Israel", value: "INNOVATION" },
-    { label: "Technion", value: "Technion" },
-  ];
   const [msgState, setMsgState] = React.useState({
     title: "",
     body: "",
@@ -274,7 +267,7 @@ const Alert = (props) => {
         </h2>
         <FormControl id="text_select">
           <MultiSelect
-            options={options}
+            options={MultiSelectOptions}
             styles={customStyles}
             value={selectedOrganization}
             onChange={handleChoose}

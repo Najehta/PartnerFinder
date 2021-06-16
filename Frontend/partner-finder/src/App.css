@@ -1,5 +1,5 @@
 body {
-  background:white;
+  background: white;
 }
 
 #textFontFamily {
@@ -35,7 +35,7 @@ h1 {
 
 h2 {
   font-family: "Helvetica Neue";
-  
+
   font-style: normal;
   font-variant: normal;
   color: #283747;
@@ -252,7 +252,7 @@ pre {
   color: white;
   font-style: normal;
   font-variant: normal;
-  font-size: xx-large !important;
+  font-size: 50px !important;
 }
 .input_row {
   color: black;
@@ -413,7 +413,6 @@ div.ReactTags__suggestions li mark {
   font-weight: 900;
   margin: 100px;
 }
-
 
 .MuiTypography-caption {
   color: white;

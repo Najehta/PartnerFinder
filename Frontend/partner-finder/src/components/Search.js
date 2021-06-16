@@ -11,6 +11,8 @@ import {
   INNOVATION_columns,
   Technion_columns,
   BACKEND_URL,
+  MultiSelectOptions,
+  statusOption,
 } from "../utils";
 import FormControl from "@material-ui/core/FormControl";
 import {
@@ -28,11 +30,9 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { Msgtoshow } from "./Msgtoshow";
 import moment from "moment";
 import Select from "react-select";
-
-//???
+// ------------------------------------------------------
 const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: "center",
@@ -59,13 +59,7 @@ const Search = (props) => {
     visible: false,
   });
   //MultiSelect parameters
-  const options = [
-    { label: "BSF", value: "BSF" },
-    { label: "ISF", value: "ISF" },
-    { label: "Ministry Of Science And Technology", value: "MST" },
-    { label: "Innovation Israel", value: "INNOVATION" },
-    { label: "Technion", value: "Technion" },
-  ];
+
   const customStyles = {
     menu: (provided, state) => ({
       ...provided,
@@ -183,6 +177,7 @@ const Search = (props) => {
           //   // };
           // });
           setData(resp);
+          console.log("hi\n", resp.INNOVATION[0].information);
           // props.setState({ ...props.state, data: { ...resp } });
           // if (resp.BSF.length === 0 && resp.ISF.length === 0) {
           //   setMsgState({
@@ -263,10 +258,7 @@ const Search = (props) => {
     setEndDate(date);
   };
   //open closed megration
-  const option = [
-    { label: "Open", value: "Open" },
-    { label: "Closed", value: "Closed" },
-  ];
+
   const [status, setStatus] = React.useState({
     label: "Status",
     value: "Open",
@@ -277,10 +269,9 @@ const Search = (props) => {
   };
 
   return (
-    <div className="parent">
-      <div className="SearchTitle">
-        <h1>Search For Calls</h1>
-      </div>
+    <div>
+      <h1 style={{ textAlign: "center" }}>Search For Calls</h1>
+
       <div className="SearchCom">
         <div className="searchMultiSelect">
           <h2 id="textFontFamily" className="textEdit">
@@ -288,7 +279,7 @@ const Search = (props) => {
           </h2>
           <FormControl id="text_select">
             <MultiSelect
-              options={options}
+              options={MultiSelectOptions}
               styles={customStyles}
               value={selectedOrganization}
               onChange={handleChoose}
@@ -360,7 +351,7 @@ const Search = (props) => {
               native
               value={status}
               onChange={handleChange}
-              options={option}
+              options={statusOption}
             ></Select>
           </FormControl>
         </div>

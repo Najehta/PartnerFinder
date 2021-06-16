@@ -2,13 +2,12 @@ import React from "react";
 import MaterialTable, { MTableToolbar } from "material-table";
 import { TablePagination } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-
 import { tableIcons } from "../utils";
 
 const MyTablePagination = styled(TablePagination)((theme) => ({
   color: "white",
   fontSize: "16px",
-  textDecorationColor: 'white'
+  textDecorationColor: "white",
 }));
 
 function ResultsTable(props) {
@@ -28,26 +27,40 @@ function ResultsTable(props) {
     newData.splice(newData.indexOf(oldData), 1);
     setData(newData);
   };
+  // const handleInformation = (data) => {
+  //   data.map((key) => {
+  //     console.log("abed", key["information"]);
+  //     key["information"] =
+  //       "<ReadMore lines={3} onShowMore={this.props.onChange} text='more'>" +
+  //       key["information"] +
+  //       "</ReadMore>";
+  //     console.log("abed", key["information"]);
+  //   });
+  //   return data;
+  // };
 
   return (
     <React.Fragment>
       <div>
         {data && data.length === 0 ? null : (
           <MaterialTable
-            style={{ color: "white", backgroundColor: "#02203c" }}
+            style={{
+              color: "white",
+              backgroundColor: "#02203c",
+              marginBottom: "30px",
+            }}
             icons={tableIcons}
             title={title}
             components={{
-              
               Pagination: (props) => <MyTablePagination {...props} />,
               Toolbar: (props) => (
                 <div
                   style={{
                     backgroundColor: "#02203c",
                     color: "white",
-                    "hover": {
-                      color:"white",
-                    }
+                    hover: {
+                      color: "white",
+                    },
                   }}
                 >
                   <MTableToolbar {...props} />
@@ -55,15 +68,15 @@ function ResultsTable(props) {
               ),
             }}
             options={{
-              tableSortLabelStyle:{
-                "hover": {
-                  color:"white",
-                }
+              tableSortLabelStyle: {
+                hover: {
+                  color: "white",
+                },
               },
               sortLablelStyle: {
-                "hover": {
-                  color:"white",
-                }
+                hover: {
+                  color: "white",
+                },
               },
               actionsCellStyle: {
                 backgroundColor: "#02203c",
@@ -74,10 +87,10 @@ function ResultsTable(props) {
                 backgroundColor: "#02203c",
                 textAlign: "center",
                 color: "white",
-                '&:hover': {
-                  color: 'white',
-                  backgroundColor: 'white',
-                  background: 'white',
+                "&:hover": {
+                  color: "white",
+                  backgroundColor: "white",
+                  background: "white",
                 },
               },
               headerStyle: {
@@ -85,8 +98,8 @@ function ResultsTable(props) {
                 textAlign: "center",
                 zIndex: 0,
                 color: "white",
-                '&:hover': {
-                  color: 'white',
+                "&:hover": {
+                  color: "white",
                 },
               },
               searchFieldStyle: {

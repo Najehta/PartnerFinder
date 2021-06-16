@@ -16,6 +16,7 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import ReadMoreReact from "read-more-react";
 
 const customStyle = { maxHeight: "110px", width: "240px", maxWidth: "250px" };
 
@@ -98,7 +99,19 @@ const B2Match_columns = [
 
 const BSF_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Information", field: "information" },
+  {
+    title: "Information",
+    field: "information",
+    render: (rowData) => (
+      <ReadMoreReact
+        text={rowData.information}
+        min={80}
+        ideal={100}
+        max={200}
+        readMoreText="click here to read more"
+      />
+    ),
+  },
   { title: "Area of research", field: "areaOfResearch" },
   { title: "Deadline Date", field: "deadlineDate" },
   {
@@ -118,7 +131,19 @@ const BSF_columns = [
 ];
 const ISF_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Information", field: "information" },
+  {
+    title: "Information",
+    field: "information",
+    render: (rowData) => (
+      <ReadMoreReact
+        text={rowData.information}
+        min={80}
+        ideal={100}
+        max={200}
+        readMoreText="click here to read more"
+      />
+    ),
+  },
   { title: "Institution type", field: "institutionType" },
   { title: "Deadline Date", field: "registrationDeadline" },
   {
@@ -138,7 +163,19 @@ const ISF_columns = [
 ];
 const MST_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Information", field: "information" },
+  {
+    title: "Information",
+    field: "information",
+    render: (rowData) => (
+      <ReadMoreReact
+        text={rowData.information}
+        min={80}
+        ideal={100}
+        max={200}
+        readMoreText="click here to read more"
+      />
+    ),
+  },
   { title: "Deadline Date", field: "submissionDeadline" },
   {
     title: "Link",
@@ -157,7 +194,17 @@ const MST_columns = [
 ];
 const INNOVATION_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Information", field: "information" },
+  {
+    title: "Information",
+    field: "information",
+    render: (rowData) => (
+      <ReadMoreReact
+        text={rowData.information}
+        ideal={100}
+        readMoreText="click here to read more..."
+      />
+    ),
+  },
   { title: "Area of research", field: "areaOfResearch" },
   { title: "Deadline date", field: "submissionDeadline" },
   {
@@ -178,11 +225,21 @@ const INNOVATION_columns = [
 
 const Technion_columns = [
   { title: "Organization Name", field: "organizationName" },
-  { title: "Information", field: "information" },
+  {
+    title: "Information",
+    field: "information",
+    render: (rowData) => (
+      <ReadMoreReact
+        text={rowData.information}
+        min={80}
+        ideal={100}
+        max={200}
+        readMoreText="click here to read more"
+      />
+    ),
+  },
   { title: "Area of research", field: "areaOfResearch" },
   { title: "Deadline date", field: "deadlineDate" },
-  
- 
 
   {
     title: "Link",
@@ -364,6 +421,18 @@ const tableIcons = {
     />
   )),
 };
+const MultiSelectOptions = [
+  { label: "BSF", value: "BSF" },
+  { label: "ISF", value: "ISF" },
+  { label: "Ministry Of Science And Technology", value: "MST" },
+  { label: "Innovation Israel", value: "INNOVATION" },
+  { label: "Others via Technion", value: "Technion" },
+  { label: "EU", value: "EU" },
+];
+const statusOption = [
+  { label: "Open", value: "Open" },
+  { label: "Closed", value: "Closed" },
+];
 
 // const BACKEND_URL = "http://62.90.89.14:8000/api/";
 const BACKEND_URL = "http://localhost:8000/api/";
@@ -381,4 +450,6 @@ export {
   MST_columns,
   INNOVATION_columns,
   Technion_columns,
+  MultiSelectOptions,
+  statusOption,
 };
