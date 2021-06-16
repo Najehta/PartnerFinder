@@ -8,14 +8,14 @@ from time import sleep
 from ..models import Event, TagP, Participants, Location, MapIDsB2match, \
     MapIDsB2matchUpcoming, Scores, UpdateSettings, AlertsSettings, IsfCalls, InnovationCalls, MstCalls,bsfCalls, \
      TechnionCalls, EuCalls,MapIdsTechnion, MapIdsISF, MapIdsINNOVATION, MapIdsMST, MapIdsBSF, MapIdsEU,Call, \
-    OrganizationProfile, MapIds, CallTag, EmailSubscription
+    OrganizationProfile, MapIds, CallTag, EmailSubscription,UpdateTime
 
 from .serializers import OrganizationProfileSerializer, AddressSerializer, TagSerializer, EventSerializer, \
     ParticipantsSerializer, CallSerializer, CallTagSerializer, \
     AlertsSettingsSerializer, UpdateSettingsSerializer, ScoresSerializer, \
     EventsForAlertsSerializer, IsfCallsSerializer, InnovationCallsSerializer\
     , MstCallsSerializer, BsfCallsSerializer, TechnionCallsSerializer, EuCallsSerializer,\
-    EmailSubscriptionSerializer
+    EmailSubscriptionSerializer, UpdateTimeSerializer
 
 import json
 
@@ -113,10 +113,10 @@ class OrganizationProfileViewSet(viewsets.ModelViewSet):
             #     index.destroy()
 
             response = {'success': 'Organizations updated successfully!'}
-            if not setUpdateSettings(euDate=time.mktime(datetime.datetime.now().timetuple())):
+            if not setUpdateSettings(euDate=time.mktime(datetime.now().timetuple())):
                 raise
         except:
-            setUpdateSettings(euDate=time.mktime(datetime.datetime.now().timetuple()))
+            setUpdateSettings(euDate=time.mktime(datetime.now().timetuple()))
             # if os.path.exists('EU_Index_Temp.0') and os.path.getsize('EU_Index_Temp.0') > os.path.getsize('EU_Index.0'):
             #     destroy_and_rename(old_index_name='EU_Index', new_index_name='EU_Index_Temp')
             # else:
@@ -393,7 +393,7 @@ class EventViewSet(viewsets.ModelViewSet):
         MapIDsB2matchUpcoming.objects.all().delete()
         MapIDsB2match.objects.all().delete()
         Location.objects.all().delete()
-        setUpdateSettings(b2matchDate=time.mktime(datetime.datetime.now().timetuple()))
+        setUpdateSettings(b2matchDate=time.mktime(datetime.now().timetuple()))
         try:
             all_event_b2match = "https://events.b2match.com/?all=true"
             b2match = "https://events.b2match.com"
@@ -422,11 +422,11 @@ class EventViewSet(viewsets.ModelViewSet):
                 except:
                     pass
 
-                event_date = datetime.datetime.strptime(dt[0][0], '%d %B, %Y')
+                event_date = datetime.strptime(dt[0][0], '%d %B, %Y')
 
                 url = get_the_participent_urls(url)
                 upComing = False
-                CurrentDate = datetime.datetime.now()
+                CurrentDate = datetime.now()
                 if CurrentDate < event_date:
                     upComing = True
 
@@ -465,11 +465,11 @@ class EventViewSet(viewsets.ModelViewSet):
                     except:
                         pass
 
-                    event_date = datetime.datetime.strptime(dt[0][0], '%d %B, %Y')
+                    event_date = datetime.strptime(dt[0][0], '%d %B, %Y')
                     try:
                         url = get_the_participent_urls(url)
                         upComing = False
-                        CurrentDate = datetime.datetime.now()
+                        CurrentDate = datetime.now()
                         if CurrentDate < event_date:
                             upComing = True
 
@@ -537,11 +537,11 @@ class EventViewSet(viewsets.ModelViewSet):
                 except:
                     pass
 
-                event_date = datetime.datetime.strptime(dt[0][0], '%d %B, %Y')
+                event_date = datetime.strptime(dt[0][0], '%d %B, %Y')
 
                 url = get_the_participent_urls(url)
                 upComing = False
-                CurrentDate = datetime.datetime.now()
+                CurrentDate = datetime.now()
                 if CurrentDate < event_date:
                     upComing = True
 
@@ -580,11 +580,11 @@ class EventViewSet(viewsets.ModelViewSet):
                     except:
                         pass
 
-                    event_date = datetime.datetime.strptime(dt[0][0], '%d %B, %Y')
+                    event_date = datetime.strptime(dt[0][0], '%d %B, %Y')
                     try:
                         url = get_the_participent_urls(url)
                         upComing = False
-                        CurrentDate = datetime.datetime.now()
+                        CurrentDate = datetime.now()
                         if CurrentDate < event_date:
                             upComing = True
                         event = Event(event_name=event_title, event_url=url,
@@ -626,11 +626,11 @@ class EventViewSet(viewsets.ModelViewSet):
             add_Participants_from_Upcoming_Event()
             # delete old index and replace with new one
             deleteOldIndexAndReplace()
-            if not setUpdateSettings(b2matchDate=time.mktime(datetime.datetime.now().timetuple())):
+            if not setUpdateSettings(b2matchDate=time.mktime(datetime.now().timetuple())):
                 raise
             response = {'success': 'B2MATCH repository updated successfully'}
         except:
-            setUpdateSettings(b2matchDate=time.mktime(datetime.datetime.now().timetuple()))
+            setUpdateSettings(b2matchDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while updating B2match repository.'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1116,8 +1116,12 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'BSF calls added successfully.'}
 
+            if not setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(e)
+            setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while adding BSF calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1197,12 +1201,15 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'ISF calls added successfully.'}
 
+            if not setUpdateTime(isfDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(repr(e))
+            setUpdateTime(isfDate=time.mktime(datetime.now().timetuple()))
             traceback.print_exc()
 
             response = {'error': 'Error while adding ISF calls to DB'}
-
 
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1306,8 +1313,12 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'Innovation Israel calls added successfully.'}
 
+            if not setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(e)
+            setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while adding Innovation Israel calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1424,8 +1435,12 @@ class MstCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'MST calls added successfully.'}
 
+            if not setUpdateTime(mstDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(e)
+            setUpdateTime(mstDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while adding MST calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1546,8 +1561,12 @@ class TechnionCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'Technion calls added successfully.'}
 
+            if not setUpdateTime(technionDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(e)
+            setUpdateTime(technionDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while adding Technion calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1591,6 +1610,7 @@ class EuCallsViewSet(viewsets.ModelViewSet):
             for i, item in enumerate(calls_obj):
 
                 newCall = EuCalls(CallID=i, organizationName=calls_obj[i]['identifier'],
+                                  ccm2Id=calls_obj[i]['ccm2Id'],
                                   information=calls_obj[i]['title'],
                                   title = calls_obj[i]['callTitle'],
                                   areaOfResearch=calls_obj[i]['tags'],
@@ -1607,8 +1627,12 @@ class EuCallsViewSet(viewsets.ModelViewSet):
 
             response = {'success': 'EU calls added successfully.'}
 
+            if not setUpdateTime(euDate=time.mktime(datetime.now().timetuple())):
+                raise
+
         except Exception as e:
             print(e)
+            setUpdateTime(euDate=time.mktime(datetime.now().timetuple()))
             response = {'error': 'Error while adding EU calls to DB'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -2197,3 +2221,90 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             response = {'Error': 'Error while updating the organization data'}
 
         return Response(response, status=status.HTTP_200_OK)
+
+
+
+class UpdateTimeViewSet(viewsets.ModelViewSet):
+    queryset = UpdateTime.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = UpdateTimeSerializer
+
+    @action(detail=False, methods=['GET'])
+    def get_updateTime(self, request):
+        """
+        method to define API to get last update times
+        :param request: HTTP request
+        :return: HTTP Response
+        """
+        try:
+            update_Time = UpdateTime.objects.all()[0]
+            response = {'EU': UpdateTime.eu_update,
+                        'Technion': UpdateTime.technion_update,
+                        'BSF': UpdateTime.bsf_update,
+                        'ISF':UpdateTime.isf_update,
+                        'MST':UpdateTime.mst_update,
+                        'INNOVATION':UpdateTime.innovation_update}
+
+        except:
+            response = {'BSF': '', 'ISF': '' , 'MST': '', 'INNOVATION': '', 'Technion': '', 'EU': '', 'error': 'Error while uploading updates settings'}
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+
+def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
+    """
+    function to update the last update date
+    :param euDate: EU last update
+    :param technionDate: Technion last update
+    :param isfDate: ISF last update
+    :param mstDate: MST last update
+    :param innovationDate: Innovation last update
+    :param bsfDate: BSF last update
+    :return: True/False
+    """
+
+    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
+        return False
+
+    if euDate:
+        euDate = int(euDate)
+    if technionDate:
+        technionDate = int(technionDate)
+    if isfDate:
+        isfDate = int(isfDate)
+    if mstDate:
+        mstDate = int(mstDate)
+    if innovationDate:
+        innovationDate = int(innovationDate)
+    if bsfDate:
+        bsfDate = int(bsfDate)
+
+    try:
+        UpdateTime.objects.get(ID=1)
+        if euDate:
+            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
+        if technionDate:
+            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
+        if isfDate:
+            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
+        if bsfDate:
+            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
+        if mstDate:
+            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
+        if innovationDate:
+            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
+
+    except:
+        Update_Time = UpdateTime(eu_update=euDate,
+                                 technion_update=technionDate,
+                                 isf_update=isfDate,
+                                 bsf_update=bsfDate,
+                                 mst_update=mstDate,
+                                 innovation_update=innovationDate,
+                                 ID=1)
+        Update_Time.save()
+
+    return True

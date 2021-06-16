@@ -480,6 +480,13 @@ def updateINNOVATION():
     names_list, urls_list, date_list = [], [], []
     counter = 0
 
+    today = datetime.today()
+    date_passed = InnovationCalls.objects.filter(deadlineDate__lte=today)
+
+    for item in date_passed:
+        MapIdsINNOVATION.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
 
     index = reload_index('InnovationIndex')
     print('Reloading Innovation Index...')

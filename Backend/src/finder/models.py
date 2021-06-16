@@ -331,6 +331,7 @@ class EuCalls(models.Model):
    """
 
    CallID = models.IntegerField(unique=True, null=True)
+   ccm2Id = models.IntegerField(unique=True)
    organizationName = models.CharField(max_length=200, blank=True, null=True)
    information = models.CharField(max_length=200, blank=True, null=True)
    title = models.CharField(max_length=200, blank=True, null=True)
@@ -403,3 +404,17 @@ class EmailSubscription(models.Model):
     ID = models.IntegerField(unique=True, null=False, blank= False)
     email = models.EmailField(max_length=300, blank=True)
     organizationName = models.CharField(max_length=200, blank=True, null=True)
+
+class UpdateTime(models.Model):
+
+    """
+    class to define the data model of Update Settings.
+    """
+    eu_update = models.IntegerField()
+    technion_update = models.IntegerField()
+    bsf_update = models.IntegerField()
+    isf_update = models.IntegerField()
+    mst_update = models.IntegerField()
+    innovation_update = models.IntegerField()
+    ID = models.IntegerField(unique=True, default=1)
+

@@ -318,6 +318,13 @@ def updateMST():
     else:
         pages_number = (get_calls_number(_url) // 10) + 1
 
+    today = datetime.today()
+    date_passed = MstCalls.objects.filter(deadlineDate__lte=today)
+
+    for item in date_passed:
+        MapIdsMST.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
 
     index = reload_index('MstIndex')
     print('Reloading MST Index...')

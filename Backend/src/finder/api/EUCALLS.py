@@ -1,8 +1,9 @@
 import requests
 from .QueryProcess import *
 from ..models import MapIdsEU, EuCalls
-
+from views import setUpdateTime
 from datetime import datetime
+import time
 
 
 
@@ -254,5 +255,62 @@ def get_eu_call_intersection(tags_call, dates_call, status):
 
     return result
 
+def updateEU():
 
-# print(get_eu_calls())
+    """
+       Method to update all the calls, and delete the old ones
+       :return: nothing, only changing the data inside the DB
+       """
+
+    today = datetime.today()
+    date_passed = EuCalls.objects.filter(deadlineDate__lte=today).delete()
+
+    for item in date_passed:
+        MapIdsEU.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
+
+    calls_obj = get_eu_calls()
+
+    index = reload_index('EuIndex')
+    print('Reloading EU Index...')
+
+    try:
+
+        for i, item in enumerate(calls_obj):
+
+            try:
+
+                EuCalls.objects.get(ccm2Id=calls_obj[i]['ccm2Id'])
+                print("This call already exist ", calls_obj[i]['callTitle'])
+
+            except EuCalls.DoesNotExist:
+
+                print("This call is not in the DB ", calls_obj[i]['callTitle'])
+
+                latest_id = EuCalls.objects.latest('CallID')
+
+                newCall = EuCalls(CallID=latest_id.CallID + 1,
+                                  organizationName=calls_obj[i]['identifier'],
+                                  information=calls_obj[i]['title'],
+                                  title=calls_obj[i]['callTitle'],
+                                  areaOfResearch=calls_obj[i]['tags'],
+                                  link=calls_obj[i]['link'],
+                                  deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
+                newCall.save()
+
+                originalID = latest_id.CallID + 1
+                indexID = len(index)
+                document = get_document_from_eu_call(calls_obj[i]['identifier'], calls_obj[i]['title'],calls_obj[i]['tags'])
+                newMap = MapIdsEU(originalID=originalID, indexID=indexID)
+                newMap.save()
+                index = add_document_to_curr_index(index, [document], 'EU')
+
+
+        if not setUpdateTime(euDate=time.mktime(datetime.now().timetuple())):
+            raise
+
+    except Exception as e:
+        print(e)
+        setUpdateTime(euDate=time.mktime(datetime.now().timetuple()))
+

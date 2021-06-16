@@ -328,14 +328,18 @@ def updateTechnion():
     else:
         pages_number = (calls_number // 20) + 1
 
+    today = datetime.today()
+    date_passed = TechnionCalls.objects.filter(deadlineDate__lte=today)
+
+    for item in date_passed:
+        MapIdsTechnion.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
 
     index = reload_index('TechnionIndex')
     print('Reloading Technion Index...')
 
     try:
-
-        today = datetime.today()
-        date_passed = TechnionCalls.objects.filter(deadlineDate__lte=today).delete()
 
         data = get_calls_data(_url)
 

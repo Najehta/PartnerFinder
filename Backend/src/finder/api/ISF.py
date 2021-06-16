@@ -327,6 +327,14 @@ def updateISF():
 
     call_names, call_links = [], []
 
+    today = datetime.today()
+    date_passed = IsfCalls.objects.filter(deadlineDate__lte=today)
+
+    for item in date_passed:
+            MapIdsISF.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
+
     index = reload_index('IsfIndex')
     print('Reloading ISF Index...')
 

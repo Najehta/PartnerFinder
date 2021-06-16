@@ -318,7 +318,12 @@ def updateBSF():
     field_name = get_field_name(_url)  # field_name is a list of strings
 
     today = datetime.today()
-    date_passed = bsfCalls.objects.filter(deadlineDate__lte=today).delete()
+    date_passed = bsfCalls.objects.filter(deadlineDate__lte=today)
+
+    for item in date_passed:
+        MapIdsBSF.objects.get(originalID=item.CallID).delete()
+
+    date_passed.delete()
 
     index = reload_index('BsfIndex')
     print('Reloading BSF Index...')

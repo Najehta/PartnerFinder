@@ -5,7 +5,7 @@ from .views import OrganizationProfileViewSet, EventViewSet, ParticipantsViewSet
     UpdateSettingsViewSet, AlertsSettingsViewSet, ScoresViewSet, AlertsB2match, BsfCallsViewSet, \
     IsfCallsViewSet, InnovCallsViewSet, MstCallsViewSet, TechnionCallsViewSet, EuCallsViewSet,\
     ProposalCallsViewSet, EmailSubscriptionViewSet\
-    , UpdateCallsViewSet
+    , UpdateCallsViewSet, UpdateTimeViewSet
 
 router = routers.DefaultRouter()
 
@@ -29,6 +29,7 @@ router.register('eucalls', EuCallsViewSet)
 router.register('proposal', ProposalCallsViewSet)
 router.register('EmailSubscription', EmailSubscriptionViewSet)
 router.register('update', UpdateCallsViewSet, basename='UpdateCalls')
+router.register('updateTime', UpdateTimeViewSet)
 
 urlpatterns = [
     path('', include(router.urls))
