@@ -914,7 +914,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
         """
 
-        BSF, ISF, INNOVATION, MST, Technion = [], [], [], [], []
+        BSF, ISF, INNOVATION, MST, Technion, EU = [], [], [], [], [], []
 
         try:
             data = request.query_params['data']
@@ -928,7 +928,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
             if not organizations:
-                organizations = 'BSF, ISF, INNOVATION, MST, Technion'
+                organizations = 'BSF, ISF, INNOVATION, MST, Technion', 'EU'
 
 
             if call_status == 'Closed':
@@ -1039,9 +1039,29 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
                         print(e)
 
 
-            response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST, 'Technion': Technion}
+            if 'EU' in organizations:
 
-        except:
+                try:
+
+                    eu_result = get_eu_call_by(tags, from_date, to_date, call_status)
+
+                    EU = []
+                    for value in eu_result:
+                        EU.append({
+                                    'organizationName': value.organizationName,
+                                    'deadlineDate': value.deadlineDate,
+                                    'information': value.information,
+                                    'areaOfResearch': value.areaOfResearch,
+                                    'link': value.link})
+
+                except Exception as e:
+                        print(e)
+
+
+            response = {'BSF': BSF, 'ISF': ISF, 'INNOVATION': INNOVATION, 'MST': MST, 'Technion': Technion, 'EU': EU}
+
+        except Exception as e:
+            print(e)
             response = {'Error': 'Error while searching for calls'}
 
         return Response(response, status=status.HTTP_200_OK)
@@ -1579,7 +1599,7 @@ class EuCallsViewSet(viewsets.ModelViewSet):
 
                 originalID = i
                 indexID = len(index)
-                document = get_document_from_eu_call(calls_obj[i]['callTitle'], calls_obj[i]['tags'])
+                document = get_document_from_eu_call(calls_obj[i]['identifier'],calls_obj[i]['callTitle'],calls_obj[i]['tags'])
                 newMap = MapIdsEU(originalID=originalID, indexID=indexID)
                 newMap.save()
                 index = add_document_to_curr_index(index, [document], 'EU')

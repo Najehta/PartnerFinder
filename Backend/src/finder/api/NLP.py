@@ -143,7 +143,7 @@ def build_index(path, type):
     """
     build an empty index in disk and save it on a specific directory
     :param path: path of the directory
-    :param type: string to know whatc index b2match or eu
+    :param type: string to know what index b2match or eu
     :return: Similarity object "index"
     """
     corpus = NLP_processor([], type)

@@ -1,8 +1,11 @@
+import string
+
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import gensim
 from nltk.tokenize import word_tokenize
+import regex as re
 
 
 def NLP_processor(documents, type):
@@ -32,9 +35,8 @@ def NLP_processor(documents, type):
     if type == 'EU':
         dir = 'Dictionary_Eu'
 
-    # print("This is the documents",documents)
+    tokens = [process_document(doc) for doc in documents ]
 
-    tokens = [process_document(doc) for doc in documents]
     try:
 
         dictionary = reload_dictionary(dir)
@@ -72,8 +74,14 @@ def process_document(document):
         print("ERR", e)
 
     try:
+
         tokens_list = [ps.stem(word.lower()) for word in word_tokenize(document) if
                 not word in stop_words]  # tokenizing and normalize tokens
+
+        # remove punctuation characters from the token list
+        for token in tokens_list:
+            if len(token) <= 1:
+                tokens_list.remove(token)
 
     except Exception as e:
         print("ERR", e)
@@ -254,14 +262,16 @@ def get_document_from_technion_call(topic, field, info):
 
     return doc
 
-def get_document_from_eu_call(title, tags):
+def get_document_from_eu_call(orgName, title, tags):
 
     """
     function to get the description and tags from EU call
+    :param orgName: organization name
     :param title: call title
     :param tags: call tags
     :return: document
     """
-    doc = title + " " + tags
+    orgName = re.sub(r'[^A-Za-z0-9]+', ' ', orgName)
+    doc = orgName + " " + tags + " " + title
 
     return doc
