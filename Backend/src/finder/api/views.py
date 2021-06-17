@@ -2239,13 +2239,13 @@ class UpdateTimeViewSet(viewsets.ModelViewSet):
         :return: HTTP Response
         """
         try:
-            update_Time = UpdateTime.objects.all()[0]
-            response = {'EU': UpdateTime.eu_update,
-                        'Technion': UpdateTime.technion_update,
-                        'BSF': UpdateTime.bsf_update,
-                        'ISF':UpdateTime.isf_update,
-                        'MST':UpdateTime.mst_update,
-                        'INNOVATION':UpdateTime.innovation_update}
+            updated = UpdateTime.objects.all()[0]
+            response = {'EU': updated.eu_update,
+                        'Technion': updated.technion_update,
+                        'BSF': updated.bsf_update,
+                        'ISF':updated.isf_update,
+                        'MST':updated.mst_update,
+                        'INNOVATION':updated.innovation_update}
 
         except:
             response = {'BSF': '', 'ISF': '' , 'MST': '', 'INNOVATION': '', 'Technion': '', 'EU': '', 'error': 'Error while uploading updates settings'}

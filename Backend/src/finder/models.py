@@ -331,7 +331,7 @@ class EuCalls(models.Model):
    """
 
    CallID = models.IntegerField(unique=True, null=True)
-   ccm2Id = models.IntegerField(unique=True)
+   ccm2Id = models.IntegerField(unique=True, default=1)
    organizationName = models.CharField(max_length=200, blank=True, null=True)
    information = models.CharField(max_length=200, blank=True, null=True)
    title = models.CharField(max_length=200, blank=True, null=True)
