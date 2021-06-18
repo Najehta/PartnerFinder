@@ -100,6 +100,7 @@ function SearchDetails(props) {
    * @param {event} event when the user want to choose country/ies
    */
   const handleCountry = (event) => {
+    // setState({ ...state, countrySearched: event})
     setCountrySearched(event);
     props.setState({ ...props.state, countrySearched: event });
   };

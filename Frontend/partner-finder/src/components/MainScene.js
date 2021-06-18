@@ -1,7 +1,4 @@
 import React from "react";
-import SearchDetails from "./SearchDetails";
-import AlertsSettings from "./AlertsSettings";
-import Updates from "./Updates";
 import PropTypes from "prop-types";
 import {
   makeStyles,
@@ -18,7 +15,6 @@ import Box from "@material-ui/core/Box";
 import moment from "moment";
 import { Msgtoshow } from "./Msgtoshow";
 import { BACKEND_URL } from "../utils";
-
 import Search from "./Search";
 import GetAlerts from "./Alert";
 import GetUpdates from "./Getcalls";
@@ -126,14 +122,18 @@ export default function NavTabs() {
     countrySearched: [],
     data: { EU: [], B2MATCH: [] },
   });
-  const [updatesState, setUpdatesState] = React.useState({
+  const [updateState, setUpdateState] = React.useState({
     EU: "",
-    B2MATCH: "",
+    Technion: "",
+    BSF: "",
+    INNOVATION: "",
+    ISF: "",
+    MST: "",
     firstLoading: true,
   });
 
-  if (updatesState.firstLoading) {
-    let url = new URL(BACKEND_URL + "updates/get_settings/");
+  if (updateState.firstLoading) {
+    let url = new URL(BACKEND_URL + "updateTime/get_updateTime/");
     fetch(url, {
       method: "GET",
     })
@@ -145,20 +145,38 @@ export default function NavTabs() {
             body: "Error while getting updates settings",
             visible: true,
           });
-          setUpdatesState({
+          setUpdateState({
             EU: "",
-            B2MATCH: "",
+            Technion: "",
+            BSF: "",
+            INNOVATION: "",
+            ISF: "",
+            MST: "",
             firstLoading: false,
           });
         } else {
-          setUpdatesState({
+          setUpdateState({
             EU: moment.unix(resp.EU).format("MMMM Do YYYY, h:mm:ss a"),
-            B2MATCH: moment
-              .unix(resp.B2MATCH)
+
+            Technion: moment
+              .unix(resp.Technion)
               .format("MMMM Do YYYY, h:mm:ss a"),
+            BSF: moment.unix(resp.BSF).format("MMMM Do YYYY, h:mm:ss a"),
+            INNOVATION: moment
+              .unix(resp.INNOVATION)
+              .format("MMMM Do YYYY, h:mm:ss a"),
+            ISF: moment.unix(resp.ISF).format("MMMM Do YYYY, h:mm:ss a"),
+            MST: moment.unix(resp.MST).format("MMMM Do YYYY, h:mm:ss a"),
             firstLoading: false,
           });
+
+          // console.log(resp);
         }
+
+        console.log(
+          resp.EU,
+          moment.unix(resp.EU).format("MMMM Do YYYY, h:mm:ss a")
+        );
       })
       .catch((error) => {
         setMsgState({
@@ -166,95 +184,100 @@ export default function NavTabs() {
           body: "Error while getting updates settings",
           visible: true,
         });
-        setUpdatesState({
+        setUpdateState({
           EU: "",
-          B2MATCH: "",
+          Technion: "",
+          BSF: "",
+          INNOVATION: "",
+          ISF: "",
+          MST: "",
           firstLoading: false,
         });
       });
+    console.log("hhhhh", updateState);
   }
 
-  if (alertsState.firstLoading) {
-    let newState = { ...alertsState, firstLoading: false };
-    let newMail = "";
-    let turned_on = false;
-    let url = new URL(BACKEND_URL + "alerts/get_settings/");
-    fetch(url, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((resp) => {
-        if ("error" in resp) {
-          setMsgState({
-            title: "Failed",
-            body: "Error while uploading alerts settings",
-            visible: true,
-          });
-          setAlertsState(newState);
-        } else {
-          turned_on = resp.turned_on;
-          newMail = resp.email;
-          url = new URL(BACKEND_URL + "scores/getscores/");
-          fetch(url, {
-            method: "GET",
-          })
-            .then((res) => res.json())
-            .then((resp) => {
-              if ("error" in resp) {
-                setMsgState({
-                  title: "Failed",
-                  body: "Error while uploading alerts settings",
-                  visible: true,
-                });
-                setAlertsState(newState);
-              } else {
-                newState["resScore"] = resp.RES;
-                newState["italy"] = resp.Italy;
-                newState["france"] = resp.France;
-                newState["austria"] = resp.Austria;
-                newState["germany"] = resp.Germany;
-                newState["denmark"] = resp.Denmark;
-                newState["czech"] = resp.Czech_Republic;
-                newState["finland"] = resp.Finland;
-                newState["ireland"] = resp.Ireland;
-                newState["israel"] = resp.Israel;
-                newState["portugal"] = resp.Portugal;
-                newState["ukranie"] = resp.Ukranie;
-                newState["uk"] = resp.United_Kingdom;
-                newState["turkey"] = resp.Turkey;
-                newState["switzerland"] = resp.Switzerland;
-                newState["spain"] = resp.Spain;
-                newState["norway"] = resp.Norway;
-                newState["agency"] = resp.Association_Agency;
-                newState["university"] = resp.University;
-                newState["company"] = resp.Company;
-                newState["RD"] = resp.R_D_Institution;
-                newState["start_up"] = resp.Start_Up;
-                newState["other"] = resp.Others;
-                newState["email"] = newMail;
-                newState["turned_on"] = turned_on;
-                setAlertsState(newState);
-              }
-            })
-            .catch((error) => {
-              setMsgState({
-                title: "Failed",
-                body: "Error while uploading alerts settings",
-                visible: true,
-              });
-              setAlertsState(newState);
-            });
-        }
-      })
-      .catch((error) => {
-        setMsgState({
-          title: "Failed",
-          body: "Error while uploading alerts settings",
-          visible: true,
-        });
-        setAlertsState(newState);
-      });
-  }
+  // if (alertsState.firstLoading) {
+  //   let newState = { ...alertsState, firstLoading: false };
+  //   let newMail = "";
+  //   let turned_on = false;
+  //   let url = new URL(BACKEND_URL + "alerts/get_settings/");
+  //   fetch(url, {
+  //     method: "GET",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((resp) => {
+  //       if ("error" in resp) {
+  //         setMsgState({
+  //           title: "Failed",
+  //           body: "Error while uploading alerts settings",
+  //           visible: true,
+  //         });
+  //         setAlertsState(newState);
+  //       } else {
+  //         turned_on = resp.turned_on;
+  //         newMail = resp.email;
+  //         url = new URL(BACKEND_URL + "scores/getscores/");
+  //         fetch(url, {
+  //           method: "GET",
+  //         })
+  //           .then((res) => res.json())
+  //           .then((resp) => {
+  //             if ("error" in resp) {
+  //               setMsgState({
+  //                 title: "Failed",
+  //                 body: "Error while uploading alerts settings",
+  //                 visible: true,
+  //               });
+  //               setAlertsState(newState);
+  //             } else {
+  //               newState["resScore"] = resp.RES;
+  //               newState["italy"] = resp.Italy;
+  //               newState["france"] = resp.France;
+  //               newState["austria"] = resp.Austria;
+  //               newState["germany"] = resp.Germany;
+  //               newState["denmark"] = resp.Denmark;
+  //               newState["czech"] = resp.Czech_Republic;
+  //               newState["finland"] = resp.Finland;
+  //               newState["ireland"] = resp.Ireland;
+  //               newState["israel"] = resp.Israel;
+  //               newState["portugal"] = resp.Portugal;
+  //               newState["ukranie"] = resp.Ukranie;
+  //               newState["uk"] = resp.United_Kingdom;
+  //               newState["turkey"] = resp.Turkey;
+  //               newState["switzerland"] = resp.Switzerland;
+  //               newState["spain"] = resp.Spain;
+  //               newState["norway"] = resp.Norway;
+  //               newState["agency"] = resp.Association_Agency;
+  //               newState["university"] = resp.University;
+  //               newState["company"] = resp.Company;
+  //               newState["RD"] = resp.R_D_Institution;
+  //               newState["start_up"] = resp.Start_Up;
+  //               newState["other"] = resp.Others;
+  //               newState["email"] = newMail;
+  //               newState["turned_on"] = turned_on;
+  //               setAlertsState(newState);
+  //             }
+  //           })
+  //           .catch((error) => {
+  //             setMsgState({
+  //               title: "Failed",
+  //               body: "Error while uploading alerts settings",
+  //               visible: true,
+  //             });
+  //             setAlertsState(newState);
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setMsgState({
+  //         title: "Failed",
+  //         body: "Error while uploading alerts settings",
+  //         visible: true,
+  //       });
+  //       setAlertsState(newState);
+  //     });
+  // }
 
   /**
    *
@@ -266,7 +289,7 @@ export default function NavTabs() {
   };
 
   if (state.firstLoading) {
-    if (!alertsState.firstLoading && !updatesState.firstLoading) {
+    if (updateState.firstLoading) {
       setState({ ...state, firstLoading: false });
     }
   }
@@ -313,7 +336,7 @@ export default function NavTabs() {
               <LinkTab
                 label={
                   <span id="textFontFamily" className={classes.tabsText}>
-                    Get Alerts
+                    Alerts
                   </span>
                 }
                 href="/settings"
@@ -322,7 +345,7 @@ export default function NavTabs() {
               <LinkTab
                 label={
                   <span id="textFontFamily" className={classes.tabsText}>
-                    Get Updates
+                    Updates
                   </span>
                 }
                 href="/updates"
@@ -331,13 +354,13 @@ export default function NavTabs() {
             </Tabs>
           </AppBar>
           <MainScene value={value} index={0}>
-            <Search />
+            <Search state={searchState} setState={setSearchState} />
           </MainScene>
           <MainScene value={value} index={1}>
             <GetAlerts />
           </MainScene>
           <MainScene value={value} index={2}>
-            <GetUpdates />
+            <GetUpdates updateState={updateState} />
           </MainScene>
         </div>
       )}

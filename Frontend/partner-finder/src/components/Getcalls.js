@@ -1,9 +1,6 @@
 import React from "react";
 import "./Components.css";
 import { Button } from "@material-ui/core";
-import MultiSelect from "react-multi-select-component";
-import { useState } from "react";
-import FormControl from "@material-ui/core/FormControl";
 import {
   makeStyles,
   Dialog,
@@ -11,9 +8,7 @@ import {
   DialogContent,
 } from "@material-ui/core/";
 import { Msgtoshow } from "./Msgtoshow";
-
 import { BACKEND_URL } from "../utils";
-
 import { BeatLoader } from "react-spinners";
 //???
 const useStyles = makeStyles((theme) => ({
@@ -55,9 +50,18 @@ const Getcalls = (props) => {
   };
 
   const [state, setState] = React.useState({
-    loading: false,
+    EU: "",
+    Technion: "",
+    BSF: "",
+    INNOVATION: "",
+    ISF: "",
+    MST: "",
     firstLoading: true,
   });
+
+  if (state.firstLoading) {
+    setState({ ...props.updateState });
+  }
 
   const updateBsf = () => {
     setState({ ...state, loading: true });
@@ -344,221 +348,238 @@ const Getcalls = (props) => {
   });
 
   return (
-    <div className="getCalls">
+    <React.Fragment>
       <Msgtoshow
         {...msgState}
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
-      <h1 style={{ fontSize: "45px" }}>Updates</h1>
-      <div className="UpdateParent">
-        <div className="BsfUpdate">
-          <h2 style={{ fontSize: "28px" }}>BSF</h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateBsf()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
-        </div>
-        <div className="IsfUpdate">
-          <h2 style={{ fontSize: "28px" }}>ISF</h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateIsf()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
-        </div>
-        <div className="MstUpdate">
-          <h2 style={{ fontSize: "28px" }}>
-            Ministry Of Science And Technology
-          </h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateMst()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
-        </div>
-        <div className="InnovationUpdate">
-          <h2 style={{ fontSize: "28px" }}>Innovation Israel</h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateInnovation()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
-        </div>
-        <div className="TechnionUpdate">
-          <h2 style={{ fontSize: "28px" }}>Others Via Technion</h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateTechnion()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
-        </div>
-        <div className="EuUpdate">
-          <h2 style={{ fontSize: "28px" }}>EU</h2>
-          <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
-            Last Update :
-          </h3>
-          <Button
-            color="primary"
-            round
-            variant="contained"
-            id="BackgroundColor"
-            onClick={() => updateEu()}
-            disabled={state.loading}
-            style={{ "margin-left": "50px", "margin-top": "20px" }}
-          >
-            {state && state.loading && (
-              <i className="fa fa-refresh fa-spin"></i>
-            )}
-            {state && state.loading && (
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle className={classes.title}>LOADING</DialogTitle>
-                <DialogContent style={{ "margin-left": "17px" }}>
-                  <BeatLoader />
-                </DialogContent>
-              </Dialog>
-            )}
-            {state && !state.loading && <span>Update Now</span>}
-          </Button>
+      <div className="getCalls">
+        <h1 style={{ fontSize: "45px" }}>Updates</h1>
+        <div className="UpdateParent">
+          <div className="BsfUpdate">
+            <h2 style={{ fontSize: "28px" }}>BSF</h2>
+            <h3
+              style={{
+                "margin-left": "50px",
+                fontSize: "24px",
+              }}
+            >
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.BSF}</h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateBsf()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
+          <div className="IsfUpdate">
+            <h2 style={{ fontSize: "28px" }}>ISF</h2>
+            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.ISF}</h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateIsf()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
+          <div className="MstUpdate">
+            <h2 style={{ fontSize: "28px" }}>
+              Ministry Of Science And Technology
+            </h2>
+            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.MST}</h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateMst()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
+          <div className="InnovationUpdate">
+            <h2 style={{ fontSize: "28px" }}>Innovation Israel</h2>
+            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>
+              {state.INNOVATION}
+            </h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateInnovation()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
+          <div className="TechnionUpdate">
+            <h2 style={{ fontSize: "28px" }}>Others Via Technion</h2>
+            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>
+              {state.Technion}
+            </h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateTechnion()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
+          <div className="EuUpdate">
+            <h2 style={{ fontSize: "28px" }}>EU</h2>
+            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+              Last Update :
+            </h3>
+            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.EU}</h3>
+            <Button
+              color="primary"
+              round
+              variant="contained"
+              id="BackgroundColor"
+              onClick={() => updateEu()}
+              disabled={state.loading}
+              style={{ "margin-left": "50px", "margin-top": "20px" }}
+            >
+              {state && state.loading && (
+                <i className="fa fa-refresh fa-spin"></i>
+              )}
+              {state && state.loading && (
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={true}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle className={classes.title}>LOADING</DialogTitle>
+                  <DialogContent style={{ "margin-left": "17px" }}>
+                    <BeatLoader />
+                  </DialogContent>
+                </Dialog>
+              )}
+              {state && !state.loading && <span>Update Now</span>}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

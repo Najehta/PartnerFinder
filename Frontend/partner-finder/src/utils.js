@@ -21,31 +21,33 @@ import ReadMoreReact from "read-more-react";
 const customStyle = { maxHeight: "110px", width: "240px", maxWidth: "250px" };
 
 const EU_columns = [
+  { title: "Organization Name", field: "organizationName" },
   {
-    title: "Name",
-    field: "legalName",
+    title: "Information",
+    field: "information",
     render: (rowData) => (
-      <GridList cols={1} cellHeight="auto">
-        <div style={(customStyle, { width: "180px" })}>{rowData.legalName}</div>
-      </GridList>
+      <ReadMoreReact
+        text={rowData.information}
+        ideal={80}
+        readMoreText="click here to read more"
+      />
     ),
   },
-  { title: "Classification Type", field: "classificationType" },
-  { title: "Country", field: "country" },
-  { title: "Data Status", field: "dataStatus" },
-  { title: "Number of EU Projects", field: "numberOfProjects" },
+  { title: "Area of research", field: "areaOfResearch" },
+  { title: "Deadline Date", field: "deadlineDate" },
   {
-    title: "Description",
-    field: "description",
+    title: "Link",
+    field: "link",
     render: (rowData) => (
-      <GridList cols={1} cellHeight="auto">
-        <div style={customStyle}>{rowData.description}</div>
-      </GridList>
+      <a
+        href={rowData.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "white" }}
+      >
+        {rowData.link}{" "}
+      </a>
     ),
-  },
-  {
-    title: "Consortium Role",
-    field: "consorsiumRoles",
   },
 ];
 
@@ -422,12 +424,12 @@ const tableIcons = {
   )),
 };
 const MultiSelectOptions = [
+  { label: "EU", value: "EU" },
+  { label: "Others via Technion", value: "Technion" },
   { label: "BSF", value: "BSF" },
+  { label: "Innovation Israel", value: "INNOVATION" },
   { label: "ISF", value: "ISF" },
   { label: "Ministry Of Science And Technology", value: "MST" },
-  { label: "Innovation Israel", value: "INNOVATION" },
-  { label: "Others via Technion", value: "Technion" },
-  { label: "EU", value: "EU" },
 ];
 const statusOption = [
   { label: "Open", value: "Open" },
