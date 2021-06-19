@@ -928,7 +928,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
 
             if not organizations:
-                organizations = 'BSF, ISF, INNOVATION, MST, Technion', 'EU'
+                organizations = 'BSF, ISF, INNOVATION, MST, Technion, EU'
 
 
             if call_status == 'Closed':
