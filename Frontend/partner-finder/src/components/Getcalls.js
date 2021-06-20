@@ -354,19 +354,28 @@ const Getcalls = (props) => {
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
       <div className="getCalls">
-        <h1 style={{ fontSize: "45px" }}>Updates</h1>
+        <h1 style={{ fontSize: "2.7vw" }}>Updates</h1>
         <div className="UpdateParent">
           <div className="BsfUpdate">
-            <h2 style={{ fontSize: "28px" }}>BSF</h2>
+            <h2 style={{ fontSize: "1.8vw" }}>BSF</h2>
             <h3
               style={{
-                "margin-left": "50px",
-                fontSize: "24px",
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
               }}
             >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.BSF}</h3>
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
+            </h3>
             <Button
               color="primary"
               round
@@ -374,7 +383,11 @@ const Getcalls = (props) => {
               id="BackgroundColor"
               onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>
@@ -397,19 +410,37 @@ const Getcalls = (props) => {
             </Button>
           </div>
           <div className="IsfUpdate">
-            <h2 style={{ fontSize: "28px" }}>ISF</h2>
-            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            <h2 style={{ fontSize: "1.8vw" }}>ISF</h2>
+            <h3
+              style={{
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
+              }}
+            >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.ISF}</h3>
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
+            </h3>
             <Button
               color="primary"
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateIsf()}
+              onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>
@@ -432,21 +463,39 @@ const Getcalls = (props) => {
             </Button>
           </div>
           <div className="MstUpdate">
-            <h2 style={{ fontSize: "28px" }}>
+            <h2 style={{ fontSize: "1.8vw" }}>
               Ministry Of Science And Technology
             </h2>
-            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            <h3
+              style={{
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
+              }}
+            >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.MST}</h3>
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
+            </h3>
             <Button
               color="primary"
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateMst()}
+              onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>
@@ -469,21 +518,37 @@ const Getcalls = (props) => {
             </Button>
           </div>
           <div className="InnovationUpdate">
-            <h2 style={{ fontSize: "28px" }}>Innovation Israel</h2>
-            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            <h2 style={{ fontSize: "1.8vw" }}>Innovation Israel</h2>
+            <h3
+              style={{
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
+              }}
+            >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>
-              {state.INNOVATION}
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
             </h3>
             <Button
               color="primary"
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateInnovation()}
+              onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>
@@ -506,21 +571,37 @@ const Getcalls = (props) => {
             </Button>
           </div>
           <div className="TechnionUpdate">
-            <h2 style={{ fontSize: "28px" }}>Others Via Technion</h2>
-            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            <h2 style={{ fontSize: "1.8vw" }}>Others Via Technion</h2>
+            <h3
+              style={{
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
+              }}
+            >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>
-              {state.Technion}
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
             </h3>
             <Button
               color="primary"
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateTechnion()}
+              onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>
@@ -543,19 +624,37 @@ const Getcalls = (props) => {
             </Button>
           </div>
           <div className="EuUpdate">
-            <h2 style={{ fontSize: "28px" }}>EU</h2>
-            <h3 style={{ "margin-left": "50px", fontSize: "24px" }}>
+            <h2 style={{ fontSize: "1.8vw" }}>EU</h2>
+            <h3
+              style={{
+                display: "inline-block",
+                "margin-left": "2.9vw",
+                fontSize: "1.4vw",
+              }}
+            >
               Last Update :
             </h3>
-            <h3 style={{ marginTop: "8%", fontSize: "15px" }}>{state.EU}</h3>
+            <h3
+              style={{
+                display: "inline-block",
+                fontSize: "1vw",
+                marginLeft: "1vw",
+              }}
+            >
+              {state.BSF}
+            </h3>
             <Button
               color="primary"
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateEu()}
+              onClick={() => updateBsf()}
               disabled={state.loading}
-              style={{ "margin-left": "50px", "margin-top": "20px" }}
+              style={{
+                "margin-left": "2.9vw",
+                "margin-top": "20px",
+                display: "block",
+              }}
             >
               {state && state.loading && (
                 <i className="fa fa-refresh fa-spin"></i>

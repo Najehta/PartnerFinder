@@ -233,53 +233,54 @@ const Alert = (props) => {
 
   const classes = useStyles();
   return (
-    <div className="Alerts">
+    <React.Fragment>
       <Msgtoshow
         {...msgState}
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
-      <div className="title">
-        <h1>Alert Subcription</h1>
-        <h5>Enter your email to receive updates</h5>
-      </div>
-      <div className="email">
-        <h2 className="test">Email</h2>
-        <TextField
-          id="email"
-          style={{
-            borderRadius: "3px",
-            width: "95%",
-            height: "100px",
-            backgroundColor: "white",
-          }}
-          onChange={handleInputChange}
-          className={Alert.textField}
-          value={state.email}
-          error={formState.email}
-          autoComplete="email"
-          margin="normal"
-          variant="outlined"
-        />
-      </div>
-      <div className="emailMultiSelect">
-        <h2 id="textFontFamily" style={{ color: "black" }}>
-          Organizations
-        </h2>
-        <FormControl id="text_select">
-          <MultiSelect
-            options={MultiSelectOptions}
-            styles={customStyles}
-            value={selectedOrganization}
-            onChange={handleChoose}
-            focusSearchOnOpen={true}
-            className="select"
-            labelledBy={"Select"}
-          />
-        </FormControl>
-      </div>
 
-      <div className="subscribtion">
-        <ButtonGroup disableElevation variant="contained" color="primary">
+      <h1 style={{ textAlign: "center", fontSize: "50px", marginTop: "30px" }}>
+        Alert Subcription
+      </h1>
+
+      <div className="Alerts">
+        <div className="email">
+          <h2 className="test">Email</h2>
+          <TextField
+            id="email"
+            style={{
+              borderRadius: "3px",
+              width: "95%",
+              height: "100px",
+              backgroundColor: "white",
+            }}
+            onChange={handleInputChange}
+            className={Alert.textField}
+            value={state.email}
+            error={formState.email}
+            autoComplete="email"
+            margin="normal"
+            variant="outlined"
+          />
+        </div>
+        <div className="emailMultiSelect">
+          <h2 id="textFontFamily" style={{ color: "black" }}>
+            Organizations
+          </h2>
+          <FormControl id="text_select">
+            <MultiSelect
+              options={MultiSelectOptions}
+              styles={customStyles}
+              value={selectedOrganization}
+              onChange={handleChoose}
+              focusSearchOnOpen={true}
+              className="select"
+              labelledBy={"Select"}
+            />
+          </FormControl>
+        </div>
+
+        <div className="subButton">
           <Button
             color="primary"
             round
@@ -335,9 +336,9 @@ const Alert = (props) => {
             )}
             {state && !state.loading && <span>Unsubsribe</span>}
           </Button>
-        </ButtonGroup>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

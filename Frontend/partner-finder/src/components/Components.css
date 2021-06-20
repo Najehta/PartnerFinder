@@ -7,22 +7,23 @@
 
 .Alerts {
   display: grid;
-  grid-template-columns: 20vw 25vw 25vw 20vw;
+  grid-template-columns: 30vw 30vw 25vw;
+  margin-left: 9vw;
 }
 .email {
   margin-top: 50px;
 }
-.title {
-  margin-top: 50px;
-}
+
 .emailMultiSelect {
   margin-top: 50px;
 }
 .test {
   margin-bottom: 4px;
 }
-.subscribtion {
-  margin-top: 112px;
+.subButton {
+  display: grid;
+  grid-template-rows: 50px;
+  margin-top: 90px;
 }
 
 .SearchCom {
@@ -64,6 +65,7 @@
 .MuiButton-root {
   width: 10vw;
   height: 38px;
+  font-size: 0.9vw !important;
 }
 .go3433208811.dropdown-container {
   width: 20vw;

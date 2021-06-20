@@ -411,9 +411,9 @@ function AlertsSettings(props) {
         {...msgState}
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
-      <div className="title">
-        <h1 id="textFontFamily">Alerts Settings</h1>
-      </div>
+
+      <h1 style={{ textAlign: "center", fontSize: "50px" }}>Alerts Settings</h1>
+
       <div
         style={{ marginBottom: "30px", marginLeft: "50px" }}
         className="alert_email"

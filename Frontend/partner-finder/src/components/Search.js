@@ -266,7 +266,7 @@ const Search = (props) => {
   //open closed megration
 
   const [status, setStatus] = React.useState({
-    label: "Status",
+    label: "Open",
     value: "Open",
   });
 
@@ -275,8 +275,8 @@ const Search = (props) => {
   };
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center", fontSize: "50px" }}>
+    <React.Fragment>
+      <h1 style={{ textAlign: "center", fontSize: "50px", marginTop: "30px" }}>
         Search For Calls
       </h1>
 
@@ -427,7 +427,7 @@ const Search = (props) => {
           )}
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 
