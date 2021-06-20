@@ -16,7 +16,7 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
-import ReadMoreReact from "read-more-react";
+import ReadMore from "./components/ReadMore";
 
 const customStyle = { maxHeight: "110px", width: "240px", maxWidth: "250px" };
 
@@ -26,14 +26,28 @@ const EU_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        ideal={80}
-        readMoreText="click here to read more"
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },
-  { title: "Area of research", field: "areaOfResearch" },
+  {
+    title: "Area of research",
+    field: "areaOfResearch",
+    render: (rowData) => (
+      <ReadMore
+        text={rowData.areaOfResearch}
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
+      />
+    ),
+  },
   { title: "Deadline Date", field: "deadlineDate" },
   {
     title: "Link",
@@ -105,12 +119,12 @@ const BSF_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        min={80}
-        ideal={100}
-        max={200}
-        readMoreText="click here to read more"
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },
@@ -137,12 +151,12 @@ const ISF_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        min={80}
-        ideal={100}
-        max={200}
-        readMoreText="click here to read more"
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },
@@ -169,12 +183,12 @@ const MST_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        min={80}
-        ideal={100}
-        max={200}
-        readMoreText="click here to read more"
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },
@@ -200,10 +214,12 @@ const INNOVATION_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        ideal={100}
-        readMoreText="click here to read more..."
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },
@@ -231,12 +247,12 @@ const Technion_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMoreReact
+      <ReadMore
         text={rowData.information}
-        min={80}
-        ideal={100}
-        max={200}
-        readMoreText="click here to read more"
+        numberOfLines={4}
+        lineHeight={1.4}
+        showLessButton={true}
+        onContentChange={"100px"}
       />
     ),
   },

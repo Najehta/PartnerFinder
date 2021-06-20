@@ -64,7 +64,7 @@ const Getcalls = (props) => {
   }
 
   const updateBsf = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -111,7 +111,7 @@ const Getcalls = (props) => {
   };
 
   const updateIsf = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -157,7 +157,7 @@ const Getcalls = (props) => {
       });
   };
   const updateMst = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -203,7 +203,7 @@ const Getcalls = (props) => {
       });
   };
   const updateInnovation = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -249,7 +249,7 @@ const Getcalls = (props) => {
       });
   };
   const updateTechnion = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -295,7 +295,7 @@ const Getcalls = (props) => {
       });
   };
   const updateEu = () => {
-    setState({ ...state, loading: true });
+    setState({ ...state, loading: false });
 
     let params = {
       data: JSON.stringify({
@@ -434,7 +434,7 @@ const Getcalls = (props) => {
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateBsf()}
+              onClick={() => updateIsf()}
               disabled={state.loading}
               style={{
                 "margin-left": "2.9vw",
@@ -489,7 +489,7 @@ const Getcalls = (props) => {
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateBsf()}
+              onClick={() => updateMst()}
               disabled={state.loading}
               style={{
                 "margin-left": "2.9vw",
@@ -542,7 +542,7 @@ const Getcalls = (props) => {
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateBsf()}
+              onClick={() => updateInnovation()}
               disabled={state.loading}
               style={{
                 "margin-left": "2.9vw",
@@ -595,7 +595,7 @@ const Getcalls = (props) => {
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateBsf()}
+              onClick={() => updateTechnion()}
               disabled={state.loading}
               style={{
                 "margin-left": "2.9vw",
@@ -648,7 +648,7 @@ const Getcalls = (props) => {
               round
               variant="contained"
               id="BackgroundColor"
-              onClick={() => updateBsf()}
+              onClick={() => updateEu()}
               disabled={state.loading}
               style={{
                 "margin-left": "2.9vw",
