@@ -21,14 +21,16 @@ def get_eu_calls():
 
     res = response.json()['fundingData']['GrantTenderObj']
     grants = []
+    today = datetime.today()
+
     for obj in res:
 
         if 'type' in obj and obj['type'] == 1:
             obj = get_attributes(obj)
 
             if is_valid_status(obj) :
-
-                grants.append(obj)
+                if obj['deadlineDatesLong'] > today:
+                    grants.append(obj)
 
     print('Number of calls: ', len(grants))
     return grants
@@ -262,7 +264,7 @@ def updateEU():
        """
 
     today = datetime.today()
-    date_passed = EuCalls.objects.filter(deadlineDate__lte=today).delete()
+    date_passed = EuCalls.objects.filter(deadlineDate__lte=today)
 
     for item in date_passed:
         MapIdsEU.objects.get(originalID=item.CallID).delete()
@@ -291,6 +293,7 @@ def updateEU():
 
                 newCall = EuCalls(CallID=latest_id.CallID + 1,
                                   organizationName=calls_obj[i]['identifier'],
+                                  ccm2Id=calls_obj[i]['ccm2Id'],
                                   information=calls_obj[i]['title'],
                                   title=calls_obj[i]['callTitle'],
                                   areaOfResearch=calls_obj[i]['tags'],

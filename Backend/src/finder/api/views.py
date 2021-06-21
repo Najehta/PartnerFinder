@@ -2165,7 +2165,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
 
             if not organizations:
-                organizations = 'BSF, ISF, INNOVATION, MST'
+                organizations = 'BSF, ISF, INNOVATION, MST, Technion, EU'
 
             if 'BSF' in organizations:
 
@@ -2209,6 +2209,15 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
                 try:
                     updateTechnion()
+
+                except Exception as e:
+                    print(e)
+                    raise Exception
+
+            if 'EU' in organizations:
+
+                try:
+                    updateEU()
 
                 except Exception as e:
                     print(e)
