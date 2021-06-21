@@ -427,7 +427,7 @@ const Getcalls = (props) => {
                 marginLeft: "1vw",
               }}
             >
-              {state.BSF}
+              {state.ISF}
             </h3>
             <Button
               color="primary"
@@ -482,7 +482,7 @@ const Getcalls = (props) => {
                 marginLeft: "1vw",
               }}
             >
-              {state.BSF}
+              {state.MST}
             </h3>
             <Button
               color="primary"
@@ -535,7 +535,7 @@ const Getcalls = (props) => {
                 marginLeft: "1vw",
               }}
             >
-              {state.BSF}
+              {state.INNOVATION}
             </h3>
             <Button
               color="primary"
@@ -588,7 +588,7 @@ const Getcalls = (props) => {
                 marginLeft: "1vw",
               }}
             >
-              {state.BSF}
+              {state.Technion}
             </h3>
             <Button
               color="primary"
@@ -641,7 +641,7 @@ const Getcalls = (props) => {
                 marginLeft: "1vw",
               }}
             >
-              {state.BSF}
+              {state.EU}
             </h3>
             <Button
               color="primary"

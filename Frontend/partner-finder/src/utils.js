@@ -26,26 +26,38 @@ const EU_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   {
     title: "Area of research",
     field: "areaOfResearch",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.areaOfResearch}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.areaOfResearch.length <= 100 ? (
+          rowData.areaOfResearch
+        ) : (
+          <ReadMore
+            text={rowData.areaOfResearch}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Deadline Date", field: "deadlineDate" },
@@ -119,13 +131,19 @@ const BSF_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Area of research", field: "areaOfResearch" },
@@ -151,13 +169,19 @@ const ISF_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Institution type", field: "institutionType" },
@@ -183,13 +207,19 @@ const MST_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Deadline Date", field: "submissionDeadline" },
@@ -214,13 +244,19 @@ const INNOVATION_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Area of research", field: "areaOfResearch" },
@@ -247,13 +283,19 @@ const Technion_columns = [
     title: "Information",
     field: "information",
     render: (rowData) => (
-      <ReadMore
-        text={rowData.information}
-        numberOfLines={4}
-        lineHeight={1.4}
-        showLessButton={true}
-        onContentChange={"100px"}
-      />
+      <div>
+        {rowData.information.length <= 100 ? (
+          rowData.information
+        ) : (
+          <ReadMore
+            text={rowData.information}
+            numberOfLines={10}
+            lineHeight={1.4}
+            showLessButton={true}
+            onContentChange={"100px"}
+          />
+        )}
+      </div>
     ),
   },
   { title: "Area of research", field: "areaOfResearch" },
