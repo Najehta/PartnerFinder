@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from ..models import MapIdsBSF, bsfCalls, UpdateTime
+from ..models import MapIdsBSF, bsfCalls, UpdateTime, bsfCalls1
 import requests
 import time
 
@@ -20,6 +20,7 @@ from urllib.request import urlopen as req
 from urllib.request import Request
 import re
 from .QueryProcess import *
+from .Utils import setUpdateTime
 
 
 
@@ -312,108 +313,69 @@ def updateBSF():
        :return: nothing, only changing the data inside the DB
        """
 
+    updated = False
+    bsfCalls1.objects.all().delete()
     _url = 'https://www.bsf.org.il/calendar/'
     deadline = get_events_deadline(_url)  # deadline is a list of strings
     event_details = get_events_details(_url)  # event_details is a list of strings
     field_name = get_field_name(_url)  # field_name is a list of strings
 
-    today = datetime.today()
-    date_passed = bsfCalls.objects.filter(deadlineDate__lte=today)
-
-    for item in date_passed:
-        MapIdsBSF.objects.get(originalID=item.CallID).delete()
-
-    date_passed.delete()
-
-    index = reload_index('BsfIndex')
-    print('Reloading BSF Index...')
 
     try:
-
         for i, item in enumerate(deadline):
 
-            try:
+            date = bsfCalls1(CallID=i, deadlineDate=item, organizationName='NSF-BSF', information=event_details[i],
+                            areaOfResearch=field_name[i], link='https://www.bsf.org.il/calendar/', open=True)
+            date.save()
 
-                bsfCalls.objects.get(areaOfResearch=field_name[i])
-                print("This call already exist ", field_name[i])
-
-            except bsfCalls.DoesNotExist:
-
-                print("This call is not in the DB ", field_name[i])
-
-                latest_id = bsfCalls.objects.latest('CallID')
-
-                date = bsfCalls(CallID=latest_id.CallID + 1, deadlineDate=item, organizationName='NSF-BSF',
-                                information=event_details[i],
-                                areaOfResearch=field_name[i], link='https://www.bsf.org.il/calendar/', open=True)
-                date.save()
-                originalID = latest_id.CallID + 1
-                indexID = len(index)
-                document = get_document_from_bsf_call(event_details[i], field_name[i])
-                newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'BSF')
-
-        if not setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple())):
-            raise
+        updated = True
 
     except Exception as e:
         print(e)
-        setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple()))
-        raise Exception
+        updated = False
+
+    return updated
 
 
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
+def copy_to_original_BSF():
 
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
+    bsfCalls.objects.all().delete()
+    MapIdsBSF.objects.all().delete()
+    try:
+        os.remove('BsfIndex')
+        os.remove('BsfIndex.0')
+        os.remove('Dictionary_BSF')
+        print('Deleting BSF original Index...')
+        
+    except Exception as e:
+        pass
 
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
+    index = make_index('BsfIndex', 'BSF')
+    print('Building BSF Index...')
 
     try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
+        all_new_calls = bsfCalls1.objects.all()
 
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
+        for i, item in enumerate (all_new_calls):
 
-    return True
+            new_call = bsfCalls(CallID=item.CallID, deadlineDate=item.deadlineDate, organizationName='NSF-BSF', information=item.information,
+                            areaOfResearch=item.areaOfResearch, link='https://www.bsf.org.il/calendar/', open=True)
+            new_call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_bsf_call(item.information, item.areaOfResearch)
+            newMap = MapIdsBSF(originalID=originalID, indexID=indexID)
+            newMap.save()                                                                  
+            index = add_document_to_curr_index(index, [document], 'BSF')
+
+    except Exception as e:
+        print(e)
+
+    try:
+        if not setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple())):
+            raise
+        
+    except Exception as e:
+        print(e)
+        setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple()))

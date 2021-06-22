@@ -1,6 +1,9 @@
+
+import os
 import requests
 from .QueryProcess import *
-from ..models import MapIdsEU, EuCalls, UpdateTime
+from .Utils import setUpdateTime
+from ..models import MapIdsEU, EuCalls, UpdateTime, EuCalls1
 from datetime import datetime
 import time
 
@@ -134,7 +137,7 @@ def get_eu_call_by_tags(tags):
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.2]
+            res = [pair for pair in res if pair[1] > 0.25]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -157,7 +160,7 @@ def get_eu_call_by_tags(tags):
                 res = index[corpus]
                 res = process_query_result(res)
 
-                res = [pair for pair in res if pair[1] > 0.2]
+                res = [pair for pair in res if pair[1] > 0.25]
                 res = sorted(res, key=lambda pair: pair[1], reverse=True)
 
                 for pair in res:
@@ -262,112 +265,81 @@ def updateEU():
        Method to update all the calls, and delete the old ones
        :return: nothing, only changing the data inside the DB
        """
+    updated = False
 
-    today = datetime.today()
-    date_passed = EuCalls.objects.filter(deadlineDate__lte=today)
+    try:
+        calls_obj = get_eu_calls()
 
-    for item in date_passed:
-        MapIdsEU.objects.get(originalID=item.CallID).delete()
+    except Exception as e:
+        print(e)
 
-    date_passed.delete()
-
-    calls_obj = get_eu_calls()
-
-    index = reload_index('EuIndex')
-    print('Reloading EU Index...')
+    EuCalls1.objects.all().delete()
 
     try:
 
         for i, item in enumerate(calls_obj):
 
-            try:
+            newCall = EuCalls1(CallID=i, organizationName=calls_obj[i]['identifier'],
+                              ccm2Id=calls_obj[i]['ccm2Id'],
+                              information=calls_obj[i]['title'],
+                              title=calls_obj[i]['callTitle'],
+                              areaOfResearch=calls_obj[i]['tags'],
+                              link=calls_obj[i]['link'],
+                              deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
+            newCall.save()
 
-                EuCalls.objects.get(ccm2Id=calls_obj[i]['ccm2Id'])
-                print("This call already exist ", calls_obj[i]['callTitle'])
+    except Exception as e:
+        print(e)
+        updated = False
 
-            except EuCalls.DoesNotExist:
-
-                print("This call is not in the DB ", calls_obj[i]['callTitle'])
-
-                latest_id = EuCalls.objects.latest('CallID')
-
-                newCall = EuCalls(CallID=latest_id.CallID + 1,
-                                  organizationName=calls_obj[i]['identifier'],
-                                  ccm2Id=calls_obj[i]['ccm2Id'],
-                                  information=calls_obj[i]['title'],
-                                  title=calls_obj[i]['callTitle'],
-                                  areaOfResearch=calls_obj[i]['tags'],
-                                  link=calls_obj[i]['link'],
-                                  deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
-                newCall.save()
-
-                originalID = latest_id.CallID + 1
-                indexID = len(index)
-                document = get_document_from_eu_call(calls_obj[i]['identifier'], calls_obj[i]['title'],calls_obj[i]['tags'])
-                newMap = MapIdsEU(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'EU')
+    return updated
 
 
+def copy_to_original_EU():
+
+    EuCalls.objects.all().delete()
+    MapIdsEU.objects.all().delete()
+
+    try:
+        os.remove('EuIndex')
+        os.remove('EuIndex.0')
+        os.remove('Dictionary_Eu')
+        print('Deleting EU Index...')
+
+    except:
+        pass
+
+    index = make_index('EuIndex', 'EU')
+    print('Building EU Index...')
+
+    try:
+        all_new_calls = EuCalls1.objects.all()
+
+        for i, item in enumerate(all_new_calls):
+            newCall = EuCalls(CallID=item.CallID,
+                              organizationName=item.organizationName,
+                              ccm2Id=item.ccm2Id,
+                              information=item.information,
+                              title=item.title,
+                              areaOfResearch=item.areaOfResearch,
+                              link=item.link,
+                              deadlineDate=item.deadlineDate, open=True)
+            newCall.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_eu_call(item.organizationName, item.title, item.areaOfResearch)
+            newMap = MapIdsEU(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'EU')
+
+    except Exception as e:
+        print(e)
+
+    try:
         if not setUpdateTime(euDate=time.mktime(datetime.now().timetuple())):
             raise
 
     except Exception as e:
         print(e)
         setUpdateTime(euDate=time.mktime(datetime.now().timetuple()))
-
-
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True

@@ -1,7 +1,7 @@
 import os
 
 import requests
-from ..models import InnovationCalls, MapIdsINNOVATION, UpdateTime
+from ..models import InnovationCalls, MapIdsINNOVATION, UpdateTime, InnovationCalls1
 import time
 
 from selenium import webdriver
@@ -18,6 +18,7 @@ import re
 import time as t
 from datetime import datetime
 from .QueryProcess import *
+from .views import setUpdateTime
 
 
 def get_calls_org(_url):
@@ -476,21 +477,13 @@ def updateINNOVATION():
        :return: nothing, only changing the data inside the DB
        """
 
+    updated = False
+    InnovationCalls1.objects.all().delete()
+
     _url = 'https://www.innovationisrael.org.il/en/page/calls-proposals'
     names, urls = (), ()
     names_list, urls_list, date_list = [], [], []
     counter = 0
-
-    today = datetime.today()
-    date_passed = InnovationCalls.objects.filter(deadlineDate__lte=today)
-
-    for item in date_passed:
-        MapIdsINNOVATION.objects.get(originalID=item.CallID).delete()
-
-    date_passed.delete()
-
-    index = reload_index('InnovationIndex')
-    print('Reloading Innovation Index...')
 
     try:
         names_url = get_calls_org(_url)
@@ -508,137 +501,84 @@ def updateINNOVATION():
             info = get_call_info(item)
             field = get_call_field(item)
 
-            try:
+            if date[2] is None:
 
-                existed_call = InnovationCalls.objects.get(link=item)
-                if existed_call.submissionDeadline != date[1]:
-                    existed_call.submissionDeadline = date[1]
-                    existed_call.save()
+                call = InnovationCalls1(CallID=i, organizationName=org_name, registrationDeadline=date[0],
+                                       submissionDeadline=date[1], information=info,
+                                       areaOfResearch=field, link=item, deadlineDate=date[2], open=False)
+            else:
+                call = InnovationCalls1(CallID=i, organizationName=org_name, registrationDeadline=date[0],
+                                       submissionDeadline=date[1], information=info,
+                                       areaOfResearch=field, link=item, deadlineDate=date[2], open=True)
 
-                else:
-                    print("This call already exist ", org_name)
-
-            except InnovationCalls.DoesNotExist:
-
-                print("This call is not in the DB ", org_name)
-                latest_id = InnovationCalls.objects.latest('CallID')
-
-                if date[2] is None:
-
-                    call = InnovationCalls(CallID=latest_id.CallID + 1, organizationName=org_name, registrationDeadline=date[0],
-                                           submissionDeadline=date[1], information=info,
-                                           areaOfResearch=field, link=item, deadlineDate=date[2], open=False)
-                else:
-                    call = InnovationCalls(CallID=latest_id.CallID + 1, organizationName=org_name, registrationDeadline=date[0],
-                                           submissionDeadline=date[1], information=info,
-                                           areaOfResearch=field, link=item, deadlineDate=date[2], open=True)
-
-                    call.save()
-
-                    originalID = latest_id.CallID + 1
-                    indexID = len(index)
-                    document = get_document_from_innovation_call(org_name, info, field)
-                    newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
-                    newMap.save()
-                    index = add_document_to_curr_index(index, [document], 'INNOVATION')
-
+            call.save()
 
         for i, item in enumerate(urls_list):
-
             org_name = names_list[i]
             date = date_list[i]
             str_date = date.strftime("%d/%m/%Y")
 
             counter = InnovationCalls.objects.latest('CallID').CallID
 
-            try:
+            call = InnovationCalls1(CallID=counter + 1, organizationName=org_name, registrationDeadline=str_date,
+                                   submissionDeadline=str_date, information='Not Available',
+                                   areaOfResearch='Not Available', link=item, deadlineDate=date, open=True)
 
-                existed_call = InnovationCalls.objects.get(link=item)
-                if existed_call.submissionDeadline != str_date:
-                    existed_call.submissionDeadline = str_date
-                    existed_call.save()
+            call.save()
 
-                else:
-                    print("This call already exist ", org_name)
+            counter += 1
 
-            except InnovationCalls.DoesNotExist:
+    except Exception as e:
+        print(e)
+        updated = False
 
-                print("This call is not in the DB ", item)
+    return updated
 
-                call = InnovationCalls(CallID=counter + 1, organizationName=org_name, registrationDeadline=str_date,
-                                       submissionDeadline=str_date, information='Not Available',
-                                       areaOfResearch='Not Available', link=item, deadlineDate=date, open=True)
 
-                call.save()
+def copy_to_original_INNOVATION():
 
-                originalID = counter + 1
-                indexID = len(index)
-                document = get_document_from_innovation_call('Not Available', org_name, "")
-                newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'INNOVATION')
-                counter += 1
+    InnovationCalls.objects.all().delete()
+    MapIdsINNOVATION.objects.all().delete()
 
+    try:
+        os.remove('InnovationIndex')
+        os.remove('InnovationIndex.0')
+        os.remove('Dictionary_INNOVATION')
+        print('Deleting Innovation Index...')
+
+    except:
+        pass
+
+    index = make_index('InnovationIndex', 'INNOVATION')
+    print('Building Innovation Index...')
+
+    try:
+        all_new_calls = InnovationCalls1.objects.all()
+
+        for i, item in enumerate(all_new_calls):
+            new_call = InnovationCalls(CallID=item.CallID, deadlineDate=item.deadlineDate,
+                                        organizationName=item.organizationName,
+                                        information=item.information,
+                                        areaOfResearch=item.areaOfResearch,
+                                        registrationDeadline=item.registrationDeadline,
+                                        submissionDeadline=item.submissionDeadline,
+                                        link=item.link, open=item.open)
+            new_call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_innovation_call(item.organizationName, item.information, item.areaOfResearch)
+            newMap = MapIdsINNOVATION(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'INNOVATION')
+
+    except Exception as e:
+        print(e)
+
+    try:
         if not setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple())):
             raise
 
     except Exception as e:
         print(e)
         setUpdateTime(innovationDate=time.mktime(datetime.now().timetuple()))
-        raise Exception
-
-
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True

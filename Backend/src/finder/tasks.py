@@ -1,8 +1,16 @@
 from celery.schedules import crontab
-from celery.task import periodic_task
+from celery.task import periodic_task, task
 import requests
+from .api.BSF import copy_to_original_BSF
+from .api.EUCALLS import copy_to_original_EU
+from .api.ISF import copy_to_original_ISF
+from .api.Innovation import copy_to_original_INNOVATION
+from .api.MST import copy_to_original_MST
+from .api.Technion import copy_to_original_Technion
 
 #URL = 'http://62.90.89.14:8000/api/'
+
+
 URL = 'http://127.0.0.1:8000/api/'
 
 
@@ -146,3 +154,63 @@ def send_emails():
 
     url = URL + 'EmailSubscription/send_emails/'
     response = requests.get(url)
+
+
+@task()
+def bsf_copy_task():
+
+    try:
+        copy_to_original_BSF()
+
+    except Exception as e:
+        print(e)
+
+
+@task()
+def isf_copy_task():
+
+    try:
+        copy_to_original_ISF()
+
+    except Exception as e:
+        print(e)
+
+@task()
+def innovation_copy_task():
+
+    try:
+        copy_to_original_INNOVATION()
+
+    except Exception as e:
+        print(e)
+
+
+@task()
+def mst_copy_task():
+
+    try:
+        copy_to_original_MST()
+
+    except Exception as e:
+        print(e)
+
+
+@task()
+def technion_copy_task():
+
+    try:
+        copy_to_original_Technion()
+
+    except Exception as e:
+        print(e)
+
+
+@task()
+def eu_copy_task():
+
+    try:
+        copy_to_original_EU()
+
+    except Exception as e:
+        print(e)
+

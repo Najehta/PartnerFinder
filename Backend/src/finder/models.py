@@ -418,3 +418,114 @@ class UpdateTime(models.Model):
     innovation_update = models.IntegerField()
     ID = models.IntegerField(unique=True, default=1)
 
+#*******************************************Temporarily models******************************************************
+
+class IsfCalls1(models.Model):
+   """
+   ISF Website Calls
+   """
+   CallID = models.IntegerField(unique=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   status = models.CharField(max_length=200, blank=True, null=True)
+   registrationDeadline = models.CharField(max_length=200, blank=True, null=True)
+   submissionDeadline = models.CharField(max_length=200, blank=True, null=True)
+   institutionType = models.CharField(max_length=200, blank=True, null=True)
+   numberOfPartners = models.CharField(max_length=200,blank=True, null=True)
+   grantPeriod = models.CharField(max_length=200,blank=True, null=True)
+   budget = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+
+   def __str__(self):
+       return self.organizationName
+
+class InnovationCalls1(models.Model):
+   """
+   Innovation Israel Website Calls
+   """
+
+   CallID = models.IntegerField(unique=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   registrationDeadline = models.CharField(max_length=200, blank=True, null=True)
+   submissionDeadline = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+
+   def __str__(self):
+       return self.organizationName
+
+
+class MstCalls1(models.Model):
+   """
+    Israel  ministry of science and technology website calls
+   """
+
+   CallID = models.IntegerField(unique=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   submissionDeadline = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+   def __str__(self):
+       return self.organizationName
+
+
+class bsfCalls1(models.Model):
+   """
+   BSF Website Calls
+   """
+   CallID = models.IntegerField(unique=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+   def __str__(self):
+       return self.organizationName
+
+class TechnionCalls1(models.Model):
+
+   """
+   Technion Website Calls
+   """
+   CallID = models.IntegerField(unique=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+   def __str__(self):
+       return self.organizationName
+
+
+class EuCalls1(models.Model):
+   """
+    EU website calls
+   """
+
+   CallID = models.IntegerField(unique=True, null=True)
+   ccm2Id = models.IntegerField(unique=True, default=1)
+   organizationName = models.CharField(max_length=200, blank=True, null=True)
+   information = models.CharField(max_length=200, blank=True, null=True)
+   title = models.CharField(max_length=200, blank=True, null=True)
+   areaOfResearch = models.CharField(max_length=200, blank=True, null=True)
+   link = models.CharField(max_length=200, blank=True, null=True)
+   deadlineDate = models.DateField(max_length=200, blank=True, null=True)
+   open = models.BooleanField(default=False, null=True)
+
+   def __str__(self):
+       return self.organizationName
+

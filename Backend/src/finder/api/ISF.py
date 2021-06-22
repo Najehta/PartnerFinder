@@ -2,7 +2,9 @@ import os
 from datetime import datetime
 
 import requests
-from ..models import IsfCalls, MapIdsISF, UpdateTime
+
+from .Utils import setUpdateTime
+from ..models import IsfCalls, MapIdsISF, UpdateTime, IsfCalls1
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -321,21 +323,13 @@ def updateISF():
        :return: nothing, only changing the data inside the DB
        """
 
+    updated = False
+    IsfCalls1.objects.all().delete()
+
     _url = 'https://www.isf.org.il/#/support-channels/1/10'
     name = 'Personal Research Grants'
 
     call_names, call_links = [], []
-
-    today = datetime.today()
-    date_passed = IsfCalls.objects.filter(deadlineDate__lte=today)
-
-    for item in date_passed:
-            MapIdsISF.objects.get(originalID=item.CallID).delete()
-
-    date_passed.delete()
-
-    index = reload_index('IsfIndex')
-    print('Reloading ISF Index...')
 
     try:
         call_names, call_links = get_proposal_names_links(_url, name)
@@ -346,107 +340,75 @@ def updateISF():
     try:
 
         for i, item in enumerate(call_names):
-
             call_info = get_calls_status(call_links[i], item)
 
-            try:
-                existed_call = IsfCalls.objects.get(organizationName=item)
-                if existed_call.deadlineDate != call_info[6]:
-                    existed_call.deadlineDate = call_info[6]
-                    existed_call.save()
+            if call_info[7] == 'Closed':
 
-                else:
-                    print("This call already exist ", item)
+                call = IsfCalls1(CallID=i, organizationName=item, status=call_info[0]
+                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                institutionType=call_info[1], numberOfPartners=call_info[2],
+                                grantPeriod=call_info[3], budget=call_info[4],
+                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=False)
+            else:
 
-            except IsfCalls.DoesNotExist:
+                call = IsfCalls1(CallID=i, organizationName=item, status=call_info[0]
+                                , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
+                                institutionType=call_info[1], numberOfPartners=call_info[2],
+                                grantPeriod=call_info[3], budget=call_info[4],
+                                information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=True)
 
-                print("This call is not in the DB ", item)
+            call.save()
 
-                latest_id = IsfCalls.objects.latest('CallID')
+    except Exception as e:
+        print(e)
+        updated = False
 
-                if call_info[7] == 'Closed':
+    return updated
 
-                    call = IsfCalls(CallID=latest_id.CallID + 1, organizationName=item, status=call_info[0]
-                                    , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                                    institutionType=call_info[1], numberOfPartners=call_info[2],
-                                    grantPeriod=call_info[3], budget=call_info[4],
-                                    information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=False)
-                else:
 
-                    call = IsfCalls(CallID=latest_id.CallID + 1, organizationName=item, status=call_info[0]
-                                    , registrationDeadline=call_info[7], submissionDeadline=call_info[8],
-                                    institutionType=call_info[1], numberOfPartners=call_info[2],
-                                    grantPeriod=call_info[3], budget=call_info[4],
-                                    information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=True)
+def copy_to_original_ISF():
 
-                call.save()
+    IsfCalls.objects.all().delete()
+    MapIdsISF.objects.all().delete()
 
-                originalID = latest_id.CallID + 1
-                indexID = len(index)
-                document = get_document_from_isf_call(call_info[5], item)
-                newMap = MapIdsISF(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'ISF')
+    try:
+        os.remove('IsfIndex')
+        os.remove('IsfIndex.0')
+        os.remove('Dictionary_ISF')
+        print('Deleting ISF Index...')
 
+    except:
+        pass
+
+    index = make_index('IsfIndex', 'ISF')
+    print('Building ISF Index...')
+
+    try:
+        all_new_calls = IsfCalls1.objects.all()
+        for i, item in enumerate (all_new_calls):
+
+            new_call = IsfCalls(CallID=item.CallID, deadlineDate=item.deadlineDate, organizationName=item.organizationName,
+                                information=item.information, status=item.status,registrationDeadline=item.registrationDeadline,
+                                submissionDeadline=item.submissionDeadline,institutionType=item.institutionType,
+                                numberOfPartners=item.numberOfPartners, grantPeriod=item.grantPeriod, budget=item.budget,
+                                link=item.link, open=item.open)
+            new_call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_isf_call(item.organizationName, item.information)
+            newMap = MapIdsISF(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'ISF')
+
+    except Exception as e:
+        print(e)
+
+    try:
         if not setUpdateTime(isfDate=time.mktime(datetime.now().timetuple())):
             raise
 
     except Exception as e:
         print(e)
         setUpdateTime(isfDate=time.mktime(datetime.now().timetuple()))
-        raise Exception
 
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True

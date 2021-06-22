@@ -41,6 +41,8 @@ from urllib.request import urlopen as req
 import re
 import os
 import pytz
+from ..tasks import bsf_copy_task, isf_copy_task, innovation_copy_task, mst_copy_task, technion_copy_task, eu_copy_task
+
 
 class OrganizationProfileViewSet(viewsets.ModelViewSet):
     queryset = OrganizationProfile.objects.all()
@@ -959,7 +961,7 @@ class ProposalCallsViewSet(viewsets.ModelViewSet):
 
                 except Exception as e:
                         print(e)
-
+                        traceback.print_exc()
 
 
             if 'ISF' in organizations:
@@ -2170,7 +2172,13 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'BSF' in organizations:
 
                 try:
-                   updateBSF()
+                    if updateBSF():
+                        try:
+                            bsf_copy_task.apply_async(countdown=15)
+
+                        except:
+                            raise
+
 
                 except Exception as e:
                     print(e)
@@ -2179,7 +2187,12 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'ISF' in organizations:
 
                 try:
-                    updateISF()
+                    if updateISF():
+                        try:
+                            isf_copy_task.apply_async(countdown=15)
+
+                        except:
+                            raise
 
                 except Exception as e:
                     print(e)
@@ -2189,7 +2202,12 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'INNOVATION' in organizations:
 
                 try:
-                    updateINNOVATION()
+                    if updateINNOVATION():
+                        try:
+                            innovation_copy_task.apply_async(countdown=15)
+
+                        except:
+                            raise
 
                 except Exception as e:
                     print(e)
@@ -2199,7 +2217,12 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'MST' in organizations:
 
                 try:
-                    updateMST()
+                    if updateMST():
+                        try:
+                            mst_copy_task.apply_async(countdown=15)
+
+                        except:
+                            raise
 
                 except Exception as e:
                     print(e)
@@ -2208,7 +2231,12 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'Technion' in organizations:
 
                 try:
-                    updateTechnion()
+                    if updateTechnion():
+                        try:
+                            technion_copy_task.apply_async(countdown=15)
+
+                        except:
+                            raise
 
                 except Exception as e:
                     print(e)
@@ -2217,8 +2245,12 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'EU' in organizations:
 
                 try:
-                    updateEU()
+                    if updateEU():
+                        try:
+                            eu_copy_task.apply_async(countdown=15)
 
+                        except:
+                            raise
                 except Exception as e:
                     print(e)
                     raise Exception
@@ -2263,57 +2295,3 @@ class UpdateTimeViewSet(viewsets.ModelViewSet):
 
 
 
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True

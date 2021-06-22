@@ -8,7 +8,8 @@ import re
 import time as t
 from datetime import datetime
 from .QueryProcess import *
-from ..models import MstCalls, MapIdsMST, UpdateTime
+from .Utils import setUpdateTime
+from ..models import MstCalls, MapIdsMST, UpdateTime, MstCalls1
 from langdetect import detect
 import time
 
@@ -311,25 +312,19 @@ def updateMST():
        :return: nothing, only changing the data inside the DB
        """
 
-    counter = 0
-    _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
+    updated = False
+    MstCalls1.objects.all().delete()
 
-    if get_calls_number(_url) % 10 == 0:
-        pages_number = get_calls_number(_url) // 10
+    counter = 0
+
+    _url = 'https://www.gov.il/he/departments/publications/?OfficeId=75d0cbd7-46cf-487b-930c-2e7b12d7f846&limit=10&publicationType=7159e036-77d5-44f9-a1bf-4500e6125bf1'
+    calls_number = get_calls_number(_url)
+
+    if calls_number % 10 == 0:
+        pages_number = calls_number // 10
 
     else:
-        pages_number = (get_calls_number(_url) // 10) + 1
-
-    today = datetime.today()
-    date_passed = MstCalls.objects.filter(deadlineDate__lte=today)
-
-    for item in date_passed:
-        MapIdsMST.objects.get(originalID=item.CallID).delete()
-
-    date_passed.delete()
-
-    index = reload_index('MstIndex')
-    print('Reloading MST Index...')
+        pages_number = (calls_number // 10) + 1
 
     try:
 
@@ -340,49 +335,26 @@ def updateMST():
 
         for i, item in enumerate(call_name_list):
 
-            try:
+            if deadline_date_list[i] is None:
 
-                existed_call = MstCalls.objects.get(organizationName=item, information=about_list[i])
-                if existed_call.submissionDeadline != deadline_list[i]:
-                    existed_call.submissionDeadline = deadline_list[i]
-                    existed_call.save()
+                call = MstCalls1(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                open=False)
+            else:
+                call = MstCalls1(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
+                                open=True)
 
-                else:
-                    print("This call already exist ", item)
-
-            except MstCalls.DoesNotExist:
-
-                print("This call is not in the DB ", item)
-
-                last_call = MstCalls.objects.latest('CallID')
-                counter = last_call.CallID + 1
-
-                if deadline_date_list[i] is None:
-
-                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
-                                    open=False)
-                else:
-
-                    call = MstCalls(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
-                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i],
-                                    open=True)
-
-                call.save()
-
-                originalID = i
-                indexID = len(index)
-                document = get_document_from_mst_call(call_name_list[i], about_list[i])
-                newMap = MapIdsMST(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'MST')
-                counter += 1
+            call.save()
 
     except Exception as e:
         print(e)
+        updated = False
 
     try:
+
         skip = 10
+
         while pages_number >= 2:
 
             if skip > 10:
@@ -399,99 +371,63 @@ def updateMST():
             call_name_list, link_list, deadline_list, about_list, deadline_date_list = list(call_name), list(
                 link), list(deadline), list(about), list(deadline_date)
 
-            counter = MstCalls.objects.latest('CallID').CallID
-
             for i, item in enumerate(call_name_list):
-
-                try:
-
-                    existed_call = MstCalls.objects.get(organizationName=item, information=about_list[i])
-                    if existed_call.submissionDeadline != deadline_list[i]:
-                        existed_call.submissionDeadline = deadline_list[i]
-                        existed_call.save()
-
-                    else:
-                        print("This call already exist ", item)
-
-                except MstCalls.DoesNotExist:
-
-                    print("This call is not in the DB ", item)
-
-                    call = MstCalls(CallID=counter + 1, organizationName=item, submissionDeadline=deadline_list[i],
-                                    information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
-                    call.save()
-
-                    originalID = counter + 1
-                    indexID = len(index)
-                    document = get_document_from_mst_call(call_name_list[i], about_list[i])
-                    newMap = MapIdsMST(originalID=originalID, indexID=indexID)
-                    newMap.save()
-                    index = add_document_to_curr_index(index, [document], 'MST')
-                    counter += 1
+                call = MstCalls1(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
+                                information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
+                call.save()
 
             skip += 10
             pages_number -= 1
 
-            if not setUpdateTime(mstDate=time.mktime(datetime.now().timetuple())):
+    except Exception as e:
+        print(e)
+        updated = False
+
+    return updated
+
+
+def copy_to_original_MST():
+
+    MstCalls.objects.all().delete()
+    MapIdsMST.objects.all().delete()
+
+    try:
+        os.remove('MstIndex')
+        os.remove('MstIndex.0')
+        os.remove('Dictionary_MST')
+        print('Deleting MST Index...')
+
+    except:
+        pass
+
+    index = make_index('MstIndex', 'MST')
+    print('Building MST Index...')
+
+    try:
+        all_new_calls = MstCalls1.objects.all()
+
+        for i, item in enumerate(all_new_calls):
+            new_call = MstCalls(CallID=item.CallID, deadlineDate=item.deadlineDate,
+                                       organizationName=item.organizationName,
+                                       information=item.information,
+                                       submissionDeadline=item.submissionDeadline,
+                                       link=item.link, open=item.open)
+            new_call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_mst_call(item.organizationName, item.information)
+            newMap = MapIdsMST(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'MST')
+
+    except Exception as e:
+        print(e)
+
+    try:
+      if not setUpdateTime(mstDate=time.mktime(datetime.now().timetuple())):
                 raise
 
     except Exception as e:
         print(e)
         setUpdateTime(mstDate=time.mktime(datetime.now().timetuple()))
-        raise Exception
-
-
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True

@@ -35,6 +35,7 @@ def NLP_processor(documents, type):
     if type == 'EU':
         dir = 'Dictionary_Eu'
 
+
     tokens = [process_document(doc) for doc in documents ]
 
     try:

@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
-from ..models import MapIdsTechnion, TechnionCalls, UpdateTime
+
+from .Utils import setUpdateTime
+from ..models import MapIdsTechnion, TechnionCalls, UpdateTime, TechnionCalls1
 import requests
 import time
 
@@ -319,6 +321,9 @@ def updateTechnion():
        :return: nothing, only changing the data inside the DB
        """
 
+    updated = False
+    TechnionCalls1.objects.all().delete()
+
     _url = 'https://www.trdf.co.il/eng/Current_Calls_for_Proposals.html?fund=allfunds&type=alltypes&ql=0'
 
     calls_number = get_calls_num(_url)
@@ -328,17 +333,6 @@ def updateTechnion():
 
     else:
         pages_number = (calls_number // 20) + 1
-
-    today = datetime.today()
-    date_passed = TechnionCalls.objects.filter(deadlineDate__lte=today)
-
-    for item in date_passed:
-        MapIdsTechnion.objects.get(originalID=item.CallID).delete()
-
-    date_passed.delete()
-
-    index = reload_index('TechnionIndex')
-    print('Reloading Technion Index...')
 
     try:
 
@@ -350,42 +344,15 @@ def updateTechnion():
         links = data['link']
 
         for i, item in enumerate(date):
-
-
-            try:
-
-                existed_call = TechnionCalls.objects.get(link=links[i])
-                if existed_call.deadlineDate != item:
-                    existed_call.deadlineDate = item
-                    existed_call.save()
-
-                else:
-                    print("This call already exist ", title[i])
-
-            except TechnionCalls.DoesNotExist:
-
-                print("This call is not in the DB ", title[i])
-
-                latest_id = TechnionCalls.objects.latest('CallID')
-                latest_id_num = latest_id.CallID + 1
-                info = get_call_information(links[i])
-
-                call = TechnionCalls(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
-                                     information=info, areaOfResearch=field[i],
-                                     link=links[i], open=True)
-                call.save()
-
-                originalID = i
-                indexID = len(index)
-                document = get_document_from_technion_call(title[i], field[i], info)
-                newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
-                newMap.save()
-                index = add_document_to_curr_index(index, [document], 'Technion')
-
+            info = get_call_information(links[i])
+            call = TechnionCalls1(CallID=i, deadlineDate=item, organizationName=title[i],
+                                 information=info, areaOfResearch=field[i],
+                                 link=links[i], open=True)
+            call.save()
 
     except Exception as e:
         print(e)
-
+        updated = False
 
     try:
 
@@ -407,103 +374,71 @@ def updateTechnion():
             date = data['date']
             links = data['link']
 
-            latest_id = TechnionCalls.objects.latest('CallID')
+            latest_id = TechnionCalls1.objects.latest('CallID')
             latest_id_num = latest_id.CallID + 1
 
             for i, item in enumerate(date):
+                info = get_call_information(links[i])
 
-                try:
+                call = TechnionCalls1(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
+                                     information=info, areaOfResearch=field[i],
+                                     link=links[i], open=True)
+                call.save()
 
-                    existed_call = TechnionCalls.objects.get(link=links[i])
-                    if existed_call.deadlineDate != item:
-                        existed_call.deadlineDate = item
-                        existed_call.save()
-
-                    else:
-                        print("This call already exist ", title[i])
-
-                except TechnionCalls.DoesNotExist:
-
-                    print("This call is not in the DB ", title[i])
-
-                    info = get_call_information(links[i])
-
-                    call = TechnionCalls(CallID=latest_id_num, deadlineDate=item, organizationName=title[i],
-                                         information=info, areaOfResearch=field[i],
-                                         link=links[i], open=True)
-                    call.save()
-
-                    originalID = latest_id_num
-                    indexID = len(index)
-                    document = get_document_from_technion_call(title[i], field[i], info)
-                    newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
-                    newMap.save()
-                    index = add_document_to_curr_index(index, [document], 'Technion')
-                    latest_id_num += 1
+                latest_id_num += 1
 
             page_content += 20
             pages_number -= 1
 
-            if not setUpdateTime(technionDate=time.mktime(datetime.now().timetuple())):
-                raise
+    except Exception as e:
+        print(e)
+        updated = False
+
+    return updated
+
+
+def copy_to_original_Technion():
+
+    TechnionCalls.objects.all().delete()
+    MapIdsTechnion.objects.all().delete()
+
+    try:
+        os.remove('TechnionIndex')
+        os.remove('TechnionIndex.0')
+        os.remove('Dictionary_Technion')
+        print('Deleting Technion Index...')
+
+    except:
+        pass
+
+    index = make_index('TechnionIndex', 'Technion')
+    print('Building Technion Index...')
+
+    try:
+        all_new_calls = TechnionCalls1.objects.all()
+
+        for i, item in enumerate(all_new_calls):
+
+            call = TechnionCalls(CallID=item.CallID, deadlineDate=item.deadlineDate,
+                                organizationName=item.organizationName,
+                                information=item.information, areaOfResearch=item.areaOfResearch,
+                                link=item.link, open=True)
+            call.save()
+
+            originalID = i
+            indexID = len(index)
+            document = get_document_from_technion_call(item.organizationName, item.areaOfResearch, item.information)
+            newMap = MapIdsTechnion(originalID=originalID, indexID=indexID)
+            newMap.save()
+            index = add_document_to_curr_index(index, [document], 'Technion')
+
+    except Exception as e:
+        print(e)
+
+    try:
+        if not setUpdateTime(technionDate=time.mktime(datetime.now().timetuple())):
+            raise
 
     except Exception as e:
         print(e)
         setUpdateTime(technionDate=time.mktime(datetime.now().timetuple()))
-        raise Exception
-
-
-def setUpdateTime(euDate=None, technionDate=None, isfDate=None, mstDate=None, innovationDate=None, bsfDate=None ):
-    """
-    function to update the last update date
-    :param euDate: EU last update
-    :param technionDate: Technion last update
-    :param isfDate: ISF last update
-    :param mstDate: MST last update
-    :param innovationDate: Innovation last update
-    :param bsfDate: BSF last update
-    :return: True/False
-    """
-
-    if not technionDate and not euDate and not isfDate and not mstDate and not innovationDate and not bsfDate:
-        return False
-
-    if euDate:
-        euDate = int(euDate)
-    if technionDate:
-        technionDate = int(technionDate)
-    if isfDate:
-        isfDate = int(isfDate)
-    if mstDate:
-        mstDate = int(mstDate)
-    if innovationDate:
-        innovationDate = int(innovationDate)
-    if bsfDate:
-        bsfDate = int(bsfDate)
-
-    try:
-        UpdateTime.objects.get(ID=1)
-        if euDate:
-            UpdateTime.objects.filter(ID=1).update(eu_update=euDate)
-        if technionDate:
-            UpdateTime.objects.filter(ID=1).update(technion_update=technionDate)
-        if isfDate:
-            UpdateTime.objects.filter(ID=1).update(isf_update=isfDate)
-        if bsfDate:
-            UpdateTime.objects.filter(ID=1).update(bsf_update=bsfDate)
-        if mstDate:
-            UpdateTime.objects.filter(ID=1).update(mst_update=mstDate)
-        if innovationDate:
-            UpdateTime.objects.filter(ID=1).update(innovation_update=innovationDate)
-
-    except:
-        Update_Time = UpdateTime(eu_update=euDate,
-                                 technion_update=technionDate,
-                                 isf_update=isfDate,
-                                 bsf_update=bsfDate,
-                                 mst_update=mstDate,
-                                 innovation_update=innovationDate,
-                                 ID=1)
-        Update_Time.save()
-
-    return True
