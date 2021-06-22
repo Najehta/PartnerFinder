@@ -116,11 +116,13 @@ export default function NavTabs() {
     oth: 0,
   });
   const [searchState, setSearchState] = React.useState({
+    selectedOrganization: [],
     tags: [],
-    type: [],
-    role: "",
-    countrySearched: [],
-    data: { EU: [], B2MATCH: [] },
+    startDate: new Date(),
+    endDate: new Date(),
+    status: { label: "Open", value: "Open" },
+    data: { BSF: [], ISF: [], MST: [], INNOVATION: [], Technion: [], EU: [] },
+    loading: false,
   });
   const [updateState, setUpdateState] = React.useState({
     EU: "",
@@ -354,7 +356,7 @@ export default function NavTabs() {
             </Tabs>
           </AppBar>
           <MainScene value={value} index={0}>
-            <Search state={searchState} setState={setSearchState} />
+            <Search searchState={searchState} setSearchState={setSearchState} />
           </MainScene>
           <MainScene value={value} index={1}>
             <GetAlerts />

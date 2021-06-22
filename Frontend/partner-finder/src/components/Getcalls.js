@@ -88,14 +88,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating BSF  data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "BSF data has been updated successfully.",
             visible: true,
           });
         }
@@ -104,7 +104,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating BSF data",
           visible: true,
         });
       });
@@ -135,14 +135,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating ISF data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "ISF data has been updated successfully.",
             visible: true,
           });
         }
@@ -151,7 +151,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating ISF data",
           visible: true,
         });
       });
@@ -181,14 +181,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating Ministry of science and technology data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "Ministry of Science and Technology data has been updated successfully.",
             visible: true,
           });
         }
@@ -197,7 +197,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating Ministry of Science and Technology data",
           visible: true,
         });
       });
@@ -227,14 +227,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating Innovation Israel data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "Innovation Israel data has been updated successfully.",
             visible: true,
           });
         }
@@ -243,7 +243,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating Innovation Israel data",
           visible: true,
         });
       });
@@ -273,14 +273,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating the Others via Technion data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "Others via Technion data has been updated successfully.",
             visible: true,
           });
         }
@@ -289,7 +289,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating Others via Technion data",
           visible: true,
         });
       });
@@ -319,14 +319,14 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Failed",
-            body: "Error while updating the Organizations data.",
+            body: "Error while updating EU data.",
             visible: true,
           });
         } else {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Organizations data has been updated successfully.",
+            body: "EU data has been updated successfully.",
             visible: true,
           });
         }
@@ -335,7 +335,7 @@ const Getcalls = (props) => {
         setState({ ...state, loading: false });
         setMsgState({
           title: "Failed",
-          body: "Error while updating Organizations data",
+          body: "Error while updating EU data",
           visible: true,
         });
       });
