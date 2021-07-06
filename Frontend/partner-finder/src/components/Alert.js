@@ -10,8 +10,14 @@ import { Dialog, DialogTitle, DialogContent } from "@material-ui/core/";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@material-ui/core";
 import { Msgtoshow } from "./Msgtoshow";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { MultiSelectOptions } from "../utils";
+
+/**Describe for this component
+ * this component realize receive alerts from our website that sent every week
+ * automatically you can do sucribe to receive alersts
+ * and unsubscribe to hide the alerts
+ *
+ */
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -56,25 +62,27 @@ const Alert = (props) => {
     }),
     singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
   };
-
+  // a const that needed to send the state of the selected organiztions in the Multiselect to the backend.
   const [selectedOrganization, setSelectedOrganization] = useState([]);
-
+  /*
+Initialization for all the data that will used in this component.
+The general state for this page if we in loading this mean that we still in process from the backend. 
+.*/
   const [state, setState] = React.useState({
     loading: false,
     firstLoading: true,
     email: "",
   });
+  // save the event (the change)that the user do in our variables
   const handleChoose = (event) => {
     setSelectedOrganization(event);
-    // props.setState({ ...props.state, selected: event });
   };
-
-  //EMAIL
+  const classes = useStyles();
+  //Save the email input from the user and process it to check if the input is legal email
   const handleInputChange = (event) => {
     let newState = { ...state };
     newState[event.target.id] = event.target.value;
     setState(newState);
-    //props.setState({ ...props.state, ...newState });
     let newFormState = { ...formState };
     if (
       event.target.id !== "email" &&
@@ -90,7 +98,10 @@ const Alert = (props) => {
   const [formState, setFormState] = React.useState({
     email: false,
   });
-  //subscribe handle
+  /**
+   * Method that do subscribe for the input email sent an request to the backend to add the email to
+   * the data base to receive alerts
+   */
   const subscribe = () => {
     if (
       selectedOrganization.length === 0 ||
@@ -161,6 +172,9 @@ const Alert = (props) => {
         });
     }
   };
+  /**
+   * check if the email in the legal form for example : input@input.input
+   */
   const formValidation = () => {
     if (
       !state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ||
@@ -171,7 +185,10 @@ const Alert = (props) => {
     return false;
   };
 
-  // Unsubscribe handle
+  /**
+   * Method that do unsubscribe for the input email sent an request to the backend to remove the email from
+   * the data base to hide alerts
+   */
   const unsubscribe = () => {
     if (formValidation()) {
       setMsgState({
@@ -191,14 +208,10 @@ const Alert = (props) => {
           organizations: organizations,
         }),
       };
-
       let url = new URL(BACKEND_URL + "EmailSubscription/delete_email/");
-
-      //searchParams?
       Object.keys(params).forEach((key) =>
         url.searchParams.append(key, params[key])
       );
-
       fetch(url, {
         method: "POST",
       })
@@ -231,7 +244,6 @@ const Alert = (props) => {
     }
   };
 
-  const classes = useStyles();
   return (
     <React.Fragment>
       <Msgtoshow

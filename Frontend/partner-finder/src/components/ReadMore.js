@@ -96,7 +96,6 @@ export default class ReadMore extends Component {
       text,
       readMoreCharacterLimit,
       showLessButton,
-      onContentChange,
       numberOfLines,
       lineHeight,
     } = this.props;

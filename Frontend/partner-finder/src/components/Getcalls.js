@@ -10,7 +10,11 @@ import {
 import { Msgtoshow } from "./Msgtoshow";
 import { BACKEND_URL } from "../utils";
 import { BeatLoader } from "react-spinners";
-//???
+/**
+ * in this component we will realize the updates for the database
+ * we will wend successful for the user if the system start to update the desirable database
+ * and an error in fall cases
+ */
 const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: "center",
@@ -18,36 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Getcalls = (props) => {
+  // Intialize all the data for this component
   const classes = useStyles();
-  const customStyles = {
-    menu: (provided, state) => ({
-      ...provided,
-      backgroundColor: "#02203c",
-      borderBottom: "1px dotted pink",
-      color: "white",
-      fontSize: "13px",
-    }),
-    placeholder: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
-    control: (styles) => ({
-      ...styles,
-      backgroundColor: "#02203c",
-      color: "white",
-      fontSize: "13px",
-    }),
-
-    option: (styles) => ({
-      ...styles,
-      color: "white",
-      backgroundColor: "#02203c",
-      fontSize: "13px",
-      "&:hover": {
-        backgroundColor: "#f1f3f5",
-        color: "black",
-        fontSize: "13px",
-      },
-    }),
-    singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
-  };
 
   const [state, setState] = React.useState({
     EU: "",
@@ -58,11 +34,15 @@ const Getcalls = (props) => {
     MST: "",
     firstLoading: true,
   });
-
+  /**if the component in the first loading  we will check if there data saved in the main scene to this component and show it
+   * data like reselts table inputs from the user using the Properties and local state
+   */
   if (state.firstLoading) {
     setState({ ...props.updateState });
   }
-
+  /**
+   * request to the data base to update BSF database
+   */
   const updateBsf = () => {
     setState({ ...state, loading: false });
 
@@ -71,10 +51,7 @@ const Getcalls = (props) => {
         organizations: ["BSF"],
       }),
     };
-
     let url = new URL(BACKEND_URL + "update/call_update/");
-
-    //searchParams?
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
     );
@@ -109,7 +86,9 @@ const Getcalls = (props) => {
         });
       });
   };
-
+  /**
+   * request to the data base to update ISF database
+   */
   const updateIsf = () => {
     setState({ ...state, loading: false });
 
@@ -156,6 +135,9 @@ const Getcalls = (props) => {
         });
       });
   };
+  /**
+   * request to the data base to update Ministry of science database
+   */
   const updateMst = () => {
     setState({ ...state, loading: false });
 
@@ -202,6 +184,9 @@ const Getcalls = (props) => {
         });
       });
   };
+  /**
+   * request to the data base to update Innovation Israel database
+   */
   const updateInnovation = () => {
     setState({ ...state, loading: false });
 
@@ -248,6 +233,9 @@ const Getcalls = (props) => {
         });
       });
   };
+  /**
+   * request to the data base to update Technion database
+   */
   const updateTechnion = () => {
     setState({ ...state, loading: false });
 
@@ -294,6 +282,9 @@ const Getcalls = (props) => {
         });
       });
   };
+  /**
+   * request to the data base to update EU database
+   */
   const updateEu = () => {
     setState({ ...state, loading: false });
 

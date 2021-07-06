@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 
-import { GridList, GridListTile } from "@material-ui/core";
+import { GridList } from "@material-ui/core";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
@@ -481,8 +481,12 @@ const tableIcons = {
     />
   )),
 };
+
 const MultiSelectOptions = [
-  { label: "EU", value: "EU" },
+  {
+    label: "EU",
+    value: "EU",
+  },
   { label: "Others via Technion", value: "Technion" },
   { label: "BSF", value: "BSF" },
   { label: "Innovation Israel", value: "INNOVATION" },

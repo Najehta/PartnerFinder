@@ -2,7 +2,7 @@ import React from "react";
 import "./Components.css";
 import { Button } from "@material-ui/core";
 import MultiSelect from "react-multi-select-component";
-import { useState } from "react";
+
 import ResultsTable from "./ResultsTable";
 import {
   BSF_columns,
@@ -34,7 +34,11 @@ import {
 import moment from "moment";
 import Select from "react-select";
 import { Msgtoshow } from "./Msgtoshow";
-// ------------------------------------------------------
+import Footer from "./Footer";
+/**
+ * in this component we implementate the search for the user
+ * all the inputs that the user can use to Improve the  search results
+ */
 const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: "center",
@@ -57,7 +61,6 @@ const Search = (props) => {
     body: "",
     visible: false,
   });
-  //MultiSelect parameters
 
   const customStyles = {
     menu: (provided, state) => ({
@@ -88,7 +91,9 @@ const Search = (props) => {
     }),
     singleValue: (styles) => ({ ...styles, color: "white", fontSize: "13px" }),
   };
-  /////consts for input intia
+  /**
+   * intialize all the data to this component
+   */
 
   const [state, setState] = React.useState({
     selectedOrganization: [],
@@ -104,14 +109,9 @@ const Search = (props) => {
   const [formState, setFormState] = React.useState({
     tags: false,
   });
-
-  ////////////////
-  //New props plan
   if (state.firstLoading) {
     setState({ ...props.searchState, firstLoading: false });
   }
-
-  // search methods
 
   const searchProposalCalls = () => {
     let orgToSearch = state.selectedOrganization.map((value) => {
@@ -121,25 +121,15 @@ const Search = (props) => {
     callsSearch(orgToSearch, state.tags, state.startDate, state.endDate);
   };
 
-  ///////////
-  const formValidation = () => {
-    let res = {};
-    let check = false;
-
-    if (
-      state.tags.length === 0 ||
-      state.tags === undefined ||
-      state.tags === null
-    ) {
-      res = { ...res, tags: true };
-      setFormState(res);
-      check = true;
-    } else {
-      res = { ...res, tags: false };
-    }
-    setFormState(res);
-    return check;
-  };
+  /**
+   * send request to the database with all the input that the user entered
+   * @param {*} organization
+   * @param {*} tags
+   * @param {*} startDate
+   * @param {*} endDate
+   * and the result that returned from the database will showed in result table
+   * if there are no results we will send a massege to the user that there is no results for this search
+   */
 
   const callsSearch = (organization, tags, startDate, endDate) => {
     setState({ ...state, loading: true });
@@ -216,29 +206,6 @@ const Search = (props) => {
         }
       })
       .catch((error) => {
-        // setState({
-        //   ...state,
-        //   data: {
-        //     BFS: [],
-        //     ISF: [],
-        //     MST: [],
-        //     INNOVATION: [],
-        //     EU: [],
-        //     Technion: [],
-        //   },
-        //   loading: false,
-        // });
-        // props.setSearchState({
-        //   ...props.state,
-        //   data: {
-        //     BFS: [],
-        //     ISF: [],
-        //     MST: [],
-        //     INNOVATION: [],
-        //     EU: [],
-        //     Technion: [],
-        //   },
-        // });
         setMsgState({
           title: "Failed",
           body: "Error while searching for organizations",
@@ -248,18 +215,16 @@ const Search = (props) => {
       });
   };
 
-  //tags consts------------------
-
+  const handleChoose = (event) => {
+    setState({ ...state, selectedOrganization: event });
+    props.setSearchState({ ...props.searchState, selectedOrganization: event });
+  };
+  //consts for the tag input handle
   const KeyCodes = {
     comma: 188,
     enter: 13,
   };
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-  const handleChoose = (event) => {
-    setState({ ...state, selectedOrganization: event });
-    props.setSearchState({ ...props.searchState, selectedOrganization: event });
-  };
   /**
    * function for adding a new tag
    * @param {String} tag the tag that the user inserts
@@ -304,9 +269,8 @@ const Search = (props) => {
     setState({ ...state, endDate: date });
     props.setSearchState({ ...props.searchState, endDate: date });
   };
-  //open closed megration
 
-  const handleChange = (event) => {
+  const handeStatus = (event) => {
     setState({ ...state, status: event });
     props.setSearchState({ ...props.searchState, status: event });
   };
@@ -399,7 +363,7 @@ const Search = (props) => {
             <Select
               native
               value={state.status}
-              onChange={handleChange}
+              onChange={handeStatus}
               options={statusOption}
             ></Select>
           </FormControl>
@@ -479,6 +443,9 @@ const Search = (props) => {
             />
           )}
         </div>
+      </div>
+      <div className="page-container">
+        <Footer></Footer>
       </div>
     </React.Fragment>
   );
