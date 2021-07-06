@@ -71,7 +71,7 @@
   width: 20vw;
 }
 .page-container {
-  margin-top: 24.1vh;
+  min-height: calc(100vh - 274px);
 }
 .MuiBox-root-8 {
   padding: 0 !important;
