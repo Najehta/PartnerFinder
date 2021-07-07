@@ -65,8 +65,8 @@ def process_document(document):
     """
 
     ps = PorterStemmer()
-  #  nltk.download('stopwords') ---> remove # for the first run only
-  #   nltk.download('punkt')    ---> remove # for the first run only
+    # nltk.download('stopwords')  # for the first run only
+    # nltk.download('punkt')   # for the first run only
 
     try:
         stop_words = (stopwords.words('english'))

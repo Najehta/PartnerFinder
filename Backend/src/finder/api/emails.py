@@ -4,7 +4,7 @@ import pandas
 import smtplib, ssl
 from email.mime.multipart import MIMEMultipart
 from decouple import config
-from dotenv import read_dotenv
+from dotenv import load_dotenv
 
 def email_processing(receiver_email, message):
 
@@ -15,7 +15,7 @@ def email_processing(receiver_email, message):
     :return: nothing
     """
 
-    read_dotenv()
+    load_dotenv()
     sender_mail = os.getenv('USERID')
     password = os.getenv('PASSWORD')
     ssl_port = 465

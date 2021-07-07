@@ -107,6 +107,11 @@ def get_field_name(_url):
 
     for event in event_details:
         word_search = re.search(r'\b(in)\b', event)
+
+        if not word_search:
+            field_name.append('Unknown')
+            continue
+
         field_start_index = word_search.start() + 2
         if ';' not in event:
             word_search = re.search(r'[(]', event)

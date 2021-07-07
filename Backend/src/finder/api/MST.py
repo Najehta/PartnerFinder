@@ -25,7 +25,8 @@ def get_calls(_url):
 
     # please change this PATH to open chromedriver from your device
     try:
-        PATH = '/Users/najeh/chromedriver'
+        #PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
 
@@ -121,7 +122,8 @@ def get_calls_number(_url):
    """
     try:
 
-        PATH = '/Users/najeh/chromedriver'
+       # PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
 

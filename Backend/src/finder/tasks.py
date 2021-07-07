@@ -8,10 +8,10 @@ from .api.Innovation import copy_to_original_INNOVATION
 from .api.MST import copy_to_original_MST
 from .api.Technion import copy_to_original_Technion
 
-#URL = 'http://62.90.89.14:8000/api/'
+URL = 'http://62.90.89.14:8000/api/'
 
 
-URL = 'http://127.0.0.1:8000/api/'
+# URL = 'http://127.0.0.1:8000/api/'
 
 
 @periodic_task(run_every=(crontab(minute=0, hour=4, day_of_week='sun')),

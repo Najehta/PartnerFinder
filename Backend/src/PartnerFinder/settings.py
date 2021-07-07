@@ -33,7 +33,7 @@ SECRET_KEY = 'm#@ajkk0-wjmbrv97%1-^7#&b%s*2*x=^s1$)-8me8m@li-l)0'
 DEBUG = True
 # DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '62.90.89.14', 'https://www.parnerfinder.jce.ac.il', 'parnerfinder.jce.ac.il', 'd-155-omen-8']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '62.90.89.14', 'https://www.researchfundingportal.jce.ac.il', 'researchfundingportal.jce.ac.il', 'd-155-omen-8']
 
 # Application definition
 
@@ -82,10 +82,10 @@ def make_key(key, key_prefix, version):
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5000',
     'http://localhost:8000',
-    'http://partnerfinder.jce.ac.il',
+    'http://researchfundingportal.jce.ac.il',
     'https://localhost:5000',
     'https://localhost:8000',
-    'https://partnerfinder.jce.ac.il',
+    'https://researchfundingportal.jce.ac.il',
  ]
 
 CORS_ORIGIN_ALLOW_ALL = True

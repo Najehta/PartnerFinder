@@ -37,7 +37,8 @@ def get_calls_data(_url):
 
     try:
 
-        PATH = '/Users/najeh/chromedriver'
+        #PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
 
@@ -97,7 +98,8 @@ def get_call_information(links):
     information = ''
 
     try:
-        PATH = '/Users/najeh/chromedriver'
+        #PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(links)
 
@@ -132,7 +134,8 @@ def get_calls_num(_url):
 
     try:
 
-        PATH = '/Users/najeh/chromedriver'
+        #PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
 

@@ -50,7 +50,8 @@ def get_calls_org(_url):
 
     # open google chrome driver to scroll down on the website to grab more calls
     try:
-        PATH = '/Users/najeh/chromedriver'
+       # PATH = '/Users/najeh/chromedriver'
+        PATH = 'C:\ChromeDriver\chromedriver.exe'
         driver = webdriver.Chrome(PATH)
         driver.get(_url)
 

@@ -1596,17 +1596,20 @@ class EuCallsViewSet(viewsets.ModelViewSet):
 
         calls_obj = get_eu_calls()
 
+        # try:
+        #     os.remove('EuIndex')
+        #     os.remove('EuIndex.0')
+        #     os.remove('Dictionary_Eu')
+        #     print('Deleting EU Index...')
+        #
+        # except:
+        #     pass
         try:
-            os.remove('EuIndex')
-            os.remove('EuIndex.0')
-            os.remove('Dictionary_Eu')
-            print('Deleting EU Index...')
-
-        except:
-            pass
-
-        index = make_index('EuIndex', 'EU')
-        print('Building EU Index...')
+            index = make_index('EuIndex', 'EU')
+            print('Building EU Index...')
+        except Exception as e:
+            traceback.print_exc()
+            print(e)
 
         try:
             for i, item in enumerate(calls_obj):
@@ -2174,8 +2177,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateBSF():
                         try:
-                            bsf_copy_task.apply_async(countdown=15)
-
+                           # bsf_copy_task.apply_async(countdown=15)
+                            copy_to_original_BSF()
                         except:
                             raise
 
@@ -2189,8 +2192,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateISF():
                         try:
-                            isf_copy_task.apply_async(countdown=15)
-
+                           # isf_copy_task.apply_async(countdown=300)
+                            copy_to_original_ISF()
                         except:
                             raise
 
@@ -2204,7 +2207,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateINNOVATION():
                         try:
-                            innovation_copy_task.apply_async(countdown=15)
+                           # innovation_copy_task.apply_async(countdown=15)
+                            copy_to_original_INNOVATION()
 
                         except:
                             raise
@@ -2219,7 +2223,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateMST():
                         try:
-                            mst_copy_task.apply_async(countdown=15)
+                           # mst_copy_task.apply_async(countdown=15)
+                           copy_to_original_MST()
 
                         except:
                             raise
@@ -2233,7 +2238,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateTechnion():
                         try:
-                            technion_copy_task.apply_async(countdown=15)
+                            #technion_copy_task.apply_async(countdown=15)
+                            copy_to_original_Technion()
 
                         except:
                             raise
@@ -2247,7 +2253,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
                 try:
                     if updateEU():
                         try:
-                            eu_copy_task.apply_async(countdown=15)
+                            #eu_copy_task.apply_async(countdown=300)
+                            copy_to_original_EU()
 
                         except:
                             raise

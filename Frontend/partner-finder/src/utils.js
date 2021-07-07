@@ -498,8 +498,8 @@ const statusOption = [
   { label: "Closed", value: "Closed" },
 ];
 
-// const BACKEND_URL = "http://62.90.89.14:8000/api/";
-const BACKEND_URL = "http://localhost:8000/api/";
+const BACKEND_URL = "http://62.90.89.14:8000/api/";
+//const BACKEND_URL = "http://localhost:8000/api/";
 export {
   EU_columns,
   B2Match_columns,
