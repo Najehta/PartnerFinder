@@ -368,7 +368,10 @@ def updateISF():
         print(e)
         updated = False
 
-    return updated
+    if updated == True:
+        copy_to_original_ISF()
+
+
 
 
 def copy_to_original_ISF():

@@ -339,7 +339,8 @@ def updateBSF():
         print(e)
         updated = False
 
-    return updated
+    if updated == True:
+        copy_to_original_BSF()
 
 
 def copy_to_original_BSF():
@@ -384,3 +385,4 @@ def copy_to_original_BSF():
     except Exception as e:
         print(e)
         setUpdateTime(bsfDate=time.mktime(datetime.now().timetuple()))
+

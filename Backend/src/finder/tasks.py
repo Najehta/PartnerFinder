@@ -1,12 +1,14 @@
+import shared as shared
 from celery.schedules import crontab
 from celery.task import periodic_task, task
+from celery import shared_task
 import requests
-from .api.BSF import copy_to_original_BSF
-from .api.EUCALLS import copy_to_original_EU
-from .api.ISF import copy_to_original_ISF
-from .api.Innovation import copy_to_original_INNOVATION
-from .api.MST import copy_to_original_MST
-from .api.Technion import copy_to_original_Technion
+from .api.BSF import updateBSF
+from .api.EUCALLS import updateEU
+from .api.ISF import updateISF
+from .api.Innovation import updateINNOVATION
+from .api.MST import updateMST
+from .api.Technion import updateTechnion
 
 URL = 'http://62.90.89.14:8000/api/'
 
@@ -156,60 +158,60 @@ def send_emails():
     response = requests.get(url)
 
 
-@task()
-def bsf_copy_task():
+@shared_task()
+def bsf_update_task():
 
     try:
-        copy_to_original_BSF()
+        updateBSF()
 
     except Exception as e:
         print(e)
 
 
-@task()
-def isf_copy_task():
+@shared_task()
+def isf_update_task():
 
     try:
-        copy_to_original_ISF()
+        updateISF()
 
     except Exception as e:
         print(e)
 
-@task()
-def innovation_copy_task():
+@shared_task()
+def innovation_update_task():
 
     try:
-        copy_to_original_INNOVATION()
-
-    except Exception as e:
-        print(e)
-
-
-@task()
-def mst_copy_task():
-
-    try:
-        copy_to_original_MST()
+        updateINNOVATION()
 
     except Exception as e:
         print(e)
 
 
-@task()
-def technion_copy_task():
+@shared_task()
+def mst_update_task():
 
     try:
-        copy_to_original_Technion()
+        updateMST()
 
     except Exception as e:
         print(e)
 
 
-@task()
-def eu_copy_task():
+@shared_task()
+def technion_update_task():
 
     try:
-        copy_to_original_EU()
+        updateTechnion()
+
+    except Exception as e:
+        print(e)
+
+
+@shared_task()
+def eu_update_task():
+
+    try:
+        updateEU()
 
     except Exception as e:
         print(e)

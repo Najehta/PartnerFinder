@@ -292,7 +292,9 @@ def updateEU():
         print(e)
         updated = False
 
-    return updated
+    if updated == True:
+        copy_to_original_EU()
+
 
 
 def copy_to_original_EU():

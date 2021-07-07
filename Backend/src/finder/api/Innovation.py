@@ -534,7 +534,8 @@ def updateINNOVATION():
         print(e)
         updated = False
 
-    return updated
+    if updated == True:
+        copy_to_original_INNOVATION()
 
 
 def copy_to_original_INNOVATION():

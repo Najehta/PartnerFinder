@@ -41,7 +41,7 @@ from urllib.request import urlopen as req
 import re
 import os
 import pytz
-from ..tasks import bsf_copy_task, isf_copy_task, innovation_copy_task, mst_copy_task, technion_copy_task, eu_copy_task
+from ..tasks import bsf_update_task, isf_update_task, innovation_update_task, mst_update_task, technion_update_task, eu_update_task
 
 
 class OrganizationProfileViewSet(viewsets.ModelViewSet):
@@ -2174,14 +2174,9 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
 
             if 'BSF' in organizations:
 
-                try:
-                    if updateBSF():
-                        try:
-                           # bsf_copy_task.apply_async(countdown=15)
-                            copy_to_original_BSF()
-                        except:
-                            raise
 
+                try:
+                    bsf_update_task.apply_async(countdown=10)
 
                 except Exception as e:
                     print(e)
@@ -2190,12 +2185,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'ISF' in organizations:
 
                 try:
-                    if updateISF():
-                        try:
-                           # isf_copy_task.apply_async(countdown=300)
-                            copy_to_original_ISF()
-                        except:
-                            raise
+
+                    isf_update_task.apply_async(countdown=10)
 
                 except Exception as e:
                     print(e)
@@ -2205,13 +2196,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'INNOVATION' in organizations:
 
                 try:
-                    if updateINNOVATION():
-                        try:
-                           # innovation_copy_task.apply_async(countdown=15)
-                            copy_to_original_INNOVATION()
 
-                        except:
-                            raise
+                    innovation_update_task.apply_async(countdown=10)
 
                 except Exception as e:
                     print(e)
@@ -2221,13 +2207,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'MST' in organizations:
 
                 try:
-                    if updateMST():
-                        try:
-                           # mst_copy_task.apply_async(countdown=15)
-                           copy_to_original_MST()
-
-                        except:
-                            raise
+                    mst_update_task.apply_async(countdown=15)
 
                 except Exception as e:
                     print(e)
@@ -2236,13 +2216,7 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'Technion' in organizations:
 
                 try:
-                    if updateTechnion():
-                        try:
-                            #technion_copy_task.apply_async(countdown=15)
-                            copy_to_original_Technion()
-
-                        except:
-                            raise
+                    technion_update_task.apply_async(countdown=15)
 
                 except Exception as e:
                     print(e)
@@ -2251,13 +2225,8 @@ class UpdateCallsViewSet(viewsets.ModelViewSet):
             if 'EU' in organizations:
 
                 try:
-                    if updateEU():
-                        try:
-                            #eu_copy_task.apply_async(countdown=300)
-                            copy_to_original_EU()
+                    eu_update_task.apply_async(countdown=10)
 
-                        except:
-                            raise
                 except Exception as e:
                     print(e)
                     raise Exception

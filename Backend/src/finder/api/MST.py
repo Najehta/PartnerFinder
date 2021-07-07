@@ -384,11 +384,14 @@ def updateMST():
             skip += 10
             pages_number -= 1
 
+        updated = True
+
     except Exception as e:
         print(e)
         updated = False
 
-    return updated
+    if updated == True:
+        copy_to_original_MST()
 
 
 def copy_to_original_MST():
