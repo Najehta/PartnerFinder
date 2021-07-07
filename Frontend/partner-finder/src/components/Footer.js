@@ -1,11 +1,11 @@
 import React from "react";
 import "./Footer.css";
 import EuLogo from "../photos/EuLogo.png";
-import BsfLogo from "../photos/BsfLogo.png";
-import InnovationLogo from "../photos/InnovationLogo.png";
-import TechnionLogo from "../photos/TechnionLogo.png";
-import MstLogo from "../photos/MstLogo.png";
-import IsfLogo from "../photos/IsfLogo.png";
+import BsfLogo from "../photos/BsfLogo.jpg";
+import InnovationLogo from "../photos/InnovationLogo.jpg";
+import TechnionLogo from "../photos/TechnionLogo.jpg";
+import MstLogo from "../photos/MstLogo.jpg";
+import IsfLogo from "../photos/IsfLogo.jpg";
 /**
  * component for implementaion the footer to the website with all the organizations logos and links on the logos
  */

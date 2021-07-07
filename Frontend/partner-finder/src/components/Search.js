@@ -94,11 +94,11 @@ const Search = (props) => {
   /**
    * intialize all the data to this component
    */
-   const changeDate = () => {
+  const changeDate = () => {
     var date = new Date();
-    date.setMonth(date.getMonth()+3);
+    date.setFullYear(date.getFullYear() + 1);
     return date;
-    };
+  };
   const [state, setState] = React.useState({
     selectedOrganization: [],
     tags: [],

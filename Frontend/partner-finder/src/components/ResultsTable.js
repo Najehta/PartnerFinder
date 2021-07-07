@@ -27,17 +27,6 @@ function ResultsTable(props) {
     newData.splice(newData.indexOf(oldData), 1);
     setData(newData);
   };
-  // const handleInformation = (data) => {
-  //   data.map((key) => {
-  //     console.log("abed", key["information"]);
-  //     key["information"] =
-  //       "<ReadMore lines={3} onShowMore={this.props.onChange} text='more'>" +
-  //       key["information"] +
-  //       "</ReadMore>";
-  //     console.log("abed", key["information"]);
-  //   });
-  //   return data;
-  // };
 
   return (
     <React.Fragment>
@@ -46,7 +35,7 @@ function ResultsTable(props) {
           <MaterialTable
             style={{
               color: "white",
-              backgroundColor: "#02203c",
+              backgroundColor: "#283747",
               marginBottom: "30px",
             }}
             icons={tableIcons}
@@ -56,7 +45,7 @@ function ResultsTable(props) {
               Toolbar: (props) => (
                 <div
                   style={{
-                    backgroundColor: "#02203c",
+                    backgroundColor: "#283747",
                     color: "white",
                     hover: {
                       color: "white",
@@ -79,12 +68,12 @@ function ResultsTable(props) {
                 },
               },
               actionsCellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },
               cellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
                 "&:hover": {
@@ -94,7 +83,7 @@ function ResultsTable(props) {
                 },
               },
               headerStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 zIndex: 0,
                 color: "white",
@@ -103,12 +92,12 @@ function ResultsTable(props) {
                 },
               },
               searchFieldStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },
               filterCellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },

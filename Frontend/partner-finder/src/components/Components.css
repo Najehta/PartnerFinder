@@ -1,6 +1,6 @@
 .UpdateParent {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 65% 35%;
   margin: 20px;
   gap: 100px;
 }
@@ -28,7 +28,7 @@
 
 .SearchCom {
   display: grid;
-  grid-template-columns: 25vw 25vw 15vw 15vw 9.39vw;
+  grid-template-columns: 25vw 25vw 17vw 17vw 9.39vw;
   margin-left: 3.5%;
   margin-right: 3.5%;
   margin-top: 100px;
@@ -76,4 +76,19 @@
 .MuiBox-root {
   padding: 0 !important;
   /* margin:0 !important; */
+}
+.MuiTypography-body1 {
+  font-family: "Montserrat" !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+}
+.MuiFormLabel-root {
+  font-family: "Montserrat" !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+}
+.MuiInputBase-input {
+  font-family: "Montserrat" !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
 }

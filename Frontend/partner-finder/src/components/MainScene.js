@@ -90,9 +90,9 @@ export default function NavTabs() {
   });
   const changeDate = () => {
     var date = new Date();
-    date.setMonth(date.getMonth()+3);
+    date.setFullYear(date.getFullYear() + 1);
     return date;
-    };
+  };
   const [searchState, setSearchState] = React.useState({
     selectedOrganization: [],
     tags: [],
