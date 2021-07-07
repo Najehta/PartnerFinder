@@ -94,12 +94,16 @@ const Search = (props) => {
   /**
    * intialize all the data to this component
    */
-
+   const changeDate = () => {
+    var date = new Date();
+    date.setMonth(date.getMonth()+3);
+    return date;
+    };
   const [state, setState] = React.useState({
     selectedOrganization: [],
     tags: [],
     startDate: new Date(),
-    endDate: new Date(),
+    endDate: changeDate(),
     status: { label: "Open", value: "Open" },
     data: { BSF: [], ISF: [], MST: [], INNOVATION: [], Technion: [], EU: [] },
     loading: false,
@@ -291,7 +295,7 @@ const Search = (props) => {
         <div className="SearchCom">
           <div className="searchMultiSelect">
             <h2 id="textFontFamily" className="textEdit">
-              Organizations
+              Funding Organizations
             </h2>
             <FormControl id="text_select">
               <MultiSelect

@@ -1,23 +1,28 @@
+
+
 body {
   background-color: white;
 }
 
 #textFontFamily {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   color: #283747(31, 29, 29);
 }
 
 #text_select {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   color: 283747 (19, 15, 15);
   font-size: 13px;
 }
 
 #text_select::hover {
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   color: black;
   background-color: whitesmoke;
 }
@@ -25,96 +30,86 @@ body {
   background-color: whitesmoke;
 }
 h1 {
-  font-family: "Helvetica Neue";
-  font-style: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   font-size: 2.33vw;
-  font-variant: normal;
   color: #283747;
   margin-top: 0px;
 }
 
 h2 {
-  font-family: "Helvetica Neue";
-
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   color: #283747;
   margin-top: 6px;
 }
 
 h3 {
-  font-family: "Helvetica Neue";
-
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   font-size: 14px;
-  font-weight: 700;
   line-height: 15.4px;
   color: #283747;
 }
 h5 {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
+  letter-spacing: -0.012em;
   color: #283747;
 }
 p {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 14px;
+  letter-spacing: -0.012em;
   font-weight: 400;
   line-height: 20px;
 }
 blockquote {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 21px;
-  font-weight: 400;
+  letter-spacing: -0.012em;
   line-height: 30px;
 }
 pre {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 13px;
-  font-weight: 400;
+  letter-spacing: -0.012em;
   line-height: 18.5714px;
 }
 
 h3 {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 14px;
-  font-weight: 700;
+  letter-spacing: -0.012em;
   line-height: 15.4px;
 }
 p {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 14px;
-  font-weight: 400;
+  letter-spacing: -0.012em;
   line-height: 20px;
 }
 blockquote {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 21px;
-
-  font-weight: 400;
+  letter-spacing: -0.012em;
   line-height: 30px;
 }
 
 pre {
-  font-family: "Helvetica Neue";
-  font-style: normal;
-  font-variant: normal;
+  font-family: 'Montserrat';
+  font-weight: 500;
   font-size: 13px;
-  font-weight: 400;
+  letter-spacing: -0.012em;
   line-height: 18.5714px;
 }
 

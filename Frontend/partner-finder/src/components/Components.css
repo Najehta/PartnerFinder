@@ -73,6 +73,7 @@
 .page-container {
   min-height: calc(100vh - 274px);
 }
-.MuiBox-root-8 {
+.MuiBox-root {
   padding: 0 !important;
+  /* margin:0 !important; */
 }

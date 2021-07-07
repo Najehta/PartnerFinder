@@ -88,12 +88,16 @@ export default function NavTabs() {
     body: "",
     visible: false,
   });
-
+  const changeDate = () => {
+    var date = new Date();
+    date.setMonth(date.getMonth()+3);
+    return date;
+    };
   const [searchState, setSearchState] = React.useState({
     selectedOrganization: [],
     tags: [],
     startDate: new Date(),
-    endDate: new Date(),
+    endDate: changeDate(),
     status: { label: "Open", value: "Open" },
     data: { BSF: [], ISF: [], MST: [], INNOVATION: [], Technion: [], EU: [] },
     loading: false,
@@ -148,14 +152,7 @@ export default function NavTabs() {
             MST: moment.unix(resp.MST).format("MMMM Do YYYY, h:mm:ss a"),
             firstLoading: false,
           });
-
-          // console.log(resp);
         }
-
-        console.log(
-          resp.EU,
-          moment.unix(resp.EU).format("MMMM Do YYYY, h:mm:ss a")
-        );
       })
       .catch((error) => {
         setMsgState({
@@ -173,7 +170,6 @@ export default function NavTabs() {
           firstLoading: false,
         });
       });
-    console.log("hhhhh", updateState);
   }
 
   const handleChange = (event, newValue) => {

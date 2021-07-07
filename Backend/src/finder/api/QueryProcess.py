@@ -18,22 +18,22 @@ def NLP_processor(documents, type):
     """
 
     if type == 'BSF':
-        dir = 'Dictionary_BSF'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_BSF'
 
     if type == 'ISF':
-        dir = 'Dictionary_ISF'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_ISF'
 
     if type == 'MST':
-        dir = 'Dictionary_MST'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_MST'
 
     if type == 'INNOVATION':
-        dir = 'Dictionary_INNOVATION'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_INNOVATION'
 
     if type == 'Technion':
-        dir = 'Dictionary_Technion'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Technion'
 
     if type == 'EU':
-        dir = 'Dictionary_Eu'
+        dir = 'C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Eu'
 
 
     tokens = [process_document(doc) for doc in documents ]

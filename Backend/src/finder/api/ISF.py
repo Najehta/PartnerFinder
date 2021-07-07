@@ -26,9 +26,12 @@ def get_calls_status(_url, click):
 
     # please change this PATH to open chromedriver from your device
     try:
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(_url)
+
 
     except Exception as e:
         print(e)
@@ -106,8 +109,10 @@ def get_proposal_names_links(_url, click):
 
     # please change this PATH to open chromedriver from your device
     try:
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(_url)
 
     except Exception as e:
@@ -188,12 +193,12 @@ def get_Isf_call_by_tags(tags):
         if len(tags) == 1:
 
             tags = ' '.join(tags)
-            index = reload_index('IsfIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex')
             corpus = NLP_processor([tags], 'ISF')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.2]
+            res = [pair for pair in res if pair[1] > 0.3]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -209,7 +214,7 @@ def get_Isf_call_by_tags(tags):
 
         else:
 
-            index = reload_index('IsfIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex')
             temp = []
             res = ''
             for tag in tags:
@@ -372,15 +377,15 @@ def copy_to_original_ISF():
     MapIdsISF.objects.all().delete()
 
     try:
-        os.remove('IsfIndex')
-        os.remove('IsfIndex.0')
-        os.remove('Dictionary_ISF')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex.0')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_ISF')
         print('Deleting ISF Index...')
 
     except:
         pass
 
-    index = make_index('IsfIndex', 'ISF')
+    index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex', 'ISF')
     print('Building ISF Index...')
 
     try:

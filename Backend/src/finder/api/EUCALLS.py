@@ -132,12 +132,12 @@ def get_eu_call_by_tags(tags):
         if len(tags) == 1:
 
             tags = ' '.join(tags)
-            index = reload_index('EuIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex')
             corpus = NLP_processor([tags], 'EU')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.25]
+            res = [pair for pair in res if pair[1] > 0.3]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -152,7 +152,7 @@ def get_eu_call_by_tags(tags):
             res = temp
 
         else:
-            index = reload_index('EuIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex')
             temp = []
             res = ''
             for tag in tags:
@@ -160,7 +160,7 @@ def get_eu_call_by_tags(tags):
                 res = index[corpus]
                 res = process_query_result(res)
 
-                res = [pair for pair in res if pair[1] > 0.25]
+                res = [pair for pair in res if pair[1] > 0.3]
                 res = sorted(res, key=lambda pair: pair[1], reverse=True)
 
                 for pair in res:
@@ -301,15 +301,15 @@ def copy_to_original_EU():
     MapIdsEU.objects.all().delete()
 
     try:
-        os.remove('EuIndex')
-        os.remove('EuIndex.0')
-        os.remove('Dictionary_Eu')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex.0')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Eu')
         print('Deleting EU Index...')
 
     except:
         pass
 
-    index = make_index('EuIndex', 'EU')
+    index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex', 'EU')
     print('Building EU Index...')
 
     try:

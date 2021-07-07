@@ -1093,14 +1093,14 @@ class BsfCallsViewSet(viewsets.ModelViewSet):
         field_name = get_field_name(_url) # field_name is a list of strings
 
         try:
-            os.remove('BsfIndex')
-            os.remove('BsfIndex.0')
-            os.remove('Dictionary_BSF')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_BSF')
             print('Deleting BSF Index...')
         except:
             pass
 
-        index = make_index('BsfIndex', 'BSF')
+        index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex', 'BSF')
         print('Building BSF Index...')
 
 
@@ -1154,15 +1154,15 @@ class IsfCallsViewSet(viewsets.ModelViewSet):
         call_names, call_links = [], []
 
         try:
-            os.remove('IsfIndex')
-            os.remove('IsfIndex.0')
-            os.remove('Dictionary_ISF')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_ISF')
             print('Deleting ISF Index...')
 
         except:
             pass
 
-        index = make_index('IsfIndex', 'ISF')
+        index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/IsfIndex', 'ISF')
         print('Building ISF Index...')
 
 
@@ -1243,15 +1243,15 @@ class InnovCallsViewSet(viewsets.ModelViewSet):
         counter = 0
 
         try:
-            os.remove('InnovationIndex')
-            os.remove('InnovationIndex.0')
-            os.remove('Dictionary_INNOVATION')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_INNOVATION')
             print('Deleting Innovation Index...')
 
         except:
             pass
 
-        index = make_index('InnovationIndex', 'INNOVATION')
+        index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex', 'INNOVATION')
         print('Building Innovation Index...')
 
 
@@ -1357,15 +1357,15 @@ class MstCallsViewSet(viewsets.ModelViewSet):
             pages_number = (calls_number // 10) + 1
 
         try:
-            os.remove('MstIndex')
-            os.remove('MstIndex.0')
-            os.remove('Dictionary_MST')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/MstIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/MstIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_MST')
             print('Deleting MST Index...')
 
         except:
             pass
 
-        index = make_index('MstIndex', 'MST')
+        index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/MstIndex', 'MST')
         print('Building MST Index...')
 
 
@@ -1479,15 +1479,15 @@ class TechnionCallsViewSet(viewsets.ModelViewSet):
             pages_number = (calls_number // 20) + 1
 
         try:
-            os.remove('TechnionIndex')
-            os.remove('TechnionIndex.0')
-            os.remove('Dictionary_Technion')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Technion')
             print('Deleting Technion Index...')
 
         except:
             pass
 
-        index = make_index('TechnionIndex', 'Technion')
+        index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex', 'Technion')
         print('Building Technion Index...')
 
         try:
@@ -1596,16 +1596,16 @@ class EuCallsViewSet(viewsets.ModelViewSet):
 
         calls_obj = get_eu_calls()
 
-        # try:
-        #     os.remove('EuIndex')
-        #     os.remove('EuIndex.0')
-        #     os.remove('Dictionary_Eu')
-        #     print('Deleting EU Index...')
-        #
-        # except:
-        #     pass
         try:
-            index = make_index('EuIndex', 'EU')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex.0')
+            os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Eu')
+            print('Deleting EU Index...')
+
+        except:
+            pass
+        try:
+            index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/EuIndex', 'EU')
             print('Building EU Index...')
         except Exception as e:
             traceback.print_exc()

@@ -183,7 +183,7 @@ def get_bsf_call_by_tags(tags):
         if len(tags) == 1:
 
             tags = ' '.join(tags)
-            index = reload_index('BsfIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex')
             corpus = NLP_processor([tags], 'BSF')
             res = index[corpus]
             res = process_query_result(res)
@@ -203,7 +203,7 @@ def get_bsf_call_by_tags(tags):
             res = temp
 
         else:
-            index = reload_index('BsfIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex')
             temp = []
             res = ''
             for tag in tags:
@@ -347,15 +347,15 @@ def copy_to_original_BSF():
     bsfCalls.objects.all().delete()
     MapIdsBSF.objects.all().delete()
     try:
-        os.remove('BsfIndex')
-        os.remove('BsfIndex.0')
-        os.remove('Dictionary_BSF')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex.0')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_BSF')
         print('Deleting BSF original Index...')
         
     except Exception as e:
         pass
 
-    index = make_index('BsfIndex', 'BSF')
+    index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/BsfIndex', 'BSF')
     print('Building BSF Index...')
 
     try:

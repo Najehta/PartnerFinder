@@ -38,8 +38,10 @@ def get_calls_data(_url):
     try:
 
         #PATH = '/Users/najeh/chromedriver'
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(_url)
 
         page_html = driver.page_source
@@ -99,8 +101,10 @@ def get_call_information(links):
 
     try:
         #PATH = '/Users/najeh/chromedriver'
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(links)
 
         page_html = driver.page_source
@@ -135,8 +139,10 @@ def get_calls_num(_url):
     try:
 
         #PATH = '/Users/najeh/chromedriver'
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(_url)
 
         page_html = driver.page_source
@@ -190,7 +196,7 @@ def get_technion_call_by_tags(tags):
         if len(tags) == 1:
 
             tags = ' '.join(tags)
-            index = reload_index('TechnionIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex')
             corpus = NLP_processor([tags], 'Technion')
             res = index[corpus]
             res = process_query_result(res)
@@ -211,7 +217,7 @@ def get_technion_call_by_tags(tags):
 
         else:
 
-            index = reload_index('TechnionIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex')
             temp = []
             res = ''
             for tag in tags:
@@ -406,15 +412,15 @@ def copy_to_original_Technion():
     MapIdsTechnion.objects.all().delete()
 
     try:
-        os.remove('TechnionIndex')
-        os.remove('TechnionIndex.0')
-        os.remove('Dictionary_Technion')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex.0')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_Technion')
         print('Deleting Technion Index...')
 
     except:
         pass
 
-    index = make_index('TechnionIndex', 'Technion')
+    index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/TechnionIndex', 'Technion')
     print('Building Technion Index...')
 
     try:

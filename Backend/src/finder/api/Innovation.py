@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from google_trans_new import google_translator
+from ..google_trans_new import google_translator
 from bs4 import BeautifulSoup as soup, element
 from urllib.request import urlopen as req
 from urllib.request import Request
@@ -50,9 +50,10 @@ def get_calls_org(_url):
 
     # open google chrome driver to scroll down on the website to grab more calls
     try:
-       # PATH = '/Users/najeh/chromedriver'
-        PATH = 'C:\ChromeDriver\chromedriver.exe'
-        driver = webdriver.Chrome(PATH)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
+        driver.maximize_window()
         driver.get(_url)
 
     except Exception as e:
@@ -346,12 +347,12 @@ def get_Innovation_call_by_tags(tags):
         if len(tags) == 1:
 
             tags = ' '.join(tags)
-            index = reload_index('InnovationIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex')
             corpus = NLP_processor([tags], 'INNOVATION')
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.2]
+            res = [pair for pair in res if pair[1] > 0.3]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -367,7 +368,7 @@ def get_Innovation_call_by_tags(tags):
 
         else:
 
-            index = reload_index('InnovationIndex')
+            index = reload_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex')
             temp = []
             res = ''
             for tag in tags:
@@ -542,15 +543,15 @@ def copy_to_original_INNOVATION():
     MapIdsINNOVATION.objects.all().delete()
 
     try:
-        os.remove('InnovationIndex')
-        os.remove('InnovationIndex.0')
-        os.remove('Dictionary_INNOVATION')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex.0')
+        os.remove('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/Dictionary_INNOVATION')
         print('Deleting Innovation Index...')
 
     except:
         pass
 
-    index = make_index('InnovationIndex', 'INNOVATION')
+    index = make_index('C:/Users/FinalProject/Desktop/PartnerFinder/Backend/src/Index/InnovationIndex', 'INNOVATION')
     print('Building Innovation Index...')
 
     try:
