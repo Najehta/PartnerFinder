@@ -221,10 +221,9 @@ python manage.py runserver
 [`Celery`](https://docs.celeryproject.org/en/stable/index.html)
 [`VS Code`](https://code.visualstudio.com/)
 [`Pycharm`](https://www.jetbrains.com/pycharm/)
-[`European Union`](https://europa.eu/european-union/index_en)
-[`B2match`](https://www.b2match.com/?campaignid=9573624898&adgroupid=102132546887&adid=423539737408&gclid=CjwKCAjw57b3BRBlEiwA1ImytnO4GfNg9sZ09Q1SvQPE_fEiUVPjYqoy3oeu3rFPw91iVwmjd7-N8RoCMIkQAvD_BwE)
+campaignid=9573624898&adgroupid=102132546887&adid=423539737408&gclid=CjwKCAjw57b3BRBlEiwA1ImytnO4GfNg9sZ09Q1SvQPE_fEiUVPjYqoy3oeu3rFPw91iVwmjd7-N8RoCMIkQAvD_BwE)
 
-[Back To The Top](#partner-finder-search-engine)
+[Back To The Top](#Research Funding Portal)
 
 ---
 ## License
@@ -260,12 +259,15 @@ freedoms that you received.  You must make sure that they, too, receive
 or can get the source code.  And you must show them these terms so they
 know their rights.
 
-[Back To The Top](#partner-finder-search-engine)
+[Back To The Top](#Research Funding Portal)
 
 ---
 ## Author Info
 
-- Github - [bashbash96](https://github.com/bashbash96)
-- Linkedin - [amjad-bashiti](https://www.linkedin.com/in/amjad-bashiti-2652a9192/)
+- Github - [Najeh Tahhan](https://github.com/Najehta)
+- Linkedin - [Najeh Tahhan](https://www.linkedin.com/in/najeh-tahhan-752641145/)
+
+- Github - [Abdallah Abu Khdair](https://github.com/abdullahab1968)
+
 
 [Back To The Top](#partner-finder-search-engine)
