@@ -1,9 +1,9 @@
 
-# Partner Finder Search Engine
+# Research Funding Portal
 
-> A smart search engine that enables searching for research partners in a short time using NLP on tags and keywords and descriptions.
+> A smart search engine that enables searching for proposal calls in a short time using NLP on tags and keywords and descriptions.
 
-<div align="center"><img src="https://i.imgur.com/iyxryPA.jpg" width="400" height="300"/></div>
+<div align="center"><img src="https://nanotempertech.com/wp-content/uploads/2020/04/Funding-Featured-Image.png" width="400" height="300"/></div>
 
 <br>
 
@@ -15,16 +15,14 @@
 - [How To Use](#how-to-use)
 - [References](#references)
 - [License](#license)
-- [Author Info](#author-info)
 
 ---
 
 ## Description
 
-Search engine that connected to two repositories, the European Union and B2match. 
-It has more than 5M organizations, and 300K participants. 
-The engine uses NLP and TF-IDF for comparing tags from user to tags and descriptions of the organizations and the participants in order to get accurate results.
-The website updates the repositories each month using scheduled tasks which executes by celery library. it also has automatic alerts for finding potential calls from the EU that has at least three partners from three different countries, and alerts for potential events from b2match.
+Search engine that connected to 6 repositories.
+The engine uses NLP and TF-IDF for comparing tags from user to tags and descriptions of the organizations in order to get accurate results.
+The website updates the repositories each week using scheduled tasks which executes by celery library. it also has automatic email alerts for finding potential calls from the 6 websites that has available proposal calls.
 
 ### Technologies
 
@@ -39,7 +37,7 @@ The website updates the repositories each month using scheduled tasks which exec
 - VS Code
 - Pycharm
 
-[Back To The Top](#partner-finder-search-engine)
+[Back To The Top](#Research Funding Portal)
 
 ---
 
@@ -47,7 +45,7 @@ The website updates the repositories each month using scheduled tasks which exec
 
 ### Installation
 
-- Copy this link ***https://github.com/bashbash96/PartnerFinder.git*** then on cmd or bash do:
+- Copy this link ***https://github.com/Najehta/PartnerFinder.git*** then on cmd or bash do:
 
 		cd ~/Desktop
 		git clone {{the link you just copied}} Project
@@ -177,7 +175,7 @@ Now you are ready to use the imported React Bootstrap components within your com
 
 To run locally, do the following on Backend directory:
 
-1. Create a Python 3.5 virtualenv
+1. Create a Python 3.9.4 virtualenv
 
 2. Install dependencies:
 	
@@ -207,7 +205,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-[Back To The Top](#partner-finder-search-engine)
+[Back To The Top](#Research Funding Portal)
 
 ---
 
@@ -233,7 +231,7 @@ python manage.py runserver
 
 GPL License
 
-Copyright (c) [2020] [Amjad Bashiti]
+Copyright (c) [2020] [Najeh Tahhan, Abdallah Abu khdair ]
 
   The licenses for most software and other practical works are designed
 to take away your freedom to share and change the works.  By contrast,
