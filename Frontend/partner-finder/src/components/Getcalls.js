@@ -345,9 +345,9 @@ const Getcalls = (props) => {
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
       <div className="getCalls">
-        <h1 style={{ fontSize: "2.7vw" }}>Updates</h1>
+        <h1 style={{ fontSize: "2.7vw" ,textAlign: "center", fontSize: "50px", marginTop: "30px" }}>Updates</h1>
         <div className="UpdateParent">
-          <div className="BsfUpdate">
+          <div style={{marginLeft:"5vw"}} className="BsfUpdate">
             <h2 style={{ fontSize: "1.8vw" }}>BSF</h2>
             <h3
               style={{
@@ -400,7 +400,7 @@ const Getcalls = (props) => {
               {state && !state.loading && <span>Update Now</span>}
             </Button>
           </div>
-          <div className="IsfUpdate">
+          <div  className="IsfUpdate">
             <h2 style={{ fontSize: "1.8vw" }}>ISF</h2>
             <h3
               style={{
@@ -453,7 +453,7 @@ const Getcalls = (props) => {
               {state && !state.loading && <span>Update Now</span>}
             </Button>
           </div>
-          <div className="MstUpdate">
+          <div style={{marginLeft:"5vw"}} className="MstUpdate">
             <h2 style={{ fontSize: "1.8vw" }}>
               Ministry Of Science And Technology
             </h2>
@@ -561,7 +561,7 @@ const Getcalls = (props) => {
               {state && !state.loading && <span>Update Now</span>}
             </Button>
           </div>
-          <div className="TechnionUpdate">
+          <div style={{marginLeft:"5vw"}} className="TechnionUpdate">
             <h2 style={{ fontSize: "1.8vw" }}>Others Via Technion</h2>
             <h3
               style={{

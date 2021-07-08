@@ -1,7 +1,6 @@
 .UpdateParent {
   display: grid;
-  grid-template-columns: 65% 35%;
-  margin: 20px;
+  grid-template-columns: 65% 28%;
   gap: 100px;
 }
 
@@ -28,7 +27,7 @@
 
 .SearchCom {
   display: grid;
-  grid-template-columns: 25vw 25vw 17vw 17vw 9.39vw;
+  grid-template-columns: 23vw 22vw 20vw 20vw 7.15vw;
   margin-left: 3.5%;
   margin-right: 3.5%;
   margin-top: 100px;
@@ -38,13 +37,14 @@
 }
 .textEdit {
   margin-bottom: 31px;
+  
 }
 
 .searchButton {
   grid-area: 2/ 2 / 3/ 4;
   margin-top: 70px;
-  text-align: center;
-  margin-left: 5vw;
+  margin-left: 18.5vw;
+ 
 }
 
 .ResultTable {
@@ -92,3 +92,11 @@
   font-weight: 500 !important;
   letter-spacing: -0.012em !important;
 }
+.MuiTableCell-root{
+  font-family: "Montserrat" !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.012em !important;
+}
+/* .MuiSvgIcon-root{
+background-color: #283747 !important;
+} */

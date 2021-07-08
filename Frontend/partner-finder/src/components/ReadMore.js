@@ -7,7 +7,7 @@ const SHOW_MORE_TEXT = "Read More";
 
 export default class ReadMore extends Component {
   static defaultProps = {
-    numberOfLines: 5,
+    numberOfLines: 10,
     lineHeight: 1,
     readMoreCharacterLimit: 100,
     showLessButton: false,

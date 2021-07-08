@@ -312,9 +312,9 @@ pre {
   letter-spacing: -0.012em;
 }
 
-#app {
+/* #app {
   padding: 40px;
-}
+} */
 
 div.ReactTags__tags {
   position: relative;
@@ -324,7 +324,7 @@ div.ReactTags__tags {
 
 /* Styles for the input */
 div.ReactTags__tagInput {
-  width: 240px;
+  width: 20vw;
   border-radius: 3px;
   display: inline-block;
   font-size: 16px;
@@ -332,14 +332,15 @@ div.ReactTags__tagInput {
 
 div.ReactTags__tagInput input.ReactTags__tagInputField,
 div.ReactTags__tagInput input.ReactTags__tagInputField {
-  height: 38px;
+  height: 37px;
   margin: 0px;
+  margin-top: 4.7px;
   font-size: 14px;
   font-family: "Montserrat";
   font-weight: 500;
   letter-spacing: -0.012em;
   width: 20vw;
-  border: 1px solid #283747;
+  border: border-box;
   padding: 0 4px;
   background-color: white;
   color: #283747;
@@ -351,7 +352,7 @@ div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder {
 
 /* Styles for selected tags */
 div.ReactTags__selected span.ReactTags__tag {
-  border: 1px solid #283747;
+  border: 2px solid #283747;
   background: #283747;
   font-family: "Montserrat";
   font-weight: 500;
@@ -369,6 +370,7 @@ div.ReactTags__selected a.ReactTags__remove {
   cursor: pointer;
 }
 
+
 /* Styles for suggestions */
 div.ReactTags__suggestions {
   position: absolute;
@@ -377,7 +379,7 @@ div.ReactTags__suggestions {
 div.ReactTags__suggestions ul {
   list-style-type: none;
   /* box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2); */
-  background: #10131011;
+  background: #283747;
   width: 200px;
 }
 div.ReactTags__suggestions li {
@@ -454,5 +456,5 @@ div.ReactTags__suggestions li mark {
   font-family: "Montserrat";
   font-weight: 500;
   letter-spacing: -0.012em;
-  color: rgb(15, 15, 15);
+  color: #283747(15, 15, 15);
 }

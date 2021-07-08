@@ -333,7 +333,7 @@ const Search = (props) => {
           </div>
 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <div className="startDate">
+            <div className="startDate" style={{marginLeft:"3vw"}}>
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"

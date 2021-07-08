@@ -32,10 +32,10 @@ const EU_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -51,10 +51,10 @@ const EU_columns = [
         ) : (
           <ReadMore
             text={rowData.areaOfResearch}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -137,10 +137,10 @@ const BSF_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -175,10 +175,10 @@ const ISF_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -213,10 +213,10 @@ const MST_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -250,10 +250,10 @@ const INNOVATION_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -289,10 +289,10 @@ const Technion_columns = [
         ) : (
           <ReadMore
             text={rowData.information}
-            numberOfLines={10}
+            numberOfLines={40}
             lineHeight={1.4}
             showLessButton={true}
-            onContentChange={"100px"}
+            onContentChange={"500px"}
           />
         )}
       </div>
@@ -365,119 +365,119 @@ const tableIcons = {
     <AddBox
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Check: forwardRef((props, ref) => (
     <Check
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Clear: forwardRef((props, ref) => (
     <Clear
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Delete: forwardRef((props, ref) => (
     <DeleteOutline
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   DetailPanel: forwardRef((props, ref) => (
     <ChevronRight
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Edit: forwardRef((props, ref) => (
     <Edit
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Export: forwardRef((props, ref) => (
     <SaveAlt
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Filter: forwardRef((props, ref) => (
     <FilterList
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   FirstPage: forwardRef((props, ref) => (
     <FirstPage
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   LastPage: forwardRef((props, ref) => (
     <LastPage
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   NextPage: forwardRef((props, ref) => (
     <ChevronRight
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   PreviousPage: forwardRef((props, ref) => (
     <ChevronLeft
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   ResetSearch: forwardRef((props, ref) => (
     <Clear
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   Search: forwardRef((props, ref) => (
     <Search
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   SortArrow: forwardRef((props, ref) => (
     <ArrowDownward
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   ThirdStateCheck: forwardRef((props, ref) => (
     <Remove
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
   ViewColumn: forwardRef((props, ref) => (
     <ViewColumn
       {...props}
       ref={ref}
-      style={{ backgroundColor: "#02203c", color: "white" }}
+      style={{ backgroundColor: "#283747", color: "white" }}
     />
   )),
 };

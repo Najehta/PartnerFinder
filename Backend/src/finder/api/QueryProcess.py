@@ -274,5 +274,4 @@ def get_document_from_eu_call(orgName, title, tags):
     """
     orgName = re.sub(r'[^A-Za-z0-9]+', ' ', orgName)
     doc = orgName + " " + tags + " " + title
-
     return doc

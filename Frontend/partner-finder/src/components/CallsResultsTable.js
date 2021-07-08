@@ -120,7 +120,7 @@ function CallsResultsTable(props) {
       <div>
         {data.length === 0 ? null : (
           <MaterialTable
-            style={{ color: "white", backgroundColor: "#02203c" }}
+            style={{ color: "white", backgroundColor: "#283747" }}
             icons={tableIcons}
             title={title}
             components={{
@@ -128,7 +128,7 @@ function CallsResultsTable(props) {
               Toolbar: (props) => (
                 <div
                   style={{
-                    backgroundColor: "#02203c",
+                    backgroundColor: "#283747",
                     color: "white",
                   }}
                 >
@@ -138,28 +138,28 @@ function CallsResultsTable(props) {
             }}
             options={{
               actionsCellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },
               cellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },
               headerStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
                 zIndex: 0,
               },
               searchFieldStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747",
                 textAlign: "center",
                 color: "white",
               },
               filterCellStyle: {
-                backgroundColor: "#02203c",
+                backgroundColor: "#283747" ,
                 textAlign: "center",
                 color: "white",
               },

@@ -137,7 +137,7 @@ def get_eu_call_by_tags(tags):
             res = index[corpus]
             res = process_query_result(res)
 
-            res = [pair for pair in res if pair[1] > 0.3]
+            res = [pair for pair in res if pair[1] > 0.25]
             res = sorted(res, key=lambda pair: pair[1], reverse=True)
             temp = []
 
@@ -160,7 +160,7 @@ def get_eu_call_by_tags(tags):
                 res = index[corpus]
                 res = process_query_result(res)
 
-                res = [pair for pair in res if pair[1] > 0.3]
+                res = [pair for pair in res if pair[1] > 0.25]
                 res = sorted(res, key=lambda pair: pair[1], reverse=True)
 
                 for pair in res:

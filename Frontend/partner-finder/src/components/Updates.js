@@ -95,7 +95,7 @@ function Updates(props) {
         handleClose={() => setMsgState({ ...msgState, visible: false })}
       />
       <div>
-        <h1>Updates</h1>
+        <h1 style={{ textAlign: "center", fontSize: "50px", marginTop: "30px" }}>Updates</h1>
       </div>
       <div style={{ "margin-top": "30px" }}>
         <h1 style={{ "margin-left": "30px" }}>B2MATCH</h1>

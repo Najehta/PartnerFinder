@@ -5,12 +5,8 @@ from .Utils import setUpdateTime
 from ..models import MapIdsTechnion, TechnionCalls, UpdateTime, TechnionCalls1
 import requests
 import time
-
-import nltk
-from nltk import tokenize
-from operator import itemgetter
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+from ..google_trans_new import google_translator
+from langdetect import detect
 
 from bs4 import BeautifulSoup as soup, element
 from urllib.request import urlopen as req
@@ -98,7 +94,7 @@ def get_call_information(links):
       """
 
     information = ''
-
+    translator = google_translator()
     try:
         #PATH = '/Users/najeh/chromedriver'
         options = webdriver.ChromeOptions()
@@ -106,12 +102,19 @@ def get_call_information(links):
         driver = webdriver.Chrome(executable_path='C:\Program Files (x86)\chromedriver.exe', options=options)
         driver.maximize_window()
         driver.get(links)
-
+        target_lang = 'en'
         page_html = driver.page_source
         page_soup = soup(page_html, "html.parser")
         sleep(1)
         table_element = page_soup.find("table", {"class": "fund"})
-        information = table_element.p.text
+
+        result_lang = table_element.p.text
+        if result_lang == target_lang:
+            information = table_element.p.text
+
+        else:
+            word_trans = translator.translate(table_element.p.text)
+            information = word_trans
 
         driver.quit()
 
