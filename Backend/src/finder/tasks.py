@@ -84,7 +84,7 @@ def add_isfcalls_to_db():
     url = URL + 'isfcalls/add_isfcalls_to_db/'
     response = requests.get(url)
 
-00
+
 @periodic_task(run_every=(crontab(minute=0, hour=7, day_of_week='sun')),
                name="add_innovcalls_to_db", ignore_result=True)
 
@@ -99,7 +99,7 @@ def add_innovcalls_to_db():
     response = requests.get(url)
 
 
-@periodic_task(run_every=(crontab(minute=00, hour=7, day_of_week='sun')),
+@periodic_task(run_every=(crontab(minute=0, hour=7, day_of_week='sun')),
                name="add_mstcalls_to_db", ignore_result=True)
 
 def add_mstcalls_to_db():
@@ -142,11 +142,13 @@ def add_eucalls_to_db():
     response = requests.get(url)
 
 
+@periodic_task(run_every=(crontab(minute=0, hour=12, day_of_week='sun')),
+               name="send_emails", ignore_result=True)
 
 def send_emails():
 
     """
-    automatic task that executes every week on sunday at 10:00 AM to send proposal calls to the subscribed email list
+    automatic task that executes every week on sunday at 12:00 PM to send proposal calls to the subscribed email list
     :return:
     """
 
