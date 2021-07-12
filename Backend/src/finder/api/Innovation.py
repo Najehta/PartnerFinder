@@ -520,7 +520,7 @@ def updateINNOVATION():
             date = date_list[i]
             str_date = date.strftime("%d/%m/%Y")
 
-            counter = InnovationCalls.objects.latest('CallID').CallID
+            counter = InnovationCalls1.objects.latest('CallID').CallID
 
             call = InnovationCalls1(CallID=counter + 1, organizationName=org_name, registrationDeadline=str_date,
                                    submissionDeadline=str_date, information='Not Available',
@@ -528,7 +528,7 @@ def updateINNOVATION():
 
             call.save()
 
-            counter += 1
+        updated = True
 
     except Exception as e:
         print(e)

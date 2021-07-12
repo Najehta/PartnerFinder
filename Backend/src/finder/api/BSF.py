@@ -311,6 +311,7 @@ def get_bsf_call_intersection(tags_call, dates_call, status):
     return result
 
 
+
 def updateBSF():
 
     """

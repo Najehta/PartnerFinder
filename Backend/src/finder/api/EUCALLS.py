@@ -259,6 +259,7 @@ def get_eu_call_intersection(tags_call, dates_call, status):
 
     return result
 
+
 def updateEU():
 
     """
@@ -287,6 +288,7 @@ def updateEU():
                               link=calls_obj[i]['link'],
                               deadlineDate=calls_obj[i]['deadlineDatesLong'], open=True)
             newCall.save()
+        updated = True
 
     except Exception as e:
         print(e)

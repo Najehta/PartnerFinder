@@ -402,6 +402,8 @@ def updateTechnion():
             page_content += 20
             pages_number -= 1
 
+        updated = True
+
     except Exception as e:
         print(e)
         updated = False

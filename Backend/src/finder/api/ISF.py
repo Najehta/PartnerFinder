@@ -73,17 +73,25 @@ def get_calls_status(_url, click):
 
         try:
             submission_tools = page_soup.find_all("span", {"class": "newlines"})
-            #deadline = submission_tools[0].text.strip()
-            deadline = None
-            reg_deadline = 'Closed'
-            sub_deadline = 'Closed'
+            if len(submission_tools) == 0:
+                submission_tools = page_soup.find("div", {"class": "toolInfo"})
+                temp_deadline = submission_tools.p.span.text
+                reg_deadline = temp_deadline.split(' ', 1)
+                reg_deadline = reg_deadline[0]
+                deadline = datetime.strptime(reg_deadline, "%d/%m/%Y")
+                sub_deadline = 'Open'
+
+            else:
+                deadline = None
+                reg_deadline = 'Closed'
+                sub_deadline = 'Closed'
 
         except:
             submission_tools = page_soup.find("div", {"class": "toolInfo"})
             reg_deadline = submission_tools.p.span.text
             submission_tools = submission_tools.find_all("span", {"class": ""})
             sub_deadline = submission_tools[1].text
-            deadline = datetime.strptime(reg_deadline,"%d/%m/%Y")
+            deadline = datetime.strptime(reg_deadline, "%d/%m/%Y")
 
         about = page_soup.find("div", {"class": "grantdataText"})
         text_clean = about.div.p.text[:-1]
@@ -363,6 +371,7 @@ def updateISF():
                                 information=call_info[5], deadlineDate=call_info[6], link=call_links[i], open=True)
 
             call.save()
+        updated = True
 
     except Exception as e:
         print(e)
@@ -393,7 +402,7 @@ def copy_to_original_ISF():
 
     try:
         all_new_calls = IsfCalls1.objects.all()
-        for i, item in enumerate (all_new_calls):
+        for i, item in enumerate(all_new_calls):
 
             new_call = IsfCalls(CallID=item.CallID, deadlineDate=item.deadlineDate, organizationName=item.organizationName,
                                 information=item.information, status=item.status,registrationDeadline=item.registrationDeadline,

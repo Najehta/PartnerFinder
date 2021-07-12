@@ -351,6 +351,7 @@ def updateMST():
                                 open=True)
 
             call.save()
+            counter += 1
 
     except Exception as e:
         print(e)
@@ -380,7 +381,7 @@ def updateMST():
                 call = MstCalls1(CallID=counter, organizationName=item, submissionDeadline=deadline_list[i],
                                 information=about_list[i], link=link_list[i], deadlineDate=deadline_date_list[i])
                 call.save()
-
+                counter += 1
             skip += 10
             pages_number -= 1
 
