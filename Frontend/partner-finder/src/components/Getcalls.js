@@ -72,7 +72,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "BSF data has been updated successfully.",
+            body: "This task will run in the background. It may take up to 1 min.",
             visible: true,
           });
         }
@@ -121,7 +121,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "ISF data has been updated successfully.",
+            body: "This task will run in the background.It may take up to 3 min.",
             visible: true,
           });
         }
@@ -170,7 +170,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Ministry of Science and Technology data has been updated successfully.",
+            body: "This task will run in the background.It may take up to 7 min.",
             visible: true,
           });
         }
@@ -219,7 +219,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Innovation Israel data has been updated successfully.",
+            body: "This task will run in the background.It may take up to 5 min.",
             visible: true,
           });
         }
@@ -268,7 +268,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "Others via Technion data has been updated successfully.",
+            body: "This task will run in the background.It may take up to 20 min.",
             visible: true,
           });
         }
@@ -317,7 +317,7 @@ const Getcalls = (props) => {
           setState({ ...state, loading: false });
           setMsgState({
             title: "Success",
-            body: "EU data has been updated successfully.",
+            body: "This task will run in the background.It may take up to 5 min.",
             visible: true,
           });
         }
