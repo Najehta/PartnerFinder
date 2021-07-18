@@ -252,7 +252,7 @@ The general state for this page if we in loading this mean that we still in proc
       />
 
       <h1 style={{ textAlign: "center", fontSize: "50px", marginTop: "30px" }}>
-        Alert Subcription
+        Alert Subscription
       </h1>
 
       <div className="Alerts">
@@ -346,7 +346,7 @@ The general state for this page if we in loading this mean that we still in proc
                 </DialogContent>
               </Dialog>
             )}
-            {state && !state.loading && <span>Unsubsribe</span>}
+            {state && !state.loading && <span>Unsubscribe</span>}
           </Button>
         </div>
       </div>
