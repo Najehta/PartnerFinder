@@ -1751,12 +1751,19 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                         email_info.save()
 
                     else:
-                        EmailSubscription.objects.filter(email=email).delete()
+                        latest_id = EmailSubscription.objects.latest('ID')
+                        latest_id_num = latest_id.ID + 1
 
-                        email_info = EmailSubscription(ID=1, email=email,
-                                                       organizationName=organization)
+                        if EmailSubscription.objects.filter(email=email,  organizationName=organization).exists():
+                            raise Exception
 
-                        email_info.save()
+                        else:
+                            EmailSubscription.objects.filter(email=email).delete()
+
+                            email_info = EmailSubscription(ID=latest_id_num, email=email,
+                                                           organizationName=organization)
+
+                            email_info.save()
 
                     response = {'Success': 'New email have been successfully subscribed.'}
 
@@ -1832,7 +1839,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + str_date  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                         <html>
                                           <head><h3>You have new NSF-BSF proposal calls that might interest you</h3></head>
@@ -1885,7 +1892,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i]  + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                                        <html>
                                                          <head><h3>You have new ISF proposal calls that might interest you</h3></head>
@@ -1940,7 +1947,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                                        <html>
                                                          <head><h3>You have new Innovation Israel proposal calls that might interest you</h3></head>
@@ -1996,7 +2003,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' + '<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' +'.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                                            <html>
                                                              <head><h3>You have new MST proposal calls that might interest you</h3></head>
@@ -2051,7 +2058,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' +'<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                                        <html>
                                                          <head><h3>You have new Technion proposal calls that might interest you</h3></head>
@@ -2106,7 +2113,7 @@ class EmailSubscriptionViewSet(viewsets.ModelViewSet):
                                 calls += '<li>' + item + '<br>' +'<b>' +' Deadline: (' + deadline_list[i] + ')' + '</b>' + '.</li>'
                                 calls += '<br>'
 
-                            signature = 'Sincerely,<br>Partner Finder Proposal Calls Alerts'
+                            signature = 'Sincerely,<br>Research Funding Portal Proposal Calls Alerts'
                             html = """\
                                                        <html>
                                                          <head><h3>You have new EU proposal calls that might interest you</h3></head>
